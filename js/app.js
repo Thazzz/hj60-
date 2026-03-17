@@ -17,7 +17,7 @@ console.log("events geladen", events);
 console.log("HJ60 dashboard gestart");
 
 /* -----------------------------
-TEST DATA
+DATA
 ----------------------------- */
 
 let events = [];
