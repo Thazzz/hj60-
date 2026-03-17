@@ -1,16 +1,19 @@
-
 /*
-HJ60 dashboard test script
-controleert of JS werkt en vult testdata in
+HJ60 dashboard
 */
 
 console.log("HJ60 dashboard gestart");
+
+/* -----------------------------
+SUPABASE
+----------------------------- */
 
 const supabaseUrl = "https://oevjdxhvtsannskbebdr.supabase.co";
 const supabaseKey = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im9ldmpkeGh2dHNhbm5za2JlYmRyIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzM3NzQ2OTMsImV4cCI6MjA4OTM1MDY5M30.5gMo9OBVoUZZ-OZtgIwsgaV0XJjPB-bK90hIKN_0uwA";
 
 const { createClient } = supabase;
 const supabaseClient = createClient(supabaseUrl, supabaseKey);
+
 
 /* -----------------------------
 DATA
@@ -30,9 +33,8 @@ const shopping = [
 "Remreiniger"
 ];
 
-
 /* -----------------------------
-Trips LADEN
+TRIPS LADEN
 ----------------------------- */
 
 async function loadTrips(){
@@ -58,13 +60,12 @@ console.log("Trips geladen:", events);
 }
 
 /* -----------------------------
-STATUS BALK
+STATUS
 ----------------------------- */
 
 function updateStatus(){
 
 const statusElement = document.getElementById("status");
-
 const now = new Date();
 
 const activeTrip = events.find(event => {
@@ -77,44 +78,47 @@ return now >= start && now <= end;
 });
 
 if(activeTrip){
-
-statusElement.innerText =
-"🚙 Nu onderweg: " + activeTrip.owner;
-
+statusElement.innerText = "🚙 Nu onderweg: " + activeTrip.owner;
 }
-
 else{
-
-statusElement.innerText =
-"🚙 HJ60 staat momenteel stil";
-
+statusElement.innerText = "🚙 HJ60 staat momenteel stil";
 }
 
 }
-
 
 /* -----------------------------
-KLUSSENLIJST
+TASKS
 ----------------------------- */
 
 function renderTasks(){
 
 const list = document.getElementById("taskList");
-
 list.innerHTML = "";
 
 tasks.forEach(task => {
-
 const li = document.createElement("li");
-
 li.textContent = task;
-
 list.appendChild(li);
-
 });
 
 }
 
+/* -----------------------------
+SHOPPING
+----------------------------- */
+
+function renderShopping(){
+
+const list = document.getElementById("shoppingList");
+list.innerHTML = "";
+
+shopping.forEach(item => {
+const li = document.createElement("li");
+li.textContent = item;
+list.appendChild(li);
+});
+
+}
 
 /* -----------------------------
 KALENDER
@@ -141,7 +145,7 @@ const daysInMonth = new Date(year,month+1,0).getDate();
 
 const weekdays = ["ma","di","wo","do","vr","za","zo"];
 
-/* WEEKDAY HEADER */
+/* HEADER */
 
 weekdays.forEach(day=>{
 const el = document.createElement("div");
@@ -150,14 +154,14 @@ el.textContent=day;
 grid.appendChild(el);
 });
 
-/* START OFFSET */
+/* OFFSET */
 
-let start = firstDay===0?6:firstDay-1;
-let cellIndex = start;
+let startOffset = firstDay===0?6:firstDay-1;
+let cellIndex = startOffset;
 
 /* EMPTY CELLS */
 
-for(let i=0;i<start;i++){
+for(let i=0;i<startOffset;i++){
 const empty = document.createElement("div");
 grid.appendChild(empty);
 }
@@ -171,18 +175,26 @@ cell.className="dayCell";
 cell.textContent = d;
 
 const cellDate = new Date(year, month, d);
-cell.dataset.date = cellDate.toISOString().split("T")[0];
 
-/* WEEKEND SHADING */
+/* WEEKEND */
 
 const weekday = cellIndex % 7;
 if(weekday === 5 || weekday === 6){
 cell.classList.add("weekend");
 }
 
-/* HUIDIGE WEEK */
+/* TODAY */
 
 const today = new Date();
+if(
+d===today.getDate() &&
+month===today.getMonth() &&
+year===today.getFullYear()
+){
+cell.classList.add("today");
+}
+
+/* WEEK HIGHLIGHT */
 
 const startOfWeek = new Date(today);
 startOfWeek.setDate(today.getDate() - today.getDay() + 1);
@@ -194,6 +206,11 @@ if(cellDate >= startOfWeek && cellDate <= endOfWeek){
 cell.classList.add("currentWeek");
 }
 
+/* ADD CELL FIRST */
+grid.appendChild(cell);
+
+/* EVENTS (multi-day balken) */
+
 events.forEach(event => {
 
 const start = new Date(event.start_date);
@@ -202,10 +219,11 @@ const end = new Date(event.end_date);
 start.setHours(0,0,0,0);
 end.setHours(0,0,0,0);
 
-const cellDay = new Date(cellDate);
-cellDay.setHours(0,0,0,0);
+const current = new Date(cellDate);
+current.setHours(0,0,0,0);
 
-if(cellDay.getTime() === start.getTime()){
+/* alleen op startdag tekenen */
+if(current.getTime() === start.getTime()){
 
 const duration =
 Math.round((end - start) / (1000*60*60*24)) + 1;
@@ -215,10 +233,14 @@ const weekday = cellIndex % 7;
 const maxSpan = 7 - weekday;
 const span = Math.min(duration, maxSpan);
 
-/* positie */
-const colStart = (cellIndex % 7) + 1;
-const row = Math.floor(cellIndex / 7) + 2;
+/* layout */
+const cellWidth = grid.offsetWidth / 7;
+const cellHeight = 84;
 
+const col = (cellIndex % 7);
+const row = Math.floor(cellIndex / 7);
+
+/* element */
 const label = document.createElement("div");
 label.className = "eventTrip";
 
@@ -226,27 +248,18 @@ label.innerText =
 "🚙 " + (event.owner || "?") +
 " → " + (event.destination || "?");
 
-/* 💥 MAGIC */
-label.style.gridColumn = colStart + " / span " + span;
-label.style.gridRow = row;
+/* position */
+label.style.position = "absolute";
+label.style.left = (col * cellWidth) + "px";
+label.style.top = (row * cellHeight + 22) + "px";
+label.style.width = (cellWidth * span - 8) + "px";
 
+/* add */
 grid.appendChild(label);
 
 }
 
 });
-
-/* TODAY */
-
-if(
-d===today.getDate() &&
-month===today.getMonth() &&
-year===today.getFullYear()
-){
-cell.classList.add("today");
-}
-
-grid.appendChild(cell);
 
 cellIndex++;
 
@@ -255,7 +268,7 @@ cellIndex++;
 }
 
 /* -----------------------------
-KALENDER NAVIGATIE
+NAVIGATIE
 ----------------------------- */
 
 function nextMonth(){
@@ -268,32 +281,8 @@ currentDate.setMonth(currentDate.getMonth()-1);
 renderCalendar();
 }
 
-
 /* -----------------------------
-BOODSCHAPPENLIJST
------------------------------ */
-
-function renderShopping(){
-
-const list = document.getElementById("shoppingList");
-
-list.innerHTML = "";
-
-shopping.forEach(item => {
-
-const li = document.createElement("li");
-
-li.textContent = item;
-
-list.appendChild(li);
-
-});
-
-}
-
-
-/* -----------------------------
-APP START
+START
 ----------------------------- */
 
 async function startApp(){
