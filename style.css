@@ -135,6 +135,19 @@ margin-top:4px;
 }
 
 
+.weekend{
+
+background:#1a1a1a;
+
+}
+
+.currentWeek{
+
+outline:2px solid #3a3a3a;
+
+}
+
+
 #calendarTitle{
 
 font-weight:bold;
