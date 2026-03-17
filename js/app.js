@@ -246,10 +246,8 @@ label.innerText =
 " → " + (event.destination || "?");
 
 /* juiste positie berekenen */
-const dayIndex = startOffset + (d - 1);
-
-const col = dayIndex % 7;
-const row = Math.floor(dayIndex / 7);
+const col = cellIndex % 7;
+const row = Math.floor(cellIndex / 7);
 
 /* position */
 label.style.position = "absolute";
@@ -270,8 +268,6 @@ label.style.left = (col * cellWidth) + "px";
 label.style.top = (row * cellHeight + 22) + "px";
 label.style.width = (cellWidth * span - 8) + "px";
 
-/* add */
-grid.appendChild(label);
 
 }
 
