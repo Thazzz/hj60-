@@ -1,0 +1,117 @@
+body {
+
+    margin:0;
+    font-family:Arial, Helvetica, sans-serif;
+    background:#111;
+    color:#eee;
+
+}
+
+/* HEADER */
+
+.header {
+
+    height:12vh;
+
+    display:flex;
+    flex-direction:column;
+    justify-content:center;
+
+    padding:10px 20px;
+
+    background:#1a1a1a;
+
+    border-bottom:1px solid #333;
+
+}
+
+.title {
+
+    font-size:26px;
+    font-weight:bold;
+
+}
+
+#status {
+
+    font-size:14px;
+    color:#aaa;
+
+}
+
+
+/* DASHBOARD GRID */
+
+.dashboard {
+
+    display:grid;
+
+    grid-template-columns: 20% 60% 20%;
+
+    height:88vh;
+
+}
+
+
+/* PANELS */
+
+.panel {
+
+    padding:15px;
+
+    overflow:auto;
+
+}
+
+
+.tasks {
+
+    background:#181818;
+    border-right:1px solid #333;
+
+}
+
+
+.calendar {
+
+    background:#101010;
+
+}
+
+
+.shopping {
+
+    background:#181818;
+    border-left:1px solid #333;
+
+}
+
+
+/* TITELS */
+
+h2 {
+
+    margin-top:0;
+    font-size:18px;
+
+    border-bottom:1px solid #333;
+
+    padding-bottom:5px;
+
+}
+
+
+/* LIJSTEN */
+
+ul {
+
+    list-style:none;
+    padding-left:0;
+
+}
+
+li {
+
+    padding:6px 0;
+
+}
