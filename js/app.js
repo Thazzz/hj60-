@@ -1,3 +1,4 @@
+
 /*
 HJ60 dashboard test script
 controleert of JS werkt en vult testdata in
@@ -201,16 +202,13 @@ cell.appendChild(label);
 
 /* TRIP */
 
-if(event.type === "trip" && cellDate.getTime() === start.getTime()){
+if(event.type === "trip" && cellDate >= start && cellDate <= end){
 
 const label = document.createElement("div");
+
 label.className = "eventTrip";
+
 label.innerText = "🚙 " + event.owner;
-
-const duration =
-Math.round((end - start) / (1000*60*60*24)) + 1;
-
-label.style.gridColumn = "span " + duration;
 
 cell.appendChild(label);
 
