@@ -45,9 +45,6 @@ const { data, error } = await supabaseClient
 .from("trip")
 .select("*");
 
-console.log("RAW data:", data);
-console.log("RAW error:", error);
-
 if(error){
 console.error("Supabase error:", error);
 return;
@@ -157,7 +154,7 @@ grid.appendChild(el);
 /* OFFSET */
 
 let startOffset = firstDay===0?6:firstDay-1;
-let cellIndex = startOffset;
+let cellIndex = startOffset + 7;
 
 /* EMPTY CELLS */
 
@@ -209,7 +206,7 @@ cell.classList.add("currentWeek");
 /* ADD CELL FIRST */
 grid.appendChild(cell);
 
-/* EVENTS (multi-day balken) */
+/* EVENTS */
 
 events.forEach(event => {
 
@@ -233,11 +230,7 @@ const weekday = cellIndex % 7;
 const maxSpan = 7 - weekday;
 const span = Math.min(duration, maxSpan);
 
-/* layout */
-const cellWidth = grid.offsetWidth / 7;
-const cellHeight = 84;
-
-/* element eerst maken */
+/* element maken */
 const label = document.createElement("div");
 label.className = "eventTrip";
 
@@ -245,29 +238,20 @@ label.innerText =
 "🚙 " + (event.owner || "?") +
 " → " + (event.destination || "?");
 
-/* juiste positie berekenen */
-const col = cellIndex % 7;
-const row = Math.floor(cellIndex / 7);
+/* 🔥 DOM-based positionering */
+const rect = cell.getBoundingClientRect();
+const gridRect = grid.getBoundingClientRect();
 
-/* position */
+const cellWidth = rect.width;
+
 label.style.position = "absolute";
-label.style.left = (col * cellWidth) + "px";
-label.style.top = (row * cellHeight + 22) + "px";
+label.style.left = (rect.left - gridRect.left) + "px";
+label.style.top = (rect.top - gridRect.top + 22) + "px";
 label.style.width = (cellWidth * span - 8) + "px";
+label.style.pointerEvents = "none";
 
 /* toevoegen */
 grid.appendChild(label);
-
-label.innerText =
-"🚙 " + (event.owner || "?") +
-" → " + (event.destination || "?");
-
-/* position */
-label.style.position = "absolute";
-label.style.left = (col * cellWidth) + "px";
-label.style.top = (row * cellHeight + 22) + "px";
-label.style.width = (cellWidth * span - 8) + "px";
-
 
 }
 
