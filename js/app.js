@@ -37,9 +37,14 @@ Trips LADEN
 
 async function loadTrips(){
 
+console.log("⏳ trips laden...");
+
 const { data, error } = await supabaseClient
 .from("trip")
 .select("*");
+
+console.log("RAW data:", data);
+console.log("RAW error:", error);
 
 if(error){
 console.error("Supabase error:", error);
