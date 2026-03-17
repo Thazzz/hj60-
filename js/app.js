@@ -125,6 +125,8 @@ const daysInMonth = new Date(year,month+1,0).getDate();
 
 const weekdays = ["ma","di","wo","do","vr","za","zo"];
 
+/* WEEKDAY HEADER */
+
 weekdays.forEach(day=>{
 const el = document.createElement("div");
 el.className="dayHeader";
@@ -132,26 +134,32 @@ el.textContent=day;
 grid.appendChild(el);
 });
 
-let start = firstDay===0?6:firstDay-1;
+/* START OFFSET */
 
+let start = firstDay===0?6:firstDay-1;
 let cellIndex = start;
+
+/* EMPTY CELLS */
+
+for(let i=0;i<start;i++){
+const empty = document.createElement("div");
+grid.appendChild(empty);
+}
+
+/* DAYS */
 
 for(let d=1;d<=daysInMonth;d++){
 
 const cell = document.createElement("div");
-
 cell.className="dayCell";
-
 cell.textContent = d;
 
 const cellDate = new Date(year, month, d);
-
 cell.dataset.date = cellDate.toISOString().split("T")[0];
 
-/* WEEKEND */
+/* WEEKEND SHADING */
 
 const weekday = cellIndex % 7;
-
 if(weekday === 5 || weekday === 6){
 cell.classList.add("weekend");
 }
@@ -175,29 +183,28 @@ cell.classList.add("currentWeek");
 events.forEach(event => {
 
 const start = new Date(event.start + "T00:00:00");
-
 const end = event.end
 ? new Date(event.end + "T23:59:59")
 : new Date(event.start + "T23:59:59");
 
+/* KLUSDAG */
+
 if(event.type === "klus" && cellDate.getTime() === start.getTime()){
 
 const label = document.createElement("div");
-
 label.className = "eventKlus";
-
 label.innerText = "🔧 klus";
 
 cell.appendChild(label);
 
 }
 
+/* TRIP */
+
 if(event.type === "trip" && cellDate.getTime() === start.getTime()){
 
 const label = document.createElement("div");
-
 label.className = "eventTrip";
-
 label.innerText = "🚙 " + event.owner;
 
 const duration =
@@ -226,79 +233,8 @@ grid.appendChild(cell);
 cellIndex++;
 
 }
-const empty = document.createElement("div");
-grid.appendChild(empty);
 
 }
-
-for(let d=1;d<=daysInMonth;d++){
-
-const cell = document.createElement("div");
-cell.className="dayCell";
-cell.textContent = d;
-
-const cellDate = new Date(year, month, d);
-
-cell.dataset.date = cellDate.toISOString().split("T")[0];
-
-events.forEach(event => {
-
-const start = new Date(event.start + "T00:00:00");
-const end = event.end
-? new Date(event.end + "T23:59:59")
-: new Date(event.start + "T23:59:59");
-
-/* KLUSDAG */
-
-if(event.type === "klus" && cellDate.getTime() === start.getTime()){
-
-const label = document.createElement("div");
-
-label.className = "eventKlus";
-
-label.innerText = "🔧 klus";
-
-cell.appendChild(label);
-
-}
-
-/* TRIP */
-
-if(event.type === "trip" && cellDate.getTime() === start.getTime()){
-
-const label = document.createElement("div");
-
-label.className = "eventTrip";
-
-label.innerText = "🚙 " + event.owner;
-
-const duration =
-Math.round((end - start) / (1000*60*60*24)) + 1;
-
-label.style.gridColumn = "span " + duration;
-
-cell.appendChild(label);
-
-}
-
-});
-
-const today = new Date();
-
-if(
-d===today.getDate() &&
-month===today.getMonth() &&
-year===today.getFullYear()
-){
-cell.classList.add("today");
-}
-
-grid.appendChild(cell);
-
-}
-
-}
-
 
 /* -----------------------------
 KALENDER NAVIGATIE
