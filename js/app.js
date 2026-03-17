@@ -6,6 +6,14 @@ controleert of JS werkt en vult testdata in
 
 console.log("HJ60 dashboard gestart");
 
+const supabaseUrl = "https://oevjdxhvtsannskbebdr.supabase.co";
+const supabaseKey = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im9ldmpkeGh2dHNhbm5za2JlYmRyIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzM3NzQ2OTMsImV4cCI6MjA4OTM1MDY5M30.5gMo9OBVoUZZ-OZtgIwsgaV0XJjPB-bK90hIKN_0uwA";
+
+const supabase = window.supabase.createClient(
+supabaseUrl,
+supabaseKey
+);
+
 /* -----------------------------
 DATA
 ----------------------------- */
@@ -26,19 +34,25 @@ const shopping = [
 
 
 /* -----------------------------
-EVENTS LADEN
+Trips LADEN
 ----------------------------- */
 
-async function loadEvents(){
+async function loadTrips(){
 
-const response = await fetch("data/events.json");
+const { data, error } = await supabase
+.from("trip")
+.select("*");
 
-events = await response.json();
-
-console.log("events geladen", events);
-
+if(error){
+console.error("Supabase error:", error);
+return;
 }
 
+events = data || [];
+
+console.log("Trips geladen:", events);
+
+}
 
 /* -----------------------------
 STATUS BALK
@@ -52,10 +66,8 @@ const now = new Date();
 
 const activeTrip = events.find(event => {
 
-if(!event.end) return false;
-
-const start = new Date(event.start + "T00:00:00");
-const end = new Date(event.end + "T23:59:59");
+const start = new Date(event.start_date + "T00:00:00");
+const end = new Date(event.end_date + "T23:59:59");
 
 return now >= start && now <= end;
 
@@ -179,36 +191,21 @@ if(cellDate >= startOfWeek && cellDate <= endOfWeek){
 cell.classList.add("currentWeek");
 }
 
-/* EVENTS */
-
 events.forEach(event => {
 
-const start = new Date(event.start + "T00:00:00");
-const end = event.end
-? new Date(event.end + "T23:59:59")
-: new Date(event.start + "T23:59:59");
-
-/* KLUSDAG */
-
-if(event.type === "klus" && cellDate.getTime() === start.getTime()){
-
-const label = document.createElement("div");
-label.className = "eventKlus";
-label.innerText = "🔧 klus";
-
-cell.appendChild(label);
-
-}
+const start = new Date(event.start_date + "T00:00:00");
+const end = new Date(event.end_date + "T23:59:59");
 
 /* TRIP */
 
-if(event.type === "trip" && cellDate >= start && cellDate <= end){
+if(cellDate >= start && cellDate <= end){
 
 const label = document.createElement("div");
 
 label.className = "eventTrip";
 
-label.innerText = "🚙 " + event.owner;
+label.innerText =
+"🚙 " + event.owner + " → " + event.destination;
 
 cell.appendChild(label);
 
@@ -280,7 +277,7 @@ async function startApp(){
 
 console.log("Dashboard initialiseren");
 
-await loadEvents();
+await loadTrips();
 
 updateStatus();
 renderTasks();
