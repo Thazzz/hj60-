@@ -3,6 +3,30 @@ HJ60 dashboard test script
 controleert of JS werkt en vult testdata in
 */
 
+console.log("HJ60 dashboard gestart");
+
+/* -----------------------------
+DATA
+----------------------------- */
+
+let events = [];
+
+const tasks = [
+"Olie verversen",
+"Banden controleren",
+"Remmen inspecteren"
+];
+
+const shopping = [
+"Motorolie",
+"Oliefilter",
+"Remreiniger"
+];
+
+
+/* -----------------------------
+EVENTS LADEN
+----------------------------- */
 
 async function loadEvents(){
 
@@ -14,31 +38,6 @@ console.log("events geladen", events);
 
 }
 
-console.log("HJ60 dashboard gestart");
-console.log(cellDate, event.start);
-
-/* -----------------------------
-DATA
------------------------------ */
-
-let events = [];
-
-const tasks = [
-
-"Olie verversen",
-"Banden controleren",
-"Remmen inspecteren"
-
-];
-
-const shopping = [
-
-"Motorolie",
-"Oliefilter",
-"Remreiniger"
-
-];
-
 
 /* -----------------------------
 STATUS BALK
@@ -46,36 +45,34 @@ STATUS BALK
 
 function updateStatus(){
 
-    const statusElement = document.getElementById("status");
+const statusElement = document.getElementById("status");
 
-    const now = new Date();
+const now = new Date();
 
-    const activeTrip = events.find(event => {
+const activeTrip = events.find(event => {
 
-        if(!event.end) return false;
+if(!event.end) return false;
 
-        const start = new Date(event.start + "T00:00:00");
-        const end = event.end
-          ? new Date(event.end + "T23:59:59")
-          : start;
+const start = new Date(event.start + "T00:00:00");
+const end = new Date(event.end + "T23:59:59");
 
-        return now >= start && now <= end;
+return now >= start && now <= end;
 
-    });
+});
 
-    if(activeTrip){
+if(activeTrip){
 
-        statusElement.innerText =
-        "🚙 Nu onderweg: " + activeTrip.owner;
+statusElement.innerText =
+"🚙 Nu onderweg: " + activeTrip.owner;
 
-    }
+}
 
-    else{
+else{
 
-        statusElement.innerText =
-        "🚙 HJ60 staat momenteel stil";
+statusElement.innerText =
+"🚙 HJ60 staat momenteel stil";
 
-    }
+}
 
 }
 
@@ -86,21 +83,23 @@ KLUSSENLIJST
 
 function renderTasks(){
 
-    const list = document.getElementById("taskList");
+const list = document.getElementById("taskList");
 
-    list.innerHTML = "";
+list.innerHTML = "";
 
-    tasks.forEach(task => {
+tasks.forEach(task => {
 
-        const li = document.createElement("li");
+const li = document.createElement("li");
 
-        li.textContent = task;
+li.textContent = task;
 
-        list.appendChild(li);
+list.appendChild(li);
 
-    });
+});
 
 }
+
+
 /* -----------------------------
 KALENDER
 ----------------------------- */
@@ -145,9 +144,7 @@ grid.appendChild(empty);
 for(let d=1;d<=daysInMonth;d++){
 
 const cell = document.createElement("div");
-
 cell.className="dayCell";
-
 cell.textContent = d;
 
 const cellDate = new Date(year, month, d);
@@ -156,26 +153,29 @@ cell.dataset.date = cellDate.toISOString().split("T")[0];
 
 events.forEach(event => {
 
-    const start = new Date(event.start);
-    const end = event.end ? new Date(event.end) : start;
+const start = new Date(event.start + "T00:00:00");
 
-    if(cellDate >= start && cellDate <= end){
+const end = event.end
+? new Date(event.end + "T23:59:59")
+: new Date(event.start + "T23:59:59");
 
-        const label = document.createElement("div");
+if(cellDate >= start && cellDate <= end){
 
-        label.className = "event";
+const label = document.createElement("div");
 
-        if(event.type === "trip"){
-            label.innerText = "🚙 " + event.owner;
-        }
+label.className = "event";
 
-        if(event.type === "klus"){
-            label.innerText = "🔧 klus";
-        }
+if(event.type === "trip"){
+label.innerText = "🚙 " + event.owner;
+}
 
-        cell.appendChild(label);
+if(event.type === "klus"){
+label.innerText = "🔧 klus";
+}
 
-    }
+cell.appendChild(label);
+
+}
 
 });
 
@@ -186,9 +186,7 @@ d===today.getDate() &&
 month===today.getMonth() &&
 year===today.getFullYear()
 ){
-
 cell.classList.add("today");
-
 }
 
 grid.appendChild(cell);
@@ -197,26 +195,20 @@ grid.appendChild(cell);
 
 }
 
+
 /* -----------------------------
 KALENDER NAVIGATIE
 ----------------------------- */
 
 function nextMonth(){
-
 currentDate.setMonth(currentDate.getMonth()+1);
-
 renderCalendar();
-
 }
 
 function prevMonth(){
-
 currentDate.setMonth(currentDate.getMonth()-1);
-
 renderCalendar();
-
 }
-
 
 
 /* -----------------------------
@@ -225,19 +217,19 @@ BOODSCHAPPENLIJST
 
 function renderShopping(){
 
-    const list = document.getElementById("shoppingList");
+const list = document.getElementById("shoppingList");
 
-    list.innerHTML = "";
+list.innerHTML = "";
 
-    shopping.forEach(item => {
+shopping.forEach(item => {
 
-        const li = document.createElement("li");
+const li = document.createElement("li");
 
-        li.textContent = item;
+li.textContent = item;
 
-        list.appendChild(li);
+list.appendChild(li);
 
-    });
+});
 
 }
 
@@ -253,11 +245,8 @@ console.log("Dashboard initialiseren");
 await loadEvents();
 
 updateStatus();
-
 renderTasks();
-
 renderShopping();
-
 renderCalendar();
 
 document.getElementById("nextMonth").onclick = nextMonth;
