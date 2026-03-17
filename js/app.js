@@ -15,6 +15,7 @@ console.log("events geladen", events);
 }
 
 console.log("HJ60 dashboard gestart");
+console.log(cellDate, event.start);
 
 /* -----------------------------
 DATA
@@ -53,8 +54,10 @@ function updateStatus(){
 
         if(!event.end) return false;
 
-        const start = new Date(event.start);
-        const end = new Date(event.end);
+        const start = new Date(event.start + "T00:00:00");
+        const end = event.end
+          ? new Date(event.end + "T23:59:59")
+          : start;
 
         return now >= start && now <= end;
 
