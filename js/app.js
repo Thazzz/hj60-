@@ -22,6 +22,22 @@ TEST DATA
 
 let events = [];
 
+const tasks = [
+
+"Olie verversen",
+"Banden controleren",
+"Remmen inspecteren"
+
+];
+
+const shopping = [
+
+"Motorolie",
+"Oliefilter",
+"Remreiniger"
+
+];
+
 
 /* -----------------------------
 STATUS BALK
