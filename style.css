@@ -1,247 +1,199 @@
 body {
-
     margin:0;
     font-family:Arial, Helvetica, sans-serif;
     background:#111;
     color:#eee;
-
 }
 
 /* HEADER */
 
 .header {
-
     height:12vh;
-
     display:flex;
     flex-direction:column;
     justify-content:center;
-
     padding:10px 20px;
-
     background:#1a1a1a;
-
     border-bottom:1px solid #333;
-
 }
 
 .title {
-
     font-size:26px;
     font-weight:bold;
-
 }
 
 #status {
-
     font-size:14px;
     color:#aaa;
-
 }
-
 
 /* DASHBOARD GRID */
 
 .dashboard {
-
     display:grid;
-
     grid-template-columns: 20% 60% 20%;
-
     height:88vh;
-
 }
-
 
 /* PANELS */
 
 .panel {
-
     padding:15px;
-
     overflow:auto;
-
 }
-
 
 .tasks {
-
     background:#181818;
     border-right:1px solid #333;
-
 }
-
 
 .calendar {
-
     background:#101010;
-   
 }
 
+/* CONTROLS */
+
 .calendarControls{
-
-display:flex;
-justify-content:space-between;
-align-items:center;
-
-margin-bottom:10px;
-
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    margin-bottom:10px;
 }
 
 .calendarControls button{
-
-background:#333;
-border:none;
-color:white;
-padding:6px 10px;
-cursor:pointer;
-
+    background:#333;
+    border:none;
+    color:white;
+    padding:6px 10px;
+    cursor:pointer;
 }
 
-.eventTrip{
-
-background:#2c7be5;
-
-color:white;
-
-font-size:11px;
-
-padding:2px 4px;
-
-border-radius:3px;
-
-margin-top:4px;
-
-white-space:nowrap;
-
-overflow:hidden;
-
-}
-
-.eventKlus{
-
-background:#e67e22;
-
-color:white;
-
-font-size:11px;
-
-padding:2px 4px;
-
-border-radius:3px;
-
-margin-top:4px;
-
-}
-
-
-.weekend{
-
-background:#1a1a1a;
-
-}
-
-.currentWeek{
-
-outline:2px solid #3a3a3a;
-
-}
-
+/* GRID */
 
 #calendarTitle{
-
-font-weight:bold;
-
+    font-weight:bold;
 }
 
 #calendarGrid{
-
-display:grid;
-
-grid-template-columns:repeat(7,1fr);
-
-gap:4px;
-
+    display:grid;
+    grid-template-columns:repeat(7,1fr);
+    gap:4px;
 }
+
+/* HEADERS */
 
 .dayHeader{
-
-text-align:center;
-font-size:12px;
-color:#888;
-
+    text-align:center;
+    font-size:12px;
+    color:#888;
 }
 
+/* CELLS */
+
 .dayCell{
+    position:relative;            /* 🔥 belangrijk */
+    background:#1b1b1b;
+    height:80px;
+    padding:6px;
+    font-size:13px;
+    overflow:visible;             /* 🔥 belangrijk */
+}
 
-background:#1b1b1b;
+/* STATES */
 
-height:80px;
+.weekend{
+    background:#1a1a1a;
+}
 
-padding:6px;
-
-font-size:13px;
-
+.currentWeek{
+    outline:2px solid #3a3a3a;
 }
 
 .today{
-
-border:2px solid #4CAF50;
-
+    border:2px solid #4CAF50;
 }
+
+/* EVENTS */
+
+.eventTrip{
+    position:absolute;            /* 🔥 essentieel */
+    top:22px;                     /* onder dagnummer */
+    left:4px;
+
+    height:18px;
+    line-height:18px;
+
+    background:#2c7be5;
+    color:white;
+
+    font-size:11px;
+    padding:0 6px;
+
+    border-radius:4px;
+
+    white-space:nowrap;
+    z-index:10;
+
+    overflow:hidden;
+}
+
+/* optioneel: afgeronde uiteinden */
+.eventTrip::after{
+    content:"";
+}
+
+/* KLUS */
+
+.eventKlus{
+    position:absolute;
+    top:44px;
+
+    left:4px;
+    right:4px;
+
+    background:#e67e22;
+    color:white;
+
+    font-size:11px;
+    padding:2px 4px;
+
+    border-radius:3px;
+}
+
+/* GENERIC EVENT (legacy) */
 
 .event{
-
-font-size:11px;
-
-background:#2c3e50;
-
-padding:2px 4px;
-
-margin-top:4px;
-
-border-radius:3px;
-
-color:white;
-
+    font-size:11px;
+    background:#2c3e50;
+    padding:2px 4px;
+    margin-top:4px;
+    border-radius:3px;
+    color:white;
 }
 
-
-
+/* SHOPPING */
 
 .shopping {
-
     background:#181818;
     border-left:1px solid #333;
-
 }
 
-
-/* TITELS */
+/* TITLES */
 
 h2 {
-
     margin-top:0;
     font-size:18px;
-
     border-bottom:1px solid #333;
-
     padding-bottom:5px;
-
 }
 
-
-/* LIJSTEN */
+/* LISTS */
 
 ul {
-
     list-style:none;
     padding-left:0;
-
 }
 
 li {
-
     padding:6px 0;
-
 }
