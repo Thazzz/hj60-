@@ -154,24 +154,38 @@ cell.dataset.date = cellDate.toISOString().split("T")[0];
 events.forEach(event => {
 
 const start = new Date(event.start + "T00:00:00");
-
 const end = event.end
 ? new Date(event.end + "T23:59:59")
 : new Date(event.start + "T23:59:59");
 
-if(cellDate >= start && cellDate <= end){
+/* KLUSDAG */
+
+if(event.type === "klus" && cellDate.getTime() === start.getTime()){
 
 const label = document.createElement("div");
 
-label.className = "event";
+label.className = "eventKlus";
 
-if(event.type === "trip"){
-label.innerText = "🚙 " + event.owner;
-}
-
-if(event.type === "klus"){
 label.innerText = "🔧 klus";
+
+cell.appendChild(label);
+
 }
+
+/* TRIP */
+
+if(event.type === "trip" && cellDate.getTime() === start.getTime()){
+
+const label = document.createElement("div");
+
+label.className = "eventTrip";
+
+label.innerText = "🚙 " + event.owner;
+
+const duration =
+Math.round((end - start) / (1000*60*60*24)) + 1;
+
+label.style.gridColumn = "span " + duration;
 
 cell.appendChild(label);
 
