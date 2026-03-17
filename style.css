@@ -98,6 +98,43 @@ cursor:pointer;
 
 }
 
+.eventTrip{
+
+background:#2c7be5;
+
+color:white;
+
+font-size:11px;
+
+padding:2px 4px;
+
+border-radius:3px;
+
+margin-top:4px;
+
+white-space:nowrap;
+
+overflow:hidden;
+
+}
+
+.eventKlus{
+
+background:#e67e22;
+
+color:white;
+
+font-size:11px;
+
+padding:2px 4px;
+
+border-radius:3px;
+
+margin-top:4px;
+
+}
+
+
 #calendarTitle{
 
 font-weight:bold;
