@@ -205,16 +205,19 @@ end.setHours(0,0,0,0);
 const cellDay = new Date(cellDate);
 cellDay.setHours(0,0,0,0);
 
-/* alleen starten op eerste dag */
 if(cellDay.getTime() === start.getTime()){
 
 const duration =
 Math.round((end - start) / (1000*60*60*24)) + 1;
 
-/* week beperking */
+/* week limit */
 const weekday = cellIndex % 7;
 const maxSpan = 7 - weekday;
 const span = Math.min(duration, maxSpan);
+
+/* positie */
+const colStart = (cellIndex % 7) + 1;
+const row = Math.floor(cellIndex / 7) + 2;
 
 const label = document.createElement("div");
 label.className = "eventTrip";
@@ -223,8 +226,9 @@ label.innerText =
 "🚙 " + (event.owner || "?") +
 " → " + (event.destination || "?");
 
-/* 💥 HIER gebeurt de magie */
-label.style.gridColumn = (cellIndex + 1) + " / span " + span;
+/* 💥 MAGIC */
+label.style.gridColumn = colStart + " / span " + span;
+label.style.gridRow = row;
 
 grid.appendChild(label);
 
