@@ -78,6 +78,9 @@ body {
     display:grid;
     grid-template-columns:repeat(7,1fr);
     gap:4px;
+
+position:relative; /* 👈 belangrijk */
+
 }
 
 /* HEADERS */
@@ -116,10 +119,8 @@ body {
 /* EVENTS */
 
 .eventTrip{
-    position:absolute;            /* 🔥 essentieel */
-    top:22px;                     /* onder dagnummer */
-    left:4px;
-
+    position:absolute;   /* 👈 key */
+    
     height:18px;
     line-height:18px;
 
@@ -132,9 +133,7 @@ body {
     border-radius:4px;
 
     white-space:nowrap;
-    z-index:10;
-
-    overflow:hidden;
+    z-index:20;
 }
 
 /* optioneel: afgeronde uiteinden */
