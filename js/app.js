@@ -237,12 +237,28 @@ const span = Math.min(duration, maxSpan);
 const cellWidth = grid.offsetWidth / 7;
 const cellHeight = 84;
 
-const col = (cellIndex % 7);
-const row = Math.floor(cellIndex / 7);
-
-/* element */
+/* element eerst maken */
 const label = document.createElement("div");
 label.className = "eventTrip";
+
+label.innerText =
+"🚙 " + (event.owner || "?") +
+" → " + (event.destination || "?");
+
+/* juiste positie berekenen */
+const dayIndex = startOffset + (d - 1);
+
+const col = dayIndex % 7;
+const row = Math.floor(dayIndex / 7);
+
+/* position */
+label.style.position = "absolute";
+label.style.left = (col * cellWidth) + "px";
+label.style.top = (row * cellHeight + 22) + "px";
+label.style.width = (cellWidth * span - 8) + "px";
+
+/* toevoegen */
+grid.appendChild(label);
 
 label.innerText =
 "🚙 " + (event.owner || "?") +
