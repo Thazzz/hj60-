@@ -3,13 +3,24 @@ HJ60 dashboard test script
 controleert of JS werkt en vult testdata in
 */
 
+
+async function loadEvents(){
+
+const response = await fetch("data/events.json");
+
+events = await response.json();
+
+console.log("events geladen", events);
+
+}
+
 console.log("HJ60 dashboard gestart");
 
 /* -----------------------------
 TEST DATA
 ----------------------------- */
 
-const events = [
+let events = [];
 
 {
     title: "Tom naar Noorwegen",
