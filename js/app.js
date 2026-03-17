@@ -196,36 +196,41 @@ cell.classList.add("currentWeek");
 
 events.forEach(event => {
 
-if(!event.start_date || !event.end_date) return;
+const start = new Date(event.start_date);
+const end = new Date(event.end_date);
 
-const start = new Date(event.start_date + "T12:00:00");
-const end = new Date(event.end_date + "T12:00:00");
-
-// strip tijd (super belangrijk!)
 start.setHours(0,0,0,0);
 end.setHours(0,0,0,0);
 
 const cellDay = new Date(cellDate);
 cellDay.setHours(0,0,0,0);
 
-/* TRIP */
+/* alleen starten op eerste dag */
+if(cellDay.getTime() === start.getTime()){
 
-if(cellDay >= start && cellDay <= end){
+const duration =
+Math.round((end - start) / (1000*60*60*24)) + 1;
+
+/* week beperking */
+const weekday = cellIndex % 7;
+const maxSpan = 7 - weekday;
+const span = Math.min(duration, maxSpan);
 
 const label = document.createElement("div");
-
 label.className = "eventTrip";
 
 label.innerText =
 "🚙 " + (event.owner || "?") +
 " → " + (event.destination || "?");
 
-cell.appendChild(label);
+/* 💥 HIER gebeurt de magie */
+label.style.gridColumn = (cellIndex + 1) + " / span " + span;
+
+grid.appendChild(label);
 
 }
 
 });
-
 
 /* TODAY */
 
