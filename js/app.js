@@ -22,38 +22,6 @@ TEST DATA
 
 let events = [];
 
-{
-    title: "Tom naar Noorwegen",
-    start: "2026-06-10",
-    end: "2026-06-20",
-    type: "trip",
-    owner: "Tom"
-},
-
-{
-    title: "Klusdag",
-    start: "2026-04-12",
-    type: "klus"
-}
-
-];
-
-const tasks = [
-
-"Olie verversen",
-"Banden controleren",
-"Remmen inspecteren"
-
-];
-
-const shopping = [
-
-"Motorolie",
-"Oliefilter",
-"Remreiniger"
-
-];
-
 
 /* -----------------------------
 STATUS BALK
