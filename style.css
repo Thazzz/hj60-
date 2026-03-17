@@ -75,8 +75,71 @@ body {
 .calendar {
 
     background:#101010;
+   
+}
+
+.calendarControls{
+
+display:flex;
+justify-content:space-between;
+align-items:center;
+
+margin-bottom:10px;
 
 }
+
+.calendarControls button{
+
+background:#333;
+border:none;
+color:white;
+padding:6px 10px;
+cursor:pointer;
+
+}
+
+#calendarTitle{
+
+font-weight:bold;
+
+}
+
+#calendarGrid{
+
+display:grid;
+
+grid-template-columns:repeat(7,1fr);
+
+gap:4px;
+
+}
+
+.dayHeader{
+
+text-align:center;
+font-size:12px;
+color:#888;
+
+}
+
+.dayCell{
+
+background:#1b1b1b;
+
+height:80px;
+
+padding:6px;
+
+font-size:13px;
+
+}
+
+.today{
+
+border:2px solid #4CAF50;
+
+}
+
 
 
 .shopping {
