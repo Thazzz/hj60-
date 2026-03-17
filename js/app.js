@@ -134,8 +134,98 @@ grid.appendChild(el);
 
 let start = firstDay===0?6:firstDay-1;
 
-for(let i=0;i<start;i++){
+let cellIndex = start;
 
+for(let d=1;d<=daysInMonth;d++){
+
+const cell = document.createElement("div");
+
+cell.className="dayCell";
+
+cell.textContent = d;
+
+const cellDate = new Date(year, month, d);
+
+cell.dataset.date = cellDate.toISOString().split("T")[0];
+
+/* WEEKEND */
+
+const weekday = cellIndex % 7;
+
+if(weekday === 5 || weekday === 6){
+cell.classList.add("weekend");
+}
+
+/* HUIDIGE WEEK */
+
+const today = new Date();
+
+const startOfWeek = new Date(today);
+startOfWeek.setDate(today.getDate() - today.getDay() + 1);
+
+const endOfWeek = new Date(startOfWeek);
+endOfWeek.setDate(startOfWeek.getDate() + 6);
+
+if(cellDate >= startOfWeek && cellDate <= endOfWeek){
+cell.classList.add("currentWeek");
+}
+
+/* EVENTS */
+
+events.forEach(event => {
+
+const start = new Date(event.start + "T00:00:00");
+
+const end = event.end
+? new Date(event.end + "T23:59:59")
+: new Date(event.start + "T23:59:59");
+
+if(event.type === "klus" && cellDate.getTime() === start.getTime()){
+
+const label = document.createElement("div");
+
+label.className = "eventKlus";
+
+label.innerText = "🔧 klus";
+
+cell.appendChild(label);
+
+}
+
+if(event.type === "trip" && cellDate.getTime() === start.getTime()){
+
+const label = document.createElement("div");
+
+label.className = "eventTrip";
+
+label.innerText = "🚙 " + event.owner;
+
+const duration =
+Math.round((end - start) / (1000*60*60*24)) + 1;
+
+label.style.gridColumn = "span " + duration;
+
+cell.appendChild(label);
+
+}
+
+});
+
+/* TODAY */
+
+if(
+d===today.getDate() &&
+month===today.getMonth() &&
+year===today.getFullYear()
+){
+cell.classList.add("today");
+}
+
+grid.appendChild(cell);
+
+cellIndex++;
+
+}
 const empty = document.createElement("div");
 grid.appendChild(empty);
 
