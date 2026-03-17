@@ -196,25 +196,36 @@ cell.classList.add("currentWeek");
 
 events.forEach(event => {
 
-const start = new Date(event.start_date + "T00:00:00");
-const end = new Date(event.end_date + "T23:59:59");
+if(!event.start_date || !event.end_date) return;
+
+const start = new Date(event.start_date + "T12:00:00");
+const end = new Date(event.end_date + "T12:00:00");
+
+// strip tijd (super belangrijk!)
+start.setHours(0,0,0,0);
+end.setHours(0,0,0,0);
+
+const cellDay = new Date(cellDate);
+cellDay.setHours(0,0,0,0);
 
 /* TRIP */
 
-if(cellDate >= start && cellDate <= end){
+if(cellDay >= start && cellDay <= end){
 
 const label = document.createElement("div");
 
 label.className = "eventTrip";
 
 label.innerText =
-"🚙 " + event.owner + " → " + event.destination;
+"🚙 " + (event.owner || "?") +
+" → " + (event.destination || "?");
 
 cell.appendChild(label);
 
 }
 
 });
+
 
 /* TODAY */
 
