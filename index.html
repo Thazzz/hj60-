@@ -1,27 +1,77 @@
 <!DOCTYPE html>
-<html>
+<html lang="nl">
+
 <head>
+
 <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>HJ60 Dashboard</title>
+
 <meta name="robots" content="noindex, nofollow">
-<title>HJ60 Planner</title>
-<style>
-body{
-    font-family:Arial;
-    background:#111;
-    color:white;
-    text-align:center;
-    padding-top:100px;
-}
-h1{
-    font-size:50px;
-}
-</style>
+
+<link rel="stylesheet" href="style.css">
+
 </head>
+
 
 <body>
 
-<h1>🚙 HJ60 Planner</h1>
-<p>Landcruiser agenda</p>
+<header class="header">
+
+    <div class="title">
+        🚙 HJ60 Planner
+    </div>
+
+    <div id="status">
+        status laden...
+    </div>
+
+</header>
+
+
+<main class="dashboard">
+
+    <section class="panel tasks">
+
+        <h2>Klussen</h2>
+
+        <ul id="taskList">
+            <li>laden...</li>
+        </ul>
+
+    </section>
+
+
+    <section class="panel calendar">
+
+        <h2>Agenda</h2>
+
+        <div id="calendar">
+
+            kalender komt hier
+
+        </div>
+
+    </section>
+
+
+    <section class="panel shopping">
+
+        <h2>Boodschappen</h2>
+
+        <div id="nextKlus">
+            volgende klus: onbekend
+        </div>
+
+        <ul id="shoppingList">
+            <li>laden...</li>
+        </ul>
+
+    </section>
+
+</main>
+
 
 </body>
 </html>
