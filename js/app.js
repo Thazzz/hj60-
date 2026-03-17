@@ -259,20 +259,22 @@ function renderShopping(){
 APP START
 ----------------------------- */
 
-function startApp(){
+async function startApp(){
 
-    console.log("Dashboard initialiseren");
+console.log("Dashboard initialiseren");
 
-    updateStatus();
+await loadEvents();
 
-    renderTasks();
+updateStatus();
 
-    renderShopping();
+renderTasks();
 
-    renderCalendar();
+renderShopping();
 
-    document.getElementById("nextMonth").onclick = nextMonth;
-    document.getElementById("prevMonth").onclick = prevMonth;
+renderCalendar();
+
+document.getElementById("nextMonth").onclick = nextMonth;
+document.getElementById("prevMonth").onclick = prevMonth;
 
 }
 
