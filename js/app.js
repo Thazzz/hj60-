@@ -150,7 +150,36 @@ const cell = document.createElement("div");
 
 cell.className="dayCell";
 
-cell.textContent=d;
+cell.textContent = d;
+
+const cellDate = new Date(year, month, d);
+
+cell.dataset.date = cellDate.toISOString().split("T")[0];
+
+events.forEach(event => {
+
+    const start = new Date(event.start);
+    const end = event.end ? new Date(event.end) : start;
+
+    if(cellDate >= start && cellDate <= end){
+
+        const label = document.createElement("div");
+
+        label.className = "event";
+
+        if(event.type === "trip"){
+            label.innerText = "🚙 " + event.owner;
+        }
+
+        if(event.type === "klus"){
+            label.innerText = "🔧 klus";
+        }
+
+        cell.appendChild(label);
+
+    }
+
+});
 
 const today = new Date();
 
