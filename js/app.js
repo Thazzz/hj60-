@@ -9,9 +9,8 @@ console.log("HJ60 dashboard gestart");
 const supabaseUrl = "https://oevjdxhvtsannskbebdr.supabase.co";
 const supabaseKey = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im9ldmpkeGh2dHNhbm5za2JlYmRyIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzM3NzQ2OTMsImV4cCI6MjA4OTM1MDY5M30.5gMo9OBVoUZZ-OZtgIwsgaV0XJjPB-bK90hIKN_0uwA";
 
-const supabase = window.supabase.createClient(
-supabaseUrl,
-supabaseKey
+const { createClient } = supabase;
+const supabaseClient = createClient(supabaseUrl, supabaseKey);
 );
 
 /* -----------------------------
@@ -39,7 +38,7 @@ Trips LADEN
 
 async function loadTrips(){
 
-const { data, error } = await supabase
+const { data, error } = await supabaseClient
 .from("trip")
 .select("*");
 
