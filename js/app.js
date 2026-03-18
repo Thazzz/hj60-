@@ -4,6 +4,10 @@ HJ60 dashboard
 
 console.log("HJ60 dashboard gestart");
 
+window.onerror = function(msg, url, line){
+    console.error("🔥 JS crash:", msg, "line:", line);
+};
+
 /* -----------------------------
 SUPABASE
 ----------------------------- */
@@ -110,7 +114,7 @@ const maintenance = [
 { name: "Klepspeling", last: "" },
 { name: "Brandstoffilter", last: "" },
 { name: "Remvloeistof", last: "" },
-{ name: "Koelvloeistof", last: "" }
+{ name: "Koelvloeistof", last: "" },
 { name: "v-snaar", last: "" },
 { name: "Olie voor diff", last: "" },
 { name: "Olie Bak", last: "" },
