@@ -219,16 +219,24 @@ end.setHours(0,0,0,0);
 const current = new Date(cellDate);
 current.setHours(0,0,0,0);
 
-/* alleen op startdag tekenen */
-if(current.getTime() === start.getTime()){
+/* zit deze dag binnen de trip? */
+if(current >= start && current <= end){
 
-const duration =
-Math.round((end - start) / (1000*60*60*24)) + 1;
-
-/* week limit */
 const weekday = cellIndex % 7;
-const maxSpan = 7 - weekday;
-const span = Math.min(duration, maxSpan);
+
+/* start van dit stuk */
+const segmentStart = current > start ? current : start;
+
+/* einde van deze week */
+const endOfWeek = new Date(current);
+endOfWeek.setDate(current.getDate() + (6 - weekday));
+
+/* einde van dit stuk */
+const segmentEnd = end < endOfWeek ? end : endOfWeek;
+
+/* lengte van dit stuk */
+const span =
+Math.round((segmentEnd - segmentStart) / (1000*60*60*24)) + 1;
 
 /* element maken */
 const label = document.createElement("div");
