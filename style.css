@@ -7,7 +7,7 @@ body {
     color:#eee;
 
     /* 🔥 HJ60 background */
-background-image: url("https://picsum.photos/1200");
+    background-image: url("./hj60.png");
     background-repeat: no-repeat;
     background-position: right bottom;
     background-size: 65%;
