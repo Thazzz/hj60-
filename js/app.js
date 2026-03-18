@@ -101,6 +101,51 @@ list.appendChild(li);
 }
 
 /* -----------------------------
+maintenance
+----------------------------- */
+const maintenance = [
+{ name: "Motorolie", last: "" },
+{ name: "Oliefilter", last: "" },
+{ name: "Luchtfilter", last: "" },
+{ name: "Brandstoffilter", last: "" },
+{ name: "Remvloeistof", last: "" },
+{ name: "Koelvloeistof", last: "" }
+];
+
+function renderMaintenance(){
+
+const container = document.getElementById("maintenanceList");
+container.innerHTML = "";
+
+maintenance.forEach(item => {
+
+const row = document.createElement("div");
+row.className = "maintenanceRow";
+
+const label = document.createElement("span");
+label.textContent = item.name;
+
+const input = document.createElement("input");
+input.type = "date";
+input.value = item.last;
+
+input.onchange = () => {
+item.last = input.value;
+};
+
+row.appendChild(label);
+row.appendChild(input);
+
+container.appendChild(row);
+
+});
+
+}
+
+
+
+
+/* -----------------------------
 SHOPPING
 ----------------------------- */
 
@@ -116,6 +161,35 @@ list.appendChild(li);
 });
 
 }
+
+/* -----------------------------
+gear
+----------------------------- */
+const gear = [
+{ name: "Tent", status: "ok" },
+{ name: "Jerrycan", status: "slijtage" },
+{ name: "Accu", status: "vervangen" }
+];
+
+function renderGear(){
+
+const container = document.getElementById("gearList");
+container.innerHTML = "";
+
+gear.forEach(item => {
+
+const div = document.createElement("div");
+div.className = "gearItem";
+
+div.innerText = item.name + " - " + item.status;
+
+container.appendChild(div);
+
+});
+
+}
+
+
 
 /* -----------------------------
 KALENDER
@@ -311,8 +385,10 @@ await loadTrips();
 
 updateStatus();
 renderTasks();
+renderMaintenance();
 renderShopping();
 renderCalendar();
+renderGear();
 
 document.getElementById("nextMonth").onclick = nextMonth;
 document.getElementById("prevMonth").onclick = prevMonth;
