@@ -316,12 +316,47 @@ current.setHours(0,0,0,0);
 
 if(current >= start && current <= end){
 
-const label = document.createElement("div");
-label.className = "eventTrip";
-label.innerText = "🚙 " + (event.owner || "?");
+    const weekday = cellIndex % 7;
 
-cell.appendChild(label);
+    const isSegmentStart =
+    current.getTime() === start.getTime() ||
+    weekday === 0 ||
+    d === 1;
 
+    if(!isSegmentStart) return;
+
+    const segmentStart = new Date(Math.max(start, current));
+
+    const endOfWeek = new Date(current);
+    endOfWeek.setDate(current.getDate() + (6 - weekday));
+
+    const endOfMonth = new Date(year, month + 1, 0);
+
+    const segmentEnd = new Date(
+        Math.min(end, endOfWeek, endOfMonth)
+    );
+
+    const span =
+    Math.round((segmentEnd - segmentStart) / (1000*60*60*24)) + 1;
+
+    const label = document.createElement("div");
+    label.className = "eventTrip";
+
+    label.innerText =
+    "🚙 " + (event.owner || "?") +
+    " → " + (event.destination || "?");
+
+    const rect = cell.getBoundingClientRect();
+    const gridRect = grid.getBoundingClientRect();
+
+    const cellWidth = rect.width;
+
+    label.style.position = "absolute";
+    label.style.left = (rect.left - gridRect.left) + "px";
+    label.style.top = (rect.top - gridRect.top + 22) + "px";
+    label.style.width = (cellWidth * span - 8) + "px";
+
+    grid.appendChild(label);
 }
 
 });
