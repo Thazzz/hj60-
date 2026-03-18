@@ -82,7 +82,13 @@ container.appendChild(div);
 SAVE TRIP
 ============================= */
 
+window.addEventListener("DOMContentLoaded", () => {
+
 document.getElementById("saveBtn").onclick = saveTrip;
+
+startApp();
+
+});
 
 async function saveTrip(){
 
@@ -164,5 +170,3 @@ async function startApp(){
 await loadTrips();
 
 }
-
-startApp();
