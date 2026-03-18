@@ -159,6 +159,35 @@ position:relative; /* 👈 belangrijk */
     border-radius:3px;
 }
 
+/* onderhoud */
+
+.maintenanceRow{
+display:flex;
+justify-content:space-between;
+align-items:center;
+gap:8px;
+margin-bottom:6px;
+font-size:12px;
+}
+
+.maintenanceRow input{
+background:#101010;
+border:1px solid #333;
+color:white;
+border-radius:4px;
+padding:4px;
+font-size:11px;
+}
+
+/*gear*/
+
+.gearItem{
+font-size:12px;
+padding:6px 0;
+border-bottom:1px solid #222;
+}
+
+
 /* GENERIC EVENT (legacy) */
 
 .event{
