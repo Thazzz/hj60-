@@ -133,12 +133,15 @@ return;
 
 const { error } = await supabaseClient
 .from("trip")
+
 .insert([{
-owner,
-destination,
-start_date: start,
-end_date: end
-}]);
+    owner,
+    destination,
+    start_date: start,
+    end_date: end,
+    status: "aangevraagd",   // 👈 deze toevoegen
+    notes: ""
+}])
 
 if(error){
 console.error("Opslaan fout:", error);
