@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+
+<html lang="nl">
+
+<head>
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>HJ60 Planner</title>
+
+<meta name="robots" content="noindex, nofollow">
+
+<link rel="stylesheet" href="planner.css">
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+<script src="planner.js" defer></script>
+
+<link rel="icon" href="data:,">
+
+</head>
+
+<body>
+
+<header class="header">
+
+```
+<div class="title">
+    🚙 Planner
+</div>
+
+<div class="subtitle">
+    Plan je rit
+</div>
+```
+
+</header>
+
+<main class="container">
+
+```
+<!-- FORM -->
+<section class="card formCard">
+
+    <h2>Nieuwe trip</h2>
+
+    <div class="formGroup">
+        <label>Wie rijdt</label>
+        <input id="owner" placeholder="Naam">
+    </div>
+
+    <div class="formGroup">
+        <label>Bestemming</label>
+        <input id="destination" placeholder="Bijv. Ardennen">
+    </div>
+
+    <div class="formRow">
+        <div class="formGroup">
+            <label>Start</label>
+            <input id="start" type="date">
+        </div>
+
+        <div class="formGroup">
+            <label>Eind</label>
+            <input id="end" type="date">
+        </div>
+    </div>
+
+    <button id="saveBtn" class="primaryBtn">
+        Opslaan
+    </button>
+
+    <div id="feedback" class="feedback"></div>
+
+</section>
+
+
+<!-- TRIP LIST -->
+<section class="card listCard">
+
+    <h2>Geplande ritten</h2>
+
+    <div id="tripList" class="tripList">
+        laden...
+    </div>
+
+</section>
+```
+
+</main>
+
+</body>
+</html>

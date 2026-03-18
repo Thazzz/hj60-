@@ -1,0 +1,159 @@
+/* ==============================
+BASE
+============================== */
+
+body {
+margin: 0;
+font-family: Arial, Helvetica, sans-serif;
+background: #111;
+color: #eee;
+}
+
+/* ==============================
+HEADER
+============================== */
+
+.header {
+padding: 16px;
+background: #1a1a1a;
+border-bottom: 1px solid #333;
+}
+
+.title {
+font-size: 22px;
+font-weight: bold;
+}
+
+.subtitle {
+font-size: 13px;
+color: #aaa;
+}
+
+/* ==============================
+LAYOUT
+============================== */
+
+.container {
+padding: 12px;
+display: flex;
+flex-direction: column;
+gap: 12px;
+}
+
+/* ==============================
+CARDS
+============================== */
+
+.card {
+background: #181818;
+border: 1px solid #2a2a2a;
+border-radius: 10px;
+padding: 14px;
+}
+
+/* ==============================
+FORM
+============================== */
+
+.formGroup {
+display: flex;
+flex-direction: column;
+margin-bottom: 12px;
+}
+
+.formGroup label {
+font-size: 12px;
+color: #aaa;
+margin-bottom: 4px;
+}
+
+.formGroup input {
+padding: 10px;
+border-radius: 6px;
+border: 1px solid #333;
+background: #101010;
+color: white;
+font-size: 14px;
+}
+
+.formGroup input:focus {
+outline: none;
+border-color: #2c7be5;
+}
+
+/* START / END naast elkaar */
+
+.formRow {
+display: flex;
+gap: 10px;
+}
+
+.formRow .formGroup {
+flex: 1;
+}
+
+/* ==============================
+BUTTON
+============================== */
+
+.primaryBtn {
+width: 100%;
+padding: 12px;
+background: #2c7be5;
+border: none;
+border-radius: 8px;
+color: white;
+font-size: 15px;
+font-weight: bold;
+cursor: pointer;
+margin-top: 8px;
+}
+
+.primaryBtn:active {
+background: #1a5fd0;
+}
+
+/* ==============================
+FEEDBACK
+============================== */
+
+.feedback {
+margin-top: 10px;
+font-size: 13px;
+color: #aaa;
+}
+
+/* ==============================
+TRIP LIST
+============================== */
+
+.tripList {
+display: flex;
+flex-direction: column;
+gap: 8px;
+}
+
+/* individuele trip */
+
+.tripItem {
+padding: 10px;
+background: #101010;
+border: 1px solid #2a2a2a;
+border-radius: 8px;
+font-size: 13px;
+}
+
+/* ==============================
+DESKTOP (optioneel)
+============================== */
+
+@media (min-width: 768px) {
+
+```
+.container {
+    max-width: 600px;
+    margin: 0 auto;
+}
+```
+
+}
