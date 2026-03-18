@@ -1,3 +1,4 @@
+```js
 /*
 HJ60 dashboard
 */
@@ -24,6 +25,7 @@ DATA
 ----------------------------- */
 
 let events = [];
+let maintenance = [];
 
 const tasks = [
 "Olie verversen",
@@ -56,7 +58,27 @@ return;
 
 events = data || [];
 
-console.log("Trips geladen:", events);
+}
+
+/* -----------------------------
+MAINTENANCE LADEN
+----------------------------- */
+
+async function loadMaintenance(){
+
+console.log("⏳ maintenance laden...");
+
+const { data, error } = await supabaseClient
+.from("maintenance")
+.select("*")
+.order("name");
+
+if(error){
+    console.error("maintenance error:", error);
+    return;
+}
+
+maintenance = data || [];
 
 }
 
@@ -105,27 +127,14 @@ list.appendChild(li);
 }
 
 /* -----------------------------
-maintenance
+MAINTENANCE RENDER
 ----------------------------- */
-const maintenance = [
-{ name: "Motorolie", last: "" },
-{ name: "Oliefilter", last: "" },
-{ name: "Luchtfilter", last: "" },
-{ name: "Klepspeling", last: "" },
-{ name: "Brandstoffilter", last: "" },
-{ name: "Remvloeistof", last: "" },
-{ name: "Koelvloeistof", last: "" },
-{ name: "v-snaar", last: "" },
-{ name: "Olie voor diff", last: "" },
-{ name: "Olie Bak", last: "" },
-{ name: "Olie Tussen Bak", last: "" },
-{ name: "Smeerpunten", last: "" },
-{ name: "Remmen", last: "" },
-];
 
 function renderMaintenance(){
 
 const container = document.getElementById("maintenanceList");
+if(!container) return;
+
 container.innerHTML = "";
 
 maintenance.forEach(item => {
@@ -138,10 +147,22 @@ label.textContent = item.name;
 
 const input = document.createElement("input");
 input.type = "date";
-input.value = item.last;
+input.value = item.last_done_date || "";
 
-input.onchange = () => {
-item.last = input.value;
+/* SAVE NAAR SUPABASE */
+input.onchange = async () => {
+
+    item.last_done_date = input.value;
+
+    const { error } = await supabaseClient
+    .from("maintenance")
+    .update({ last_done_date: item.last_done_date })
+    .eq("id", item.id);
+
+    if(error){
+        console.error("update fout:", error);
+    }
+
 };
 
 row.appendChild(label);
@@ -152,9 +173,6 @@ container.appendChild(row);
 });
 
 }
-
-
-
 
 /* -----------------------------
 SHOPPING
@@ -174,8 +192,9 @@ list.appendChild(li);
 }
 
 /* -----------------------------
-gear
+GEAR
 ----------------------------- */
+
 const gear = [
 { name: "Tent", status: "ok" },
 { name: "Jerrycan", status: "slijtage" },
@@ -185,13 +204,14 @@ const gear = [
 function renderGear(){
 
 const container = document.getElementById("gearList");
+if(!container) return;
+
 container.innerHTML = "";
 
 gear.forEach(item => {
 
 const div = document.createElement("div");
 div.className = "gearItem";
-
 div.innerText = item.name + " - " + item.status;
 
 container.appendChild(div);
@@ -199,8 +219,6 @@ container.appendChild(div);
 });
 
 }
-
-
 
 /* -----------------------------
 KALENDER
@@ -213,6 +231,8 @@ function renderCalendar(){
 
 const grid = document.getElementById("calendarGrid");
 const title = document.getElementById("calendarTitle");
+
+if(!grid) return;
 
 grid.innerHTML = "";
 
@@ -276,19 +296,7 @@ year===today.getFullYear()
 cell.classList.add("today");
 }
 
-/* WEEK HIGHLIGHT */
-
-const startOfWeek = new Date(today);
-startOfWeek.setDate(today.getDate() - today.getDay() + 1);
-
-const endOfWeek = new Date(startOfWeek);
-endOfWeek.setDate(startOfWeek.getDate() + 6);
-
-if(cellDate >= startOfWeek && cellDate <= endOfWeek){
-cell.classList.add("currentWeek");
-}
-
-/* ADD CELL FIRST */
+/* ADD CELL */
 grid.appendChild(cell);
 
 /* EVENTS */
@@ -304,61 +312,13 @@ end.setHours(0,0,0,0);
 const current = new Date(cellDate);
 current.setHours(0,0,0,0);
 
-/* alleen renderen als deze dag in deze maand zit */
-if(current.getMonth() !== month) return;
-
-/* zit in trip */
 if(current >= start && current <= end){
 
-const weekday = cellIndex % 7;
-
-/* segment start bepalen */
-const isFirstDayOfMonth = d === 1;
-
-const isSegmentStart =
-current.getTime() === start.getTime() ||  // echte start
-weekday === 0 ||                          // maandag
-isFirstDayOfMonth;                        // maandstart
-
-if(!isSegmentStart) return;
-
-/* segment berekenen */
-const segmentStart = new Date(Math.max(start, current));
-
-const endOfWeek = new Date(current);
-endOfWeek.setDate(current.getDate() + (6 - weekday));
-
-const endOfMonth = new Date(year, month + 1, 0);
-endOfMonth.setHours(0,0,0,0);
-
-const segmentEnd = new Date(
-Math.min(end, endOfWeek, endOfMonth)
-);
-
-const span =
-Math.round((segmentEnd - segmentStart) / (1000*60*60*24)) + 1;
-
-/* label */
 const label = document.createElement("div");
 label.className = "eventTrip";
+label.innerText = "🚙 " + (event.owner || "?");
 
-label.innerText =
-"🚙 " + (event.owner || "?") +
-" → " + (event.destination || "?");
-
-/* DOM-based position */
-const rect = cell.getBoundingClientRect();
-const gridRect = grid.getBoundingClientRect();
-
-const cellWidth = rect.width;
-
-label.style.position = "absolute";
-label.style.left = (rect.left - gridRect.left) + "px";
-label.style.top = (rect.top - gridRect.top + 22) + "px";
-label.style.width = (cellWidth * span - 8) + "px";
-label.style.pointerEvents = "none";
-
-grid.appendChild(label);
+cell.appendChild(label);
 
 }
 
@@ -393,6 +353,7 @@ async function startApp(){
 console.log("Dashboard initialiseren");
 
 await loadTrips();
+await loadMaintenance();
 
 updateStatus();
 renderTasks();
@@ -407,3 +368,4 @@ document.getElementById("prevMonth").onclick = prevMonth;
 }
 
 startApp();
+```
