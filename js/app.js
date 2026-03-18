@@ -219,6 +219,9 @@ end.setHours(0,0,0,0);
 const current = new Date(cellDate);
 current.setHours(0,0,0,0);
 
+/* alleen renderen als deze dag in deze maand zit */
+if(current.getMonth() !== month) return;
+
 /* zit in trip */
 if(current >= start && current <= end){
 
@@ -240,7 +243,12 @@ const segmentStart = new Date(Math.max(start, current));
 const endOfWeek = new Date(current);
 endOfWeek.setDate(current.getDate() + (6 - weekday));
 
-const segmentEnd = new Date(Math.min(end, endOfWeek));
+const endOfMonth = new Date(year, month + 1, 0);
+endOfMonth.setHours(0,0,0,0);
+
+const segmentEnd = new Date(
+Math.min(end, endOfWeek, endOfMonth)
+);
 
 const span =
 Math.round((segmentEnd - segmentStart) / (1000*60*60*24)) + 1;
