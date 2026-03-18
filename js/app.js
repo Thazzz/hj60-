@@ -107,9 +107,16 @@ const maintenance = [
 { name: "Motorolie", last: "" },
 { name: "Oliefilter", last: "" },
 { name: "Luchtfilter", last: "" },
+{ name: "Klepspeling", last: "" },
 { name: "Brandstoffilter", last: "" },
 { name: "Remvloeistof", last: "" },
 { name: "Koelvloeistof", last: "" }
+{ name: "v-snaar", last: "" },
+{ name: "Olie voor diff", last: "" },
+{ name: "Olie Bak", last: "" },
+{ name: "Olie Tussen Bak", last: "" },
+{ name: "Smeerpunten", last: "" },
+{ name: "Remmen", last: "" },
 ];
 
 function renderMaintenance(){
