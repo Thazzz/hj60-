@@ -224,20 +224,23 @@ if(current >= start && current <= end){
 
 const weekday = cellIndex % 7;
 
-/* alleen starten op begin of maandag */
+/* segment start bepalen */
+const isFirstDayOfMonth = d === 1;
+
 const isSegmentStart =
-current.getTime() === start.getTime() ||
-weekday === 0;
+current.getTime() === start.getTime() ||  // echte start
+weekday === 0 ||                          // maandag
+isFirstDayOfMonth;                        // maandstart
 
 if(!isSegmentStart) return;
 
 /* segment berekenen */
-const segmentStart = current > start ? current : start;
+const segmentStart = new Date(Math.max(start, current));
 
 const endOfWeek = new Date(current);
 endOfWeek.setDate(current.getDate() + (6 - weekday));
 
-const segmentEnd = end < endOfWeek ? end : endOfWeek;
+const segmentEnd = new Date(Math.min(end, endOfWeek));
 
 const span =
 Math.round((segmentEnd - segmentStart) / (1000*60*60*24)) + 1;
@@ -250,7 +253,7 @@ label.innerText =
 "🚙 " + (event.owner || "?") +
 " → " + (event.destination || "?");
 
-/* position */
+/* DOM-based position */
 const rect = cell.getBoundingClientRect();
 const gridRect = grid.getBoundingClientRect();
 
