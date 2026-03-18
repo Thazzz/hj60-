@@ -73,6 +73,9 @@ const { data, error } = await supabaseClient
 .select("*")
 .order("name");
 
+console.log("👉 DATA:", data);
+console.log("👉 ERROR:", error);
+
 if(error){
     console.error("maintenance error:", error);
     return;
@@ -81,7 +84,6 @@ if(error){
 maintenance = data || [];
 
 }
-
 /* -----------------------------
 STATUS
 ----------------------------- */
