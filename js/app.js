@@ -1,4 +1,3 @@
-```js
 /*
 HJ60 dashboard
 */
