@@ -65,24 +65,25 @@ MAINTENANCE LADEN
 
 async function loadMaintenance(){
 
-console.log("⏳ maintenance laden...");
+    console.log("⏳ maintenance laden...");
 
-const { data, error } = await supabaseClient
-.from("maintenance")
-.select("*")
-.order("name");
+    const { data, error } = await supabaseClient
+    .from("maintenance")
+    .select("*")
+    .order("name");
 
-console.log("👉 DATA:", data);
-console.log("👉 ERROR:", error);
+    console.log("👉 DATA:", data);
+    console.log("👉 ERROR:", error);
 
-if(error){
-    console.error("maintenance error:", error);
-    return;
+    if(error){
+        console.error("maintenance error:", error);
+        return;
+    }
+
+    maintenance = data || [];
+
 }
 
-maintenance = data || [];
-
-}
 /* -----------------------------
 STATUS
 ----------------------------- */
@@ -351,22 +352,21 @@ START
 
 async function startApp(){
 
-console.log("Dashboard initialiseren");
+    console.log("Dashboard initialiseren");
 
-await loadTrips();
-await loadMaintenance();
+    await loadTrips();
+    await loadMaintenance();
 
-updateStatus();
-renderTasks();
-renderMaintenance();
-renderShopping();
-renderCalendar();
-renderGear();
+    updateStatus();
+    renderTasks();
+    renderMaintenance();
+    renderShopping();
+    renderCalendar();
+    renderGear();
 
-document.getElementById("nextMonth").onclick = nextMonth;
-document.getElementById("prevMonth").onclick = prevMonth;
+    document.getElementById("nextMonth").onclick = nextMonth;
+    document.getElementById("prevMonth").onclick = prevMonth;
 
 }
 
 startApp();
-```
