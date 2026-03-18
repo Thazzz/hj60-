@@ -219,26 +219,30 @@ end.setHours(0,0,0,0);
 const current = new Date(cellDate);
 current.setHours(0,0,0,0);
 
-/* zit deze dag binnen de trip? */
+/* zit in trip */
 if(current >= start && current <= end){
 
 const weekday = cellIndex % 7;
 
-/* start van dit stuk */
+/* alleen starten op begin of maandag */
+const isSegmentStart =
+current.getTime() === start.getTime() ||
+weekday === 0;
+
+if(!isSegmentStart) return;
+
+/* segment berekenen */
 const segmentStart = current > start ? current : start;
 
-/* einde van deze week */
 const endOfWeek = new Date(current);
 endOfWeek.setDate(current.getDate() + (6 - weekday));
 
-/* einde van dit stuk */
 const segmentEnd = end < endOfWeek ? end : endOfWeek;
 
-/* lengte van dit stuk */
 const span =
 Math.round((segmentEnd - segmentStart) / (1000*60*60*24)) + 1;
 
-/* element maken */
+/* label */
 const label = document.createElement("div");
 label.className = "eventTrip";
 
@@ -246,7 +250,7 @@ label.innerText =
 "🚙 " + (event.owner || "?") +
 " → " + (event.destination || "?");
 
-/* 🔥 DOM-based positionering */
+/* position */
 const rect = cell.getBoundingClientRect();
 const gridRect = grid.getBoundingClientRect();
 
@@ -258,7 +262,6 @@ label.style.top = (rect.top - gridRect.top + 22) + "px";
 label.style.width = (cellWidth * span - 8) + "px";
 label.style.pointerEvents = "none";
 
-/* toevoegen */
 grid.appendChild(label);
 
 }
