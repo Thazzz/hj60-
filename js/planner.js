@@ -135,15 +135,23 @@ LOAD INTO FORM
 
 function loadIntoForm(t){
 
-    const isOwner = true; // 🔥 tijdelijk, backend regelt veiligheid
+    console.log("LOAD INTO FORM", {
+        id: t.id,
+        user: t.user_id
+    });
 
+    // state zetten
     editingId = t.id;
     editingUserId = t.user_id;
 
-    document.getElementById("eventType").value = t.type;
-    document.getElementById("eventType").dispatchEvent(new Event("change"));
+    // type zetten + UI switch triggeren
+    const typeEl = document.getElementById("eventType");
+    typeEl.value = t.type;
+    typeEl.dispatchEvent(new Event("change"));
 
-    /* FORM VULLEN */
+    /* =============================
+    FORM VULLEN
+    ============================= */
 
     if(t.type === "trip"){
         document.getElementById("owner").value = t.owner || "";
@@ -157,23 +165,21 @@ function loadIntoForm(t){
         document.getElementById("location").value = t.destination || "";
     }
 
-    /* OWNER CHECK */
+    /* =============================
+    UI STATE
+    ============================= */
 
     const deleteBtn = document.getElementById("deleteBtn");
     const feedback = document.getElementById("feedback");
 
-    if(isOwner){
-        if(deleteBtn) deleteBtn.style.display = "block";
-        if(feedback) feedback.innerText = "✏️ bewerken";
+    // 🔥 altijd zichtbaar bij edit
+    if(deleteBtn) deleteBtn.style.display = "block";
 
-        enableForm(true);
+    // feedback
+    if(feedback) feedback.innerText = "✏️ bewerken";
 
-    } else {
-        if(deleteBtn) deleteBtn.style.display = "none";
-        if(feedback) feedback.innerText = "👀 alleen bekijken";
-
-        enableForm(false);
-    }
+    // form actief
+    enableForm(true);
 }
 
 /* =============================
