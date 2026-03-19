@@ -25,12 +25,6 @@ DATA
 
 let events = [];
 
-const tasks = [
-"Olie verversen",
-"Banden controleren",
-"Remmen inspecteren"
-];
-
 const shopping = [
 "Motorolie",
 "Oliefilter",
@@ -111,6 +105,26 @@ statusElement.innerText = "🚙 HJ60 staat momenteel stil";
 }
 
 }
+/* -----------------------------
+LOAD TASKS
+----------------------------- */
+
+async function loadTasks(){
+
+    const { data, error } = await supabaseClient
+        .from("tasks")
+        .select("*")
+        .order("status", { ascending: true })
+        .order("priority", { ascending: true });
+
+    if(error){
+        console.error("❌ tasks load error", error);
+        return;
+    }
+
+    tasks = data;
+
+}
 
 
 /* -----------------------------
@@ -119,14 +133,35 @@ TASKS
 
 function renderTasks(){
 
-const list = document.getElementById("taskList");
-list.innerHTML = "";
+    const list = document.getElementById("taskList");
+    list.innerHTML = "";
 
-tasks.forEach(task => {
-const li = document.createElement("li");
-li.textContent = task;
-list.appendChild(li);
-});
+    if(tasks.length === 0){
+        list.innerHTML = "<li>Geen klussen</li>";
+        return;
+    }
+
+    tasks.forEach(task => {
+
+        const li = document.createElement("li");
+
+        li.innerHTML = `
+            ${getPriorityIcon(task.priority)} ${task.title}
+            <br>
+            <small>${task.status} - ${task.owner || "-"}</small>
+        `;
+
+        list.appendChild(li);
+
+    });
+
+}
+
+function getPriorityIcon(p){
+    if(p === 1) return "🔴";
+    if(p === 2) return "🟠";
+    return "🟢";
+}
 
 }
 
@@ -419,6 +454,7 @@ async function startApp(){
 console.log("Dashboard initialiseren");
 
 await loadTrips();
+await loadTasks();
 
 updateStatus();
 renderTasks();
