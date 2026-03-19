@@ -162,19 +162,29 @@ function loadIntoForm(t){
     const deleteBtn = document.getElementById("deleteBtn");
     const feedback = document.getElementById("feedback");
 
+    // 🔥 NIEUW
+    const isOwner = t.user_id === getUserId();
+
     if(deleteBtn){
-    console.log("DELETE BTN FOUND");
+        console.log("DELETE BTN FOUND", { isOwner });
 
-    deleteBtn.style.display = "block";
-    deleteBtn.style.visibility = "visible";
-    deleteBtn.style.opacity = "1";
+        if(isOwner){
+            deleteBtn.style.display = "block";
+            deleteBtn.style.visibility = "visible";
+            deleteBtn.style.opacity = "1";
+            deleteBtn.onclick = deleteEvent;
+        } else {
+            deleteBtn.style.display = "none";
+        }
+    }
 
-    deleteBtn.onclick = deleteEvent;
-}
+    if(feedback){
+        feedback.innerText = isOwner
+            ? "✏️ bewerken"
+            : "👀 alleen bekijken";
+    }
 
-    if(feedback) feedback.innerText = "✏️ bewerken";
-
-    enableForm(true);
+    enableForm(isOwner); // 🔥 key verschil
 }
 /* =============================
 SAVE
