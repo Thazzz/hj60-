@@ -140,38 +140,12 @@ function loadIntoForm(t){
         user: t.user_id
     });
 
-    // state zetten
     editingId = t.id;
     editingUserId = t.user_id;
 
-    // type zetten + UI switch triggeren
     const typeEl = document.getElementById("eventType");
     typeEl.value = t.type;
     typeEl.dispatchEvent(new Event("change"));
-
-    /* =============================
-    FORM VULLEN
-    ============================= */
-
-function loadIntoForm(t){
-
-    console.log("LOAD INTO FORM", {
-        id: t.id,
-        user: t.user_id
-    });
-
-    // state
-    editingId = t.id;
-    editingUserId = t.user_id;
-
-    // type switch
-    const typeEl = document.getElementById("eventType");
-    typeEl.value = t.type;
-    typeEl.dispatchEvent(new Event("change"));
-
-    /* =============================
-    FORM VULLEN
-    ============================= */
 
     if(t.type === "trip"){
         document.getElementById("owner").value = t.owner || "";
@@ -185,17 +159,11 @@ function loadIntoForm(t){
         document.getElementById("location").value = t.destination || "";
     }
 
-    /* =============================
-    UI STATE
-    ============================= */
-
     const deleteBtn = document.getElementById("deleteBtn");
     const feedback = document.getElementById("feedback");
 
     if(deleteBtn){
         deleteBtn.style.display = "block";
-
-        // 🔥 HIER moet hij zitten
         deleteBtn.onclick = deleteEvent;
     }
 
@@ -203,7 +171,6 @@ function loadIntoForm(t){
 
     enableForm(true);
 }
-
 /* =============================
 SAVE
 ============================= */
