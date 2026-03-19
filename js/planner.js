@@ -163,7 +163,7 @@ function loadIntoForm(t){
     const feedback = document.getElementById("feedback");
 
     // 🔥 NIEUW
-    const isOwner = t.user_id === getUserId();
+const isOwner = t.user_id && t.user_id === getUserId();
 
     if(deleteBtn){
         console.log("DELETE BTN FOUND", { isOwner });
@@ -178,11 +178,15 @@ function loadIntoForm(t){
         }
     }
 
-    if(feedback){
-        feedback.innerText = isOwner
-            ? "✏️ bewerken"
-            : "👀 alleen bekijken";
+  if(feedback){
+    if(!t.user_id){
+        feedback.innerText = "⚠️ onbekende eigenaar";
+    } else if(isOwner){
+        feedback.innerText = "✏️ bewerken";
+    } else {
+        feedback.innerText = "👀 van iemand anders";
     }
+}
 
     enableForm(isOwner); // 🔥 key verschil
 }
