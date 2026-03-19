@@ -405,6 +405,35 @@ window.showTab = function(tab){
 
 }
 
+/*==========================
+rendertasklist
+===========================*/
+function renderTaskListPlanner(){
+
+    const el = document.getElementById("taskListPlanner");
+    if(!el) return;
+
+    el.innerHTML = "";
+
+    if(tasks.length === 0){
+        el.innerText = "Geen klussen";
+        return;
+    }
+
+    tasks.forEach(task => {
+
+        const div = document.createElement("div");
+        div.className = "tripItem";
+
+        div.innerText =
+            `${getPriorityIcon(task.priority)} ${task.title} (${task.status})`;
+
+        el.appendChild(div);
+
+    });
+
+}
+
 /* =============================
 INIT (SAFE)
 ============================= */
