@@ -163,9 +163,14 @@ function loadIntoForm(t){
     const feedback = document.getElementById("feedback");
 
     if(deleteBtn){
-        deleteBtn.style.display = "block";
-        deleteBtn.onclick = deleteEvent;
-    }
+    console.log("DELETE BTN FOUND");
+
+    deleteBtn.style.display = "block";
+    deleteBtn.style.visibility = "visible";
+    deleteBtn.style.opacity = "1";
+
+    deleteBtn.onclick = deleteEvent;
+}
 
     if(feedback) feedback.innerText = "✏️ bewerken";
 
