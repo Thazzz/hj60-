@@ -69,13 +69,7 @@ LOAD EVENTS
 
 async function loadTrips(){
 
-    const user_id = getUserId();
-
-    if(!user_id){
-        trips = [];
-        renderTripList();
-        return;
-    }
+  
 
     const { data, error } = await supabaseClient
         .from("trip")
@@ -133,12 +127,7 @@ LOAD INTO FORM
 
 function loadIntoForm(t){
 
-    const user_id = getUserId();
-
-    // 🔥 FIX: robuuste vergelijking
-    const isOwner =
-        (t.user_id || "").trim().toLowerCase() ===
-        (user_id || "").trim().toLowerCase();
+    const isOwner = true; // 🔥 tijdelijk, backend regelt veiligheid
 
     editingId = t.id;
     editingUserId = t.user_id;
