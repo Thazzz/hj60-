@@ -359,10 +359,14 @@ if(current >= start && current <= end){
 
 const label = document.createElement("div");
 
-if(event.owner === "onderhoud"){
-    label.className = "eventTripOnderhoud"; // 👈 NIEUW (groen)
+const text =
+    (event.owner || "") + " " +
+    (event.destination || "");
+
+if(text.toLowerCase().includes("onderhoud")){
+    label.className = "eventTripOnderhoud";
 } else {
-    label.className = "eventTrip"; // 👈 standaard blauw
+    label.className = "eventTrip";
 }
 
     label.innerText =
