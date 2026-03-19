@@ -392,6 +392,20 @@ function setupTypeSwitch(){
 }
 
 /* =============================
+klus
+============================= */
+
+window.showTab = function(tab){
+
+    document.getElementById("eventTab").style.display =
+        tab === "event" ? "block" : "none";
+
+    document.getElementById("taskTab").style.display =
+        tab === "task" ? "block" : "none";
+
+}
+
+/* =============================
 INIT (SAFE)
 ============================= */
 
