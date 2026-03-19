@@ -34,10 +34,11 @@ const savedUser = localStorage.getItem("user_id");
 
 if(savedUser){
     document.getElementById("email").value = savedUser;
+} else {
+    console.warn("⚠️ geen user_id gevonden");
 }
 
 }
-
 
 /* =============================
 LOAD TRIPS
@@ -52,6 +53,7 @@ const user_id = localStorage.getItem("user_id");
 const { data, error } = await supabaseClient
 .from("trip")
 .select("*")
+.eq("user_id", user_id) // 🔥 BELANGRIJK
 .order("start_date", { ascending: true });
 
 if(error){
@@ -209,7 +211,6 @@ async function saveEvent(){
 const feedback = document.getElementById("feedback");
 const type = document.getElementById("eventType").value;
 const user_id = document.getElementById("email").value.trim();
-
 localStorage.setItem("user_id", user_id);
 
 document.getElementById("deleteBtn").style.display = "none";
