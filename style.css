@@ -201,6 +201,20 @@ position:relative; /* 👈 belangrijk */
     overflow: hidden;
 }
 
+.eventOnderhoudGepland {
+    background: #f39c12; /* oranje */
+    color: white;
+
+    font-size: 11px;
+    padding: 2px 4px;
+
+    border-radius: 3px;
+    margin-top: 4px;
+
+    white-space: nowrap;
+    overflow: hidden;
+}
+
 /* KLUS */
 
 .eventKlus{
