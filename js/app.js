@@ -357,11 +357,13 @@ if(current >= start && current <= end){
     const span =
     Math.round((segmentEnd - segmentStart) / (1000*60*60*24)) + 1;
 
-    const label = document.createElement("div");
-label.className =
-    event.type === "onderhoud"
-    ? "eventOnderhoudGepland"
-    : "eventTrip";
+const label = document.createElement("div");
+
+if(event.owner === "onderhoud"){
+    label.className = "eventTripOnderhoud"; // 👈 NIEUW (groen)
+} else {
+    label.className = "eventTrip"; // 👈 standaard blauw
+}
 
     label.innerText =
     "🚙 " + (event.owner || "?") +
