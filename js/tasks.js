@@ -74,7 +74,7 @@ INIT
 async function initTasks(){
 
     await loadTasks();
-
+    renderTaskListPlanner();
 }
 
 initTasks();
