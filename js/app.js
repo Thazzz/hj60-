@@ -98,13 +98,14 @@ return now >= start && now <= end;
 });
 
 if(activeTrip){
-statusElement.innerText = "🚙 Nu onderweg: " + activeTrip.owner;
-}
-else{
-statusElement.innerText = "🚙 HJ60 staat momenteel stil";
+    statusElement.className = "headerStatus status-active";
+    statusElement.innerText =
+        "🚙 " + activeTrip.owner + " → " + (activeTrip.destination || "");
+} else {
+    statusElement.className = "headerStatus status-idle";
+    statusElement.innerText = "🛠️ werkplaats";
 }
 
-}
 /* -----------------------------
 LOAD TASKS
 ----------------------------- */
