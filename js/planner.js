@@ -21,6 +21,7 @@ STATE
 
 let trips = [];
 let editingId = null;
+let editingUserId = null;
 
 /* =============================
 HELPERS
@@ -36,6 +37,7 @@ function setUserId(id){
 
 function resetForm(){
     editingId = null;
+    editingUserId = null;
 
     document.getElementById("owner").value = "";
     document.getElementById("destination").value = "";
@@ -45,6 +47,8 @@ function resetForm(){
     document.getElementById("location").value = "";
 
     document.getElementById("deleteBtn").style.display = "none";
+
+    enableForm(true); // 🔥 deze niet vergeten
 }
 
 /* =============================
@@ -128,12 +132,16 @@ LOAD INTO FORM
 
 function loadIntoForm(t){
 
+    const user_id = getUserId();
+    const isOwner = t.user_id === user_id;
+
     editingId = t.id;
+    editingUserId = t.user_id;
 
     document.getElementById("eventType").value = t.type;
     document.getElementById("eventType").dispatchEvent(new Event("change"));
 
-    document.getElementById("deleteBtn").style.display = "block";
+    /* FORM VULLEN */
 
     if(t.type === "trip"){
         document.getElementById("owner").value = t.owner || "";
@@ -146,15 +154,43 @@ function loadIntoForm(t){
         document.getElementById("onderhoudDate").value = t.start_date;
         document.getElementById("location").value = t.destination || "";
     }
-const user_id = getUserId();
 
-if(t.user_id !== user_id){
-    alert("Alleen je eigen events kun je aanpassen");
-    return;
+    /* OWNER CHECK */
+
+    if(isOwner){
+        document.getElementById("deleteBtn").style.display = "block";
+        document.getElementById("feedback").innerText = "✏️ bewerken";
+
+        enableForm(true);
+
+    } else {
+        document.getElementById("deleteBtn").style.display = "none";
+        document.getElementById("feedback").innerText = "👀 alleen bekijken";
+
+        enableForm(false);
+    }
+
 }
 
-    document.getElementById("feedback").innerText = "✏️ bewerken";
+function enableForm(enabled){
+
+    const fields = [
+        "owner",
+        "destination",
+        "start",
+        "end",
+        "onderhoudDate",
+        "location"
+    ];
+
+    fields.forEach(id => {
+        const el = document.getElementById(id);
+        if(el) el.disabled = !enabled;
+    });
+
+    document.getElementById("saveBtn").disabled = !enabled;
 }
+
 
 /* =============================
 SAVE
@@ -250,6 +286,7 @@ async function saveEvent(){
             .from("trip")
             .update(payload)
             .eq("id", editingId)
+            .eq("user_id", editingUserId);
             .eq("user_id", user_id);
     } else {
         query = supabaseClient
@@ -288,6 +325,7 @@ async function deleteEvent(){
         .from("trip")
         .delete()
         .eq("id", editingId)
+        .eq("user_id", editingUserId);
         .eq("user_id", user_id);
 
     if(error){
