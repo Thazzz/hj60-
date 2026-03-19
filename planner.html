@@ -25,7 +25,7 @@
 
 <header class="header">
 
-```
+
 <div class="title">
     🚙 Planner
 </div>
@@ -33,21 +33,35 @@
 <div class="subtitle">
     Plan je rit
 </div>
-```
+
 
 </header>
 
 <main class="container">
 
-```
+
 <!-- FORM -->
 <section class="card formCard">
 
-    <h2>Nieuwe trip</h2>
+    <h2>Nieuw Event</h2>
+<div class="formGroup">
+    <label>Type</label>
+    <select id="eventType">
+        <option value="trip" selected>Trip</option>
+        <option value="onderhoud">Onderhoud</option>
+    </select>
+</div>
+
+    <!-- TRIP VELDEN -->
+<div id="tripFields">
 
     <div class="formGroup">
         <label>Wie rijdt</label>
         <input id="owner" placeholder="Naam">
+    </div>
+    <div class="formGroup">
+        <label>Email</label>
+        <input id="email" placeholder="bijv. thijs@email.nl">
     </div>
 
     <div class="formGroup">
@@ -66,6 +80,23 @@
             <input id="end" type="date">
         </div>
     </div>
+
+</div>
+
+<!-- ONDERHOUD VELDEN -->
+<div id="onderhoudFields" style="display:none;">
+
+    <div class="formGroup">
+        <label>Datum</label>
+        <input id="onderhoudDate" type="date">
+    </div>
+
+    <div class="formGroup">
+        <label>Locatie</label>
+        <input id="location" placeholder="Garage / plaats">
+    </div>
+
+</div>
 
     <button id="saveBtn" class="primaryBtn">
         Opslaan
@@ -86,7 +117,7 @@
     </div>
 
 </section>
-```
+
 
 </main>
 
