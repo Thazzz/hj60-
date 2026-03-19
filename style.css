@@ -187,14 +187,18 @@ position:relative; /* 👈 belangrijk */
     content:"";
 }
 
-.eventOnderhoud{
-    background:#27ae60;
-    color:white;
-    font-size:11px;
-    padding:2px 4px;
-    border-radius:3px;
-    margin-top:4px;
-    display:inline-block;
+.eventOnderhoud {
+    background: #e67e22; /* oranje */
+    color: white;
+
+    font-size: 11px;
+    padding: 2px 4px;
+
+    border-radius: 3px;
+    margin-top: 4px;
+
+    white-space: nowrap;
+    overflow: hidden;
 }
 
 /* KLUS */
