@@ -72,7 +72,7 @@ async function loadTrips(){
         return;
     }
 
-    const { data, error } = await db
+    const { data, error } = await supabaseClient
         .from("trip")
         .select("*")
         .eq("user_id", user_id)
@@ -241,13 +241,13 @@ async function saveEvent(){
     let query;
 
     if(editingId){
-        query = db
+        query = supabaseClient
             .from("trip")
             .update(payload)
             .eq("id", editingId)
             .eq("user_id", user_id);
     } else {
-        query = db
+        query = supabaseClient
             .from("trip")
             .insert([payload]);
     }
@@ -279,7 +279,7 @@ async function deleteEvent(){
 
     if(!confirm("Verwijderen?")) return;
 
-    const { error } = await db
+    const { error } = await supabaseClient
         .from("trip")
         .delete()
         .eq("id", editingId)
