@@ -201,6 +201,10 @@ date.value = e.start_date || "";
 
 date.addEventListener("change", async () => {
     await updateMaintenanceDate(e.id, date.value);
+
+    await loadTrips();
+    renderMaintenance();
+    renderCalendar();
 });
 
 row.appendChild(name);
@@ -435,12 +439,6 @@ if(error){
 }
 }
 
-date.addEventListener("change", async () => {
-    await updateMaintenanceDate(e.id, date.value);
 
-    await loadTrips();
-    renderMaintenance();
-    renderCalendar();
-});
 
 startApp();
