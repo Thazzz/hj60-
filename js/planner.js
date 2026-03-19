@@ -66,6 +66,20 @@ function getPriorityIcon(p){
     return "🟢";
 }
 
+function showTab(tab){
+
+    document.getElementById("eventTab").style.display =
+        tab === "event" ? "block" : "none";
+
+    document.getElementById("taskTab").style.display =
+        tab === "task" ? "block" : "none";
+
+    const title = document.getElementById("formTitle");
+
+    if(tab === "event") title.innerText = "PlannerApp";
+    if(tab === "task") title.innerText = "Klussen";
+}
+
 /* =============================
 INIT USER
 ============================= */
