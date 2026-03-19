@@ -105,7 +105,7 @@ if(activeTrip){
     statusElement.className = "headerStatus status-idle";
     statusElement.innerText = "🛠️ werkplaats";
 }
-
+}
 /* -----------------------------
 LOAD TASKS
 ----------------------------- */
