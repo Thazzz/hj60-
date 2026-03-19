@@ -71,10 +71,10 @@ const tripEvents = (trips || []).map(t => ({
 }));
 
 const maintenanceEvents = (maintenance || []).map(m => ({
-    ...m,
     type: "onderhoud",
-    start_date: m.date,        // 👈 belangrijk
-    end_date: m.date           // 👈 belangrijk
+    start_date: m.last_done_date || null,
+    end_date: m.last_done_date || null,
+    location: m.name
 }));
 
 /* COMBINE */
@@ -195,7 +195,9 @@ events
     name.innerText = e.location || "Onbekend";
 
     const date = document.createElement("span");
-    date.innerText = e.start_date || "-";
+    date.innerText = e.start_date
+    ? new Date(e.start_date).toLocaleDateString("nl-NL")
+    : "-";
 
     row.appendChild(name);
     row.appendChild(date);
