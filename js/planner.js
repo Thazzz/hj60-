@@ -287,7 +287,6 @@ async function saveEvent(){
             .update(payload)
             .eq("id", editingId)
             .eq("user_id", editingUserId);
-            .eq("user_id", user_id);
     } else {
         query = supabaseClient
             .from("trip")
@@ -326,7 +325,6 @@ async function deleteEvent(){
         .delete()
         .eq("id", editingId)
         .eq("user_id", editingUserId);
-        .eq("user_id", user_id);
 
     if(error){
         console.error(error);
