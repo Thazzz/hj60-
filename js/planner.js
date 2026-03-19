@@ -112,18 +112,40 @@ function renderTripList(){
         const div = document.createElement("div");
         div.className = "tripItem";
 
-        div.onclick = () => loadIntoForm(t);
+        const isOwner = t.user_id === getUserId();
+        div.classList.add(isOwner ? "mine" : "other");
+
+        div.onclick = () => {
+            loadIntoForm(t);
+
+            // 🔥 active state
+            document.querySelectorAll(".tripItem").forEach(el=>{
+                el.classList.remove("active");
+            });
+            div.classList.add("active");
+        };
+
+        /* LABEL OPBOUW */
+
+        let label = "";
 
         if(t.type === "trip"){
-            div.innerText =
+            label =
                 `${t.start_date} → ${t.end_date} | ${t.owner || "?"}` +
                 (t.destination ? ` → ${t.destination}` : "");
         }
 
         if(t.type === "onderhoud"){
-            div.innerText =
+            label =
                 `🔧 ${t.start_date} | ${t.destination || "onbekend"}`;
         }
+
+        /* STATUS CHIP (voorbereid op later) */
+        let status = "";
+        if(t.status === "aangevraagd") status = "🟡";
+        if(t.status === "bevestigd") status = "🟢";
+
+        div.innerText = `${status} ${label}`;
 
         el.appendChild(div);
     });
