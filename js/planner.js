@@ -15,6 +15,7 @@ const { createClient } = supabase;
 const supabaseClient = createClient(supabaseUrl, supabaseKey);
 
 
+
 /* =============================
 STATE
 ============================= */
@@ -39,7 +40,7 @@ if(savedUser){
 
 
 /* =============================
-LOAD TRIPS (ALLEEN EIGEN)
+LOAD TRIPS
 ============================= */
 
 async function loadTrips(){
@@ -110,7 +111,7 @@ if(trip.type === "onderhoud"){
     "🔧 " +
     trip.start_date +
     " | " +
-    (trip.location || "onbekend");
+    (trip.destination || "onbekend");
 }
 
 container.appendChild(div);
@@ -121,7 +122,7 @@ container.appendChild(div);
 
 
 /* =============================
-LOAD INTO FORM (EDIT MODE)
+LOAD INTO FORM
 ============================= */
 
 function loadIntoForm(trip){
@@ -139,6 +140,8 @@ editingId = trip.id;
 document.getElementById("eventType").value = trip.type;
 document.getElementById("eventType").dispatchEvent(new Event("change"));
 
+document.getElementById("deleteBtn").style.display = "block";
+
 if(trip.type === "trip"){
     document.getElementById("owner").value = trip.owner || "";
     document.getElementById("destination").value = trip.destination || "";
@@ -148,10 +151,57 @@ if(trip.type === "trip"){
 
 if(trip.type === "onderhoud"){
     document.getElementById("onderhoudDate").value = trip.start_date;
-    document.getElementById("location").value = trip.location || "";
+    document.getElementById("location").value = trip.destination || "";
 }
 
 document.getElementById("feedback").innerText = "✏️ bewerken";
+
+}
+
+
+/* =============================
+DELETE EVENT (FIXED!)
+============================= */
+
+async function deleteEvent(){
+
+const feedback = document.getElementById("feedback");
+const user_id = localStorage.getItem("user_id");
+
+if(!editingId){
+    return;
+}
+
+const confirmDelete = confirm("Weet je zeker dat je dit event wilt verwijderen?");
+if(!confirmDelete) return;
+
+const { error } = await supabaseClient
+.from("trip")
+.delete()
+.eq("id", editingId)
+.eq("user_id", user_id);
+
+if(error){
+    console.error("Delete fout:", error);
+    feedback.innerText = "❌ verwijderen mislukt";
+    return;
+}
+
+feedback.innerText = "🗑️ verwijderd";
+editingId = null;
+
+/* reset form */
+
+document.getElementById("owner").value = "";
+document.getElementById("destination").value = "";
+document.getElementById("start").value = "";
+document.getElementById("end").value = "";
+document.getElementById("onderhoudDate").value = "";
+document.getElementById("location").value = "";
+
+document.getElementById("deleteBtn").style.display = "none";
+
+await loadTrips();
 
 }
 
@@ -165,7 +215,10 @@ async function saveEvent(){
 const feedback = document.getElementById("feedback");
 const type = document.getElementById("eventType").value;
 const user_id = document.getElementById("email").value.trim();
+
 localStorage.setItem("user_id", user_id);
+
+document.getElementById("deleteBtn").style.display = "none";
 
 /* VALIDATE USER */
 
@@ -174,11 +227,7 @@ if(!user_id){
     return;
 }
 
-/* SAVE USER */
-
-localStorage.setItem("user_id", user_id);
-
-/* PAYLOAD BASIS */
+/* PAYLOAD */
 
 let payload = { 
     type,
@@ -248,15 +297,16 @@ if(type === "onderhoud"){
         return;
     }
 
-    payload.owner = "Onderhoud";          // 👈 belangrijk
-    payload.destination = location;       // 👈 FIX
+    payload.owner = "Onderhoud";
+    payload.destination = location;
     payload.start_date = date;
     payload.end_date = date;
-    payload.status = "gepland";
+    payload.status = "aangevraagd"; // ✅ FIXED
 }
 
+
 /* =============================
-INSERT OF UPDATE
+INSERT / UPDATE
 ============================= */
 
 let query;
@@ -286,14 +336,12 @@ return;
 }
 
 
-/* =============================
-SUCCESS
-============================= */
+/* SUCCESS */
 
 feedback.innerText = "✅ opgeslagen";
 editingId = null;
 
-/* RESET FORM */
+/* reset form */
 
 document.getElementById("owner").value = "";
 document.getElementById("destination").value = "";
@@ -346,9 +394,10 @@ INIT
 window.addEventListener("DOMContentLoaded", () => {
 
 document.getElementById("saveBtn").onclick = saveEvent;
+document.getElementById("deleteBtn").onclick = deleteEvent; // ✅ FIX
 
 setupTypeSwitch();
-initUser();     // 🔥 FIXED
+initUser();
 startApp();
 
 });
