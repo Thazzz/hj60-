@@ -49,12 +49,6 @@ console.log("⏳ events laden...");
 
 const user_id = localStorage.getItem("user_id");
 
-if(!user_id){
-    trips = [];
-    renderTripList();
-    return;
-}
-
 const { data, error } = await supabaseClient
 .from("trip")
 .select("*")
