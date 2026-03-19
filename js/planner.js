@@ -248,12 +248,12 @@ if(type === "onderhoud"){
         return;
     }
 
+    payload.owner = "Onderhoud";          // 👈 belangrijk
+    payload.destination = location;       // 👈 FIX
     payload.start_date = date;
     payload.end_date = date;
-    payload.location = location;
     payload.status = "gepland";
 }
-
 
 /* =============================
 INSERT OF UPDATE
