@@ -78,7 +78,25 @@ async function initTasks(){
 }
 
 initTasks();
+/*==================================
+alleen klussen
+======================*/
 
+async function initTasks(){
+
+    await loadTasks();
+    renderTaskListPlanner();
+
+}
+
+
+window.addEventListener("DOMContentLoaded", () => {
+
+    if(document.getElementById("taskListPlanner")){
+        initTasks();
+    }
+
+});
 
 /* =============================
 DEBUG
@@ -87,3 +105,4 @@ DEBUG
 // run in console:
 // testInsertTask()
 // loadTasks()
+
