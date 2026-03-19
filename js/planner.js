@@ -57,7 +57,13 @@ function resetForm(){
 const deleteBtn = document.getElementById("deleteBtn");
 if(deleteBtn) deleteBtn.style.display = "none";
 
-    enableForm(true); // 🔥 deze niet vergeten
+    enableForm(true); 
+}
+
+function getPriorityIcon(p){
+    if(p == 1) return "🔴";
+    if(p == 2) return "🟠";
+    return "🟢";
 }
 
 /* =============================

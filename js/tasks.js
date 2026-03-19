@@ -77,18 +77,6 @@ async function initTasks(){
     renderTaskListPlanner();
 }
 
-initTasks();
-/*==================================
-alleen klussen
-======================*/
-
-async function initTasks(){
-
-    await loadTasks();
-    renderTaskListPlanner();
-
-}
-
 
 window.addEventListener("DOMContentLoaded", () => {
 
