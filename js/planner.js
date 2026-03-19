@@ -75,7 +75,6 @@ async function loadTrips(){
     const { data, error } = await supabaseClient
         .from("trip")
         .select("*")
-        .eq("user_id", user_id)
         .order("start_date", { ascending: true });
 
     if(error){
@@ -147,6 +146,12 @@ function loadIntoForm(t){
         document.getElementById("onderhoudDate").value = t.start_date;
         document.getElementById("location").value = t.destination || "";
     }
+const user_id = getUserId();
+
+if(t.user_id !== user_id){
+    alert("Alleen je eigen events kun je aanpassen");
+    return;
+}
 
     document.getElementById("feedback").innerText = "✏️ bewerken";
 }
