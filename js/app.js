@@ -46,19 +46,41 @@ async function loadTrips(){
 
 console.log("⏳ events laden...");
 
-const { data, error } = await supabaseClient
+/* TRIPS */
+const { data: trips, error: tripError } = await supabaseClient
 .from("trip")
 .select("*");
 
-if(error){
-console.error("Supabase error:", error);
-return;
+if(tripError){
+    console.error("Trip error:", tripError);
 }
 
-events = data || [];
+/* MAINTENANCE */
+const { data: maintenance, error: maintenanceError } = await supabaseClient
+.from("maintenance")
+.select("*");
 
+if(maintenanceError){
+    console.error("Maintenance error:", maintenanceError);
 }
 
+/* NORMALIZE DATA */
+const tripEvents = (trips || []).map(t => ({
+    ...t,
+    type: "trip"
+}));
+
+const maintenanceEvents = (maintenance || []).map(m => ({
+    ...m,
+    type: "onderhoud",
+    start_date: m.date,        // 👈 belangrijk
+    end_date: m.date           // 👈 belangrijk
+}));
+
+/* COMBINE */
+events = [...tripEvents, ...maintenanceEvents];
+
+}
 
 /* -----------------------------
 STATUS
