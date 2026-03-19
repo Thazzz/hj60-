@@ -250,6 +250,18 @@ position:relative; /* 👈 belangrijk */
     border-radius:3px;
 }
 
+/* task */
+.taskTitle.done {
+    text-decoration: line-through;
+    opacity: 0.5;
+}
+
+.taskTitle.doing {
+    font-weight: bold;
+}
+
+
+
 /* onderhoud */
 
 .maintenanceRow{
