@@ -46,7 +46,8 @@ function resetForm(){
     document.getElementById("onderhoudDate").value = "";
     document.getElementById("location").value = "";
 
-    document.getElementById("deleteBtn").style.display = "none";
+const deleteBtn = document.getElementById("deleteBtn");
+if(deleteBtn) deleteBtn.style.display = "none";
 
     enableForm(true); // 🔥 deze niet vergeten
 }
@@ -133,7 +134,11 @@ LOAD INTO FORM
 function loadIntoForm(t){
 
     const user_id = getUserId();
-    const isOwner = t.user_id === user_id;
+
+    // 🔥 FIX: robuuste vergelijking
+    const isOwner =
+        (t.user_id || "").trim().toLowerCase() ===
+        (user_id || "").trim().toLowerCase();
 
     editingId = t.id;
     editingUserId = t.user_id;
@@ -157,40 +162,22 @@ function loadIntoForm(t){
 
     /* OWNER CHECK */
 
+    const deleteBtn = document.getElementById("deleteBtn");
+    const feedback = document.getElementById("feedback");
+
     if(isOwner){
-        document.getElementById("deleteBtn").style.display = "block";
-        document.getElementById("feedback").innerText = "✏️ bewerken";
+        if(deleteBtn) deleteBtn.style.display = "block";
+        if(feedback) feedback.innerText = "✏️ bewerken";
 
         enableForm(true);
 
     } else {
-        document.getElementById("deleteBtn").style.display = "none";
-        document.getElementById("feedback").innerText = "👀 alleen bekijken";
+        if(deleteBtn) deleteBtn.style.display = "none";
+        if(feedback) feedback.innerText = "👀 alleen bekijken";
 
         enableForm(false);
     }
-
 }
-
-function enableForm(enabled){
-
-    const fields = [
-        "owner",
-        "destination",
-        "start",
-        "end",
-        "onderhoudDate",
-        "location"
-    ];
-
-    fields.forEach(id => {
-        const el = document.getElementById(id);
-        if(el) el.disabled = !enabled;
-    });
-
-    document.getElementById("saveBtn").disabled = !enabled;
-}
-
 
 /* =============================
 SAVE
