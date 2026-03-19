@@ -16,7 +16,7 @@ STATE
 ============================= */
 
 let tasks = [];
-
+let editingTaskId = null;
 
 /* =============================
 TEST INSERT
@@ -81,7 +81,23 @@ async function saveTask(){
         return;
     }
 
-    const { error } = await supabaseClient
+    let query;
+
+if(editingTaskId){
+    // 🔥 UPDATE (bestaande klus)
+    query = supabaseClient
+        .from("tasks")
+        .update({
+            title,
+            description,
+            priority,
+            owner
+        })
+        .eq("id", editingTaskId);
+
+} else {
+    // 🆕 NIEUWE klus
+    query = supabaseClient
         .from("tasks")
         .insert([{
             title,
@@ -90,6 +106,9 @@ async function saveTask(){
             status: "todo",
             owner
         }]);
+}
+
+const { error } = await query;
 
     if(error){
         console.error("❌ save error", error);
@@ -98,6 +117,10 @@ async function saveTask(){
     }
 
     console.log("✅ taak opgeslagen");
+
+// reset edit mode
+editingTaskId = null;
+document.getElementById("deleteTaskBtn").style.display = "none";
 
     // reset form
     document.getElementById("taskTitle").value = "";

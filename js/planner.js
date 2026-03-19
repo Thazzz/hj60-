@@ -446,12 +446,35 @@ function renderTaskListPlanner(){
         div.className = "tripItem";
 
         div.innerText =
-            `${getPriorityIcon(task.priority)} ${task.title} (${task.status})`;
+    `${getPriorityIcon(task.priority)} ${task.title} (${task.status})`;
+
+div.onclick = () => loadTaskIntoForm(task);
 
         el.appendChild(div);
 
     });
 
+}
+
+
+/*=============================
+edit task
+=============================*/
+
+let editingTaskId = null;
+
+function loadTaskIntoForm(task){
+
+    editingTaskId = task.id;
+
+    document.getElementById("taskTitle").value = task.title || "";
+    document.getElementById("taskDesc").value = task.description || "";
+    document.getElementById("taskPriority").value = task.priority || 1;
+    document.getElementById("taskOwner").value = task.owner || "";
+
+    document.getElementById("deleteTaskBtn").style.display = "block";
+
+    console.log("✏️ editing task", task.id);
 }
 
 /* =============================
