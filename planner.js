@@ -27,6 +27,14 @@ let editingUserId = null;
 HELPERS
 ============================= */
 
+function enableForm(enabled){
+    const fields = document.querySelectorAll("input, select");
+
+    fields.forEach(f => {
+        f.disabled = !enabled;
+    });
+}
+
 function getUserId(){
     return localStorage.getItem("user_id");
 }
@@ -69,13 +77,7 @@ LOAD EVENTS
 
 async function loadTrips(){
 
-    const user_id = getUserId();
-
-    if(!user_id){
-        trips = [];
-        renderTripList();
-        return;
-    }
+  
 
     const { data, error } = await supabaseClient
         .from("trip")
@@ -133,16 +135,43 @@ LOAD INTO FORM
 
 function loadIntoForm(t){
 
-    const user_id = getUserId();
-    const isOwner = t.user_id === user_id;
+    console.log("LOAD INTO FORM", {
+        id: t.id,
+        user: t.user_id
+    });
 
+    // state zetten
     editingId = t.id;
     editingUserId = t.user_id;
 
-    document.getElementById("eventType").value = t.type;
-    document.getElementById("eventType").dispatchEvent(new Event("change"));
+    // type zetten + UI switch triggeren
+    const typeEl = document.getElementById("eventType");
+    typeEl.value = t.type;
+    typeEl.dispatchEvent(new Event("change"));
 
-    /* FORM VULLEN */
+    /* =============================
+    FORM VULLEN
+    ============================= */
+
+function loadIntoForm(t){
+
+    console.log("LOAD INTO FORM", {
+        id: t.id,
+        user: t.user_id
+    });
+
+    // state
+    editingId = t.id;
+    editingUserId = t.user_id;
+
+    // type switch
+    const typeEl = document.getElementById("eventType");
+    typeEl.value = t.type;
+    typeEl.dispatchEvent(new Event("change"));
+
+    /* =============================
+    FORM VULLEN
+    ============================= */
 
     if(t.type === "trip"){
         document.getElementById("owner").value = t.owner || "";
@@ -156,44 +185,23 @@ function loadIntoForm(t){
         document.getElementById("location").value = t.destination || "";
     }
 
-    /* OWNER CHECK */
+    /* =============================
+    UI STATE
+    ============================= */
 
-   const deleteBtn = document.getElementById("deleteBtn");
-const feedback = document.getElementById("feedback");
+    const deleteBtn = document.getElementById("deleteBtn");
+    const feedback = document.getElementById("feedback");
 
-if(isOwner){
-    if(deleteBtn) deleteBtn.style.display = "block";
+    if(deleteBtn){
+        deleteBtn.style.display = "block";
+
+        // 🔥 HIER moet hij zitten
+        deleteBtn.onclick = deleteEvent;
+    }
+
     if(feedback) feedback.innerText = "✏️ bewerken";
 
     enableForm(true);
-
-} else {
-    if(deleteBtn) deleteBtn.style.display = "none";
-    if(feedback) feedback.innerText = "👀 alleen bekijken";
-
-    enableForm(false);
-}
-
-}
-
-function enableForm(enabled){
-
-    const fields = [
-        "owner",
-        "destination",
-        "start",
-        "end",
-        "onderhoudDate",
-        "location"
-    ];
-
-    fields.forEach(id => {
-        const el = document.getElementById(id);
-        if(el) el.disabled = !enabled;
-    });
-
-    const saveBtn = document.getElementById("saveBtn");
-    if(saveBtn) saveBtn.disabled = !enabled;
 }
 
 /* =============================
@@ -317,6 +325,13 @@ DELETE
 
 async function deleteEvent(){
 
+console.log("DELETE DEBUG", {
+    editingId,
+    editingUserId,
+    currentUser: getUserId()
+});
+
+
     const feedback = document.getElementById("feedback");
     const user_id = getUserId();
 
@@ -328,7 +343,6 @@ async function deleteEvent(){
         .from("trip")
         .delete()
         .eq("id", editingId)
-        .eq("user_id", editingUserId);
 
     if(error){
         console.error(error);
