@@ -24,7 +24,6 @@ DATA
 ----------------------------- */
 
 let events = [];
-let maintenance = [];
 
 const tasks = [
 "Olie verversen",
@@ -38,13 +37,14 @@ const shopping = [
 "Remreiniger"
 ];
 
+
 /* -----------------------------
-TRIPS LADEN
+TRIPS LADEN (nu ook onderhoud)
 ----------------------------- */
 
 async function loadTrips(){
 
-console.log("⏳ trips laden...");
+console.log("⏳ events laden...");
 
 const { data, error } = await supabaseClient
 .from("trip")
@@ -59,30 +59,6 @@ events = data || [];
 
 }
 
-/* -----------------------------
-MAINTENANCE LADEN
------------------------------ */
-
-async function loadMaintenance(){
-
-    console.log("⏳ maintenance laden...");
-
-    const { data, error } = await supabaseClient
-    .from("maintenance")
-    .select("*")
-    .order("name");
-
-    console.log("👉 DATA:", data);
-    console.log("👉 ERROR:", error);
-
-    if(error){
-        console.error("maintenance error:", error);
-        return;
-    }
-
-    maintenance = data || [];
-
-}
 
 /* -----------------------------
 STATUS
@@ -94,6 +70,8 @@ const statusElement = document.getElementById("status");
 const now = new Date();
 
 const activeTrip = events.find(event => {
+
+if(event.type !== "trip") return false;
 
 const start = new Date(event.start_date + "T00:00:00");
 const end = new Date(event.end_date + "T23:59:59");
@@ -110,6 +88,7 @@ statusElement.innerText = "🚙 HJ60 staat momenteel stil";
 }
 
 }
+
 
 /* -----------------------------
 TASKS
@@ -128,53 +107,6 @@ list.appendChild(li);
 
 }
 
-/* -----------------------------
-MAINTENANCE RENDER
------------------------------ */
-
-function renderMaintenance(){
-
-const container = document.getElementById("maintenanceList");
-if(!container) return;
-
-container.innerHTML = "";
-
-maintenance.forEach(item => {
-
-const row = document.createElement("div");
-row.className = "maintenanceRow";
-
-const label = document.createElement("span");
-label.textContent = item.name;
-
-const input = document.createElement("input");
-input.type = "date";
-input.value = item.last_done_date || "";
-
-/* SAVE NAAR SUPABASE */
-input.onchange = async () => {
-
-    item.last_done_date = input.value;
-
-    const { error } = await supabaseClient
-    .from("maintenance")
-    .update({ last_done_date: item.last_done_date })
-    .eq("id", item.id);
-
-    if(error){
-        console.error("update fout:", error);
-    }
-
-};
-
-row.appendChild(label);
-row.appendChild(input);
-
-container.appendChild(row);
-
-});
-
-}
 
 /* -----------------------------
 SHOPPING
@@ -192,6 +124,7 @@ list.appendChild(li);
 });
 
 }
+
 
 /* -----------------------------
 GEAR
@@ -221,6 +154,7 @@ container.appendChild(div);
 });
 
 }
+
 
 /* -----------------------------
 KALENDER
@@ -298,7 +232,6 @@ year===today.getFullYear()
 cell.classList.add("today");
 }
 
-/* ADD CELL */
 grid.appendChild(cell);
 
 /* EVENTS */
@@ -313,6 +246,29 @@ end.setHours(0,0,0,0);
 
 const current = new Date(cellDate);
 current.setHours(0,0,0,0);
+
+/* =============================
+ONDERHOUD (1 dag)
+============================= */
+
+if(event.type === "onderhoud"){
+
+    if(current.getTime() === start.getTime()){
+
+        const label = document.createElement("div");
+        label.className = "eventOnderhoud";
+        label.innerText = "🔧 " + (event.location || "");
+
+        cell.appendChild(label);
+    }
+
+    return;
+}
+
+
+/* =============================
+TRIP (meerdere dagen)
+============================= */
 
 if(current >= start && current <= end){
 
@@ -367,6 +323,7 @@ cellIndex++;
 
 }
 
+
 /* -----------------------------
 NAVIGATIE
 ----------------------------- */
@@ -381,26 +338,25 @@ currentDate.setMonth(currentDate.getMonth()-1);
 renderCalendar();
 }
 
+
 /* -----------------------------
 START
 ----------------------------- */
 
 async function startApp(){
 
-    console.log("Dashboard initialiseren");
+console.log("Dashboard initialiseren");
 
-    await loadTrips();
-    await loadMaintenance();
+await loadTrips();
 
-    updateStatus();
-    renderTasks();
-    renderMaintenance();
-    renderShopping();
-    renderCalendar();
-    renderGear();
+updateStatus();
+renderTasks();
+renderShopping();
+renderCalendar();
+renderGear();
 
-    document.getElementById("nextMonth").onclick = nextMonth;
-    document.getElementById("prevMonth").onclick = prevMonth;
+document.getElementById("nextMonth").onclick = nextMonth;
+document.getElementById("prevMonth").onclick = prevMonth;
 
 }
 
