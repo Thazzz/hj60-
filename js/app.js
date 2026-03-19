@@ -155,6 +155,34 @@ container.appendChild(div);
 
 }
 
+function renderMaintenance(){
+
+const container = document.getElementById("maintenanceList");
+if(!container) return;
+
+container.innerHTML = "";
+
+events
+.filter(e => e.type === "onderhoud")
+.forEach(e => {
+
+    const row = document.createElement("div");
+    row.className = "maintenanceRow";
+
+    const name = document.createElement("span");
+    name.innerText = e.location || "Onbekend";
+
+    const date = document.createElement("span");
+    date.innerText = e.start_date || "-";
+
+    row.appendChild(name);
+    row.appendChild(date);
+
+    container.appendChild(row);
+
+});
+
+}
 
 /* -----------------------------
 KALENDER
@@ -238,8 +266,8 @@ grid.appendChild(cell);
 
 events.forEach(event => {
 
-const start = new Date(event.start_date);
-const end = new Date(event.end_date);
+const start = new Date(event.start_date + "T00:00:00");
+const end = new Date(event.end_date + "T00:00:00");
 
 start.setHours(0,0,0,0);
 end.setHours(0,0,0,0);
@@ -264,6 +292,8 @@ if(event.type === "onderhoud"){
 
     return;
 }
+
+
 
 
 /* =============================
@@ -351,6 +381,7 @@ await loadTrips();
 
 updateStatus();
 renderTasks();
+renderMaintenance();
 renderShopping();
 renderCalendar();
 renderGear();

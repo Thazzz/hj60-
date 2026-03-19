@@ -32,7 +32,7 @@ function initUser(){
 const savedUser = localStorage.getItem("user_id");
 
 if(savedUser){
-    document.getElementById("user_id").value = savedUser;
+    document.getElementById("email").value = savedUser;
 }
 
 }
@@ -57,7 +57,6 @@ if(!user_id){
 const { data, error } = await supabaseClient
 .from("trip")
 .select("*")
-.eq("user_id", user_id)
 .order("start_date", { ascending: true });
 
 if(error){
@@ -165,7 +164,8 @@ async function saveEvent(){
 
 const feedback = document.getElementById("feedback");
 const type = document.getElementById("eventType").value;
-const user_id = document.getElementById("user_id").value.trim();
+const user_id = document.getElementById("email").value.trim();
+localStorage.setItem("user_id", user_id);
 
 /* VALIDATE USER */
 
