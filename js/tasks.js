@@ -66,6 +66,50 @@ async function loadTasks(){
 
 }
 
+/*================================
+save task
+=============================*/
+async function saveTask(){
+
+    const title = document.getElementById("taskTitle").value.trim();
+    const description = document.getElementById("taskDesc").value.trim();
+    const priority = parseInt(document.getElementById("taskPriority").value);
+    const owner = document.getElementById("taskOwner").value.trim();
+
+    if(!title){
+        alert("Titel verplicht");
+        return;
+    }
+
+    const { error } = await supabaseClient
+        .from("tasks")
+        .insert([{
+            title,
+            description,
+            priority,
+            status: "todo",
+            owner
+        }]);
+
+    if(error){
+        console.error("❌ save error", error);
+        alert("Opslaan mislukt");
+        return;
+    }
+
+    console.log("✅ taak opgeslagen");
+
+    // reset form
+    document.getElementById("taskTitle").value = "";
+    document.getElementById("taskDesc").value = "";
+    document.getElementById("taskPriority").value = "1";
+    document.getElementById("taskOwner").value = "";
+
+    // refresh lijst
+    await loadTasks();
+    renderTaskListPlanner();
+}
+
 
 /* =============================
 INIT
