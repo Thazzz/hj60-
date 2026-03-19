@@ -45,7 +45,15 @@
 <!-- FORM -->
 <section class="card formCard">
 
-    <h2>Nieuw Event</h2>
+    <h2>PlannerApp</h2>
+
+<div style="margin-bottom:10px;">
+    <button onclick="showTab('event')">Event</button>
+    <button onclick="showTab('task')">Klus</button>
+</div>
+
+   <div id="eventTab">
+
 <div class="formGroup">
     <label>Type</label>
     <select id="eventType">
