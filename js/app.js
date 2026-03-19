@@ -145,14 +145,18 @@ function renderTasks(){
 
         const li = document.createElement("li");
 
-        li.innerHTML = `
-            ${getPriorityIcon(task.priority)} ${task.title}
-            <br>
-            <small>${task.status} - ${task.owner || "-"}</small>
-        `;
+       li.innerHTML = `
+    ${getPriorityIcon(task.priority)} 
+    <span class="taskTitle ${task.status}">
+        ${task.title}
+    </span>
+    <br>
+    <small>${task.status} - ${task.owner || "-"}</small>
+`;
 
-        list.appendChild(li);
+li.onclick = () => toggleTaskStatus(task.id, task.status);
 
+list.appendChild(li);
     });
 
 }
@@ -163,7 +167,28 @@ function getPriorityIcon(p){
     return "🟢";
 }
 
+async function toggleTaskStatus(id, currentStatus){
 
+    let newStatus = "todo";
+
+    if(currentStatus === "todo") newStatus = "doing";
+    else if(currentStatus === "doing") newStatus = "done";
+
+    const { error } = await supabaseClient
+        .from("tasks")
+        .update({ status: newStatus })
+        .eq("id", id);
+
+    if(error){
+        console.error("❌ update error", error);
+        return;
+    }
+
+    console.log("✅ status updated:", newStatus);
+
+    await loadTasks();
+    renderTasks();
+}
 
 /* -----------------------------
 SHOPPING
