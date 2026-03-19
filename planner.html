@@ -121,7 +121,42 @@
 </div>
 
 <div id="taskTab" style="display:none;">
+
     <h3>Nieuwe klus</h3>
+
+    <div class="formGroup">
+        <label>Klus naam</label>
+        <input id="taskTitle" placeholder="Bijv. Olie verversen">
+    </div>
+
+    <div class="formGroup">
+        <label>Beschrijving</label>
+        <textarea id="taskDesc"></textarea>
+    </div>
+
+    <div class="formGroup">
+        <label>Prioriteit</label>
+        <select id="taskPriority">
+            <option value="1">🔴 Hoog</option>
+            <option value="2">🟠 Midden</option>
+            <option value="3">🟢 Laag</option>
+        </select>
+    </div>
+
+    <div class="formGroup">
+        <label>Eigenaar</label>
+        <input id="taskOwner" placeholder="Naam">
+    </div>
+
+    <div class="formGroup">
+        <label>Boodschappen</label>
+        <textarea id="taskShopping"></textarea>
+    </div>
+
+    <button onclick="saveTask()" class="primaryBtn">
+        Opslaan
+    </button>
+
 </div>
 
 </section>
