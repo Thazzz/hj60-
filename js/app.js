@@ -115,7 +115,6 @@ async function loadTasks(){
         .from("tasks")
         .select("*")
         .neq("status", "done")
-        .order("status", { ascending: true })
         .order("priority", { ascending: true });
 
     if(error){
@@ -124,6 +123,23 @@ async function loadTasks(){
     }
 
     tasks = data;
+
+tasks.sort((a, b) => {
+
+    const statusOrder = {
+        "doing": 0,
+        "todo": 1
+    };
+
+    const statusDiff =
+        (statusOrder[a.status] ?? 99) -
+        (statusOrder[b.status] ?? 99);
+
+    if(statusDiff !== 0) return statusDiff;
+
+    return a.priority - b.priority;
+
+});
 
 }
 
@@ -142,22 +158,40 @@ function renderTasks(){
         return;
     }
 
+    let lastStatus = null;
+
     tasks.forEach(task => {
+
+        // 🔥 divider toevoegen bij status wissel
+        if(task.status !== lastStatus){
+
+            const divider = document.createElement("li");
+            divider.innerText =
+                task.status === "doing" ? "🔧 Bezig" : "📋 Te doen";
+
+            divider.style.opacity = "0.6";
+            divider.style.marginTop = "10px";
+
+            list.appendChild(divider);
+
+            lastStatus = task.status;
+        }
 
         const li = document.createElement("li");
 
-       li.innerHTML = `
-    ${getPriorityIcon(task.priority)} 
-    <span class="taskTitle ${task.status}">
-        ${task.title}
-    </span>
-    <br>
-    <small>${task.status} - ${task.owner || "-"}</small>
-`;
+        li.innerHTML = `
+            ${getPriorityIcon(task.priority)} 
+            <span class="taskTitle ${task.status}">
+                ${task.title}
+            </span>
+            <br>
+            <small>${task.status} - ${task.owner || "-"}</small>
+        `;
 
-li.onclick = () => toggleTaskStatus(task.id, task.status);
+        li.onclick = () => toggleTaskStatus(task.id, task.status);
 
-list.appendChild(li);
+        list.appendChild(li);
+
     });
 
 }
