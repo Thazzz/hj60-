@@ -1,5 +1,5 @@
 /*
-HJ60 Planner App
+HJ60 Planner App - CLEAN VERSION
 */
 
 console.log("Planner gestart");
@@ -15,7 +15,6 @@ const { createClient } = supabase;
 const supabaseClient = createClient(supabaseUrl, supabaseKey);
 
 
-
 /* =============================
 STATE
 ============================= */
@@ -23,50 +22,70 @@ STATE
 let trips = [];
 let editingId = null;
 
+/* =============================
+HELPERS
+============================= */
+
+function getUserId(){
+    return localStorage.getItem("user_id");
+}
+
+function setUserId(id){
+    localStorage.setItem("user_id", id);
+}
+
+function resetForm(){
+    editingId = null;
+
+    document.getElementById("owner").value = "";
+    document.getElementById("destination").value = "";
+    document.getElementById("start").value = "";
+    document.getElementById("end").value = "";
+    document.getElementById("onderhoudDate").value = "";
+    document.getElementById("location").value = "";
+
+    document.getElementById("deleteBtn").style.display = "none";
+}
 
 /* =============================
-INIT USER (LOCAL STORAGE)
+INIT USER
 ============================= */
 
 function initUser(){
-
-const savedUser = localStorage.getItem("user_id");
-
-if(savedUser){
-    document.getElementById("email").value = savedUser;
-} else {
-    console.warn("⚠️ geen user_id gevonden");
-}
-
+    const saved = getUserId();
+    if(saved){
+        document.getElementById("email").value = saved;
+    }
 }
 
 /* =============================
-LOAD TRIPS
+LOAD EVENTS
 ============================= */
 
 async function loadTrips(){
 
-console.log("⏳ events laden...");
+    const user_id = getUserId();
 
-const user_id = localStorage.getItem("user_id");
+    if(!user_id){
+        trips = [];
+        renderTripList();
+        return;
+    }
 
-const { data, error } = await supabaseClient
-.from("trip")
-.select("*")
-.eq("user_id", user_id) // 🔥 BELANGRIJK
-.order("start_date", { ascending: true });
+    const { data, error } = await db
+        .from("trip")
+        .select("*")
+        .eq("user_id", user_id)
+        .order("start_date", { ascending: true });
 
-if(error){
-console.error("Fout bij laden:", error);
-return;
+    if(error){
+        console.error(error);
+        return;
+    }
+
+    trips = data || [];
+    renderTripList();
 }
-
-trips = data || [];
-
-renderTripList();
-
-}
-
 
 /* =============================
 RENDER LIST
@@ -74,281 +93,209 @@ RENDER LIST
 
 function renderTripList(){
 
-const container = document.getElementById("tripList");
-container.innerHTML = "";
+    const el = document.getElementById("tripList");
+    el.innerHTML = "";
 
-if(trips.length === 0){
-container.innerText = "Nog geen events";
-return;
+    if(trips.length === 0){
+        el.innerText = "Nog geen events";
+        return;
+    }
+
+    trips.forEach(t => {
+
+        const div = document.createElement("div");
+        div.className = "tripItem";
+
+        div.onclick = () => loadIntoForm(t);
+
+        if(t.type === "trip"){
+            div.innerText =
+                `${t.start_date} → ${t.end_date} | ${t.owner || "?"}` +
+                (t.destination ? ` → ${t.destination}` : "");
+        }
+
+        if(t.type === "onderhoud"){
+            div.innerText =
+                `🔧 ${t.start_date} | ${t.destination || "onbekend"}`;
+        }
+
+        el.appendChild(div);
+    });
 }
-
-trips.forEach(trip => {
-
-const div = document.createElement("div");
-div.className = "tripItem";
-
-/* CLICKABLE */
-div.onclick = () => loadIntoForm(trip);
-
-/* TRIP */
-if(trip.type === "trip"){
-    div.innerText =
-    trip.start_date +
-    " → " +
-    trip.end_date +
-    " | " +
-    (trip.owner || "?") +
-    (trip.destination ? " → " + trip.destination : "");
-}
-
-/* ONDERHOUD */
-if(trip.type === "onderhoud"){
-    div.innerText =
-    "🔧 " +
-    trip.start_date +
-    " | " +
-    (trip.destination || "onbekend");
-}
-
-container.appendChild(div);
-
-});
-
-}
-
 
 /* =============================
 LOAD INTO FORM
 ============================= */
 
-function loadIntoForm(trip){
+function loadIntoForm(t){
 
-const user_id = localStorage.getItem("user_id");
+    editingId = t.id;
 
-/* SECURITY CHECK */
-if(trip.user_id !== user_id){
-    alert("Dit event is niet van jou");
-    return;
+    document.getElementById("eventType").value = t.type;
+    document.getElementById("eventType").dispatchEvent(new Event("change"));
+
+    document.getElementById("deleteBtn").style.display = "block";
+
+    if(t.type === "trip"){
+        document.getElementById("owner").value = t.owner || "";
+        document.getElementById("destination").value = t.destination || "";
+        document.getElementById("start").value = t.start_date;
+        document.getElementById("end").value = t.end_date;
+    }
+
+    if(t.type === "onderhoud"){
+        document.getElementById("onderhoudDate").value = t.start_date;
+        document.getElementById("location").value = t.destination || "";
+    }
+
+    document.getElementById("feedback").innerText = "✏️ bewerken";
 }
-
-editingId = trip.id;
-
-document.getElementById("eventType").value = trip.type;
-document.getElementById("eventType").dispatchEvent(new Event("change"));
-
-document.getElementById("deleteBtn").style.display = "block";
-
-if(trip.type === "trip"){
-    document.getElementById("owner").value = trip.owner || "";
-    document.getElementById("destination").value = trip.destination || "";
-    document.getElementById("start").value = trip.start_date;
-    document.getElementById("end").value = trip.end_date;
-}
-
-if(trip.type === "onderhoud"){
-    document.getElementById("onderhoudDate").value = trip.start_date;
-    document.getElementById("location").value = trip.destination || "";
-}
-
-document.getElementById("feedback").innerText = "✏️ bewerken";
-
-}
-
 
 /* =============================
-DELETE EVENT (FIXED!)
-============================= */
-
-async function deleteEvent(){
-
-const feedback = document.getElementById("feedback");
-const user_id = localStorage.getItem("user_id");
-
-if(!editingId){
-    return;
-}
-
-const confirmDelete = confirm("Weet je zeker dat je dit event wilt verwijderen?");
-if(!confirmDelete) return;
-
-const { error } = await supabaseClient
-.from("trip")
-.delete()
-.eq("id", editingId)
-.eq("user_id", user_id);
-
-if(error){
-    console.error("Delete fout:", error);
-    feedback.innerText = "❌ verwijderen mislukt";
-    return;
-}
-
-feedback.innerText = "🗑️ verwijderd";
-editingId = null;
-
-/* reset form */
-
-document.getElementById("owner").value = "";
-document.getElementById("destination").value = "";
-document.getElementById("start").value = "";
-document.getElementById("end").value = "";
-document.getElementById("onderhoudDate").value = "";
-document.getElementById("location").value = "";
-
-document.getElementById("deleteBtn").style.display = "none";
-
-await loadTrips();
-
-}
-
-
-/* =============================
-SAVE EVENT
+SAVE
 ============================= */
 
 async function saveEvent(){
 
-const feedback = document.getElementById("feedback");
-const type = document.getElementById("eventType").value;
-const user_id = document.getElementById("email").value.trim();
-localStorage.setItem("user_id", user_id);
+    const feedback = document.getElementById("feedback");
 
-document.getElementById("deleteBtn").style.display = "none";
+    const type = document.getElementById("eventType").value;
+    const user_id = document.getElementById("email").value.trim();
 
-/* VALIDATE USER */
+    if(!user_id){
+        feedback.innerText = "⚠️ vul email in";
+        return;
+    }
 
-if(!user_id){
-    feedback.innerText = "⚠️ vul je email in";
-    return;
+    setUserId(user_id);
+
+    let payload = { type, user_id };
+
+    /* TRIP */
+
+    if(type === "trip"){
+
+        const owner = document.getElementById("owner").value.trim();
+        const destination = document.getElementById("destination").value.trim();
+        const start = document.getElementById("start").value;
+        let end = document.getElementById("end").value;
+
+        if(!owner || !start){
+            feedback.innerText = "⚠️ naam + start verplicht";
+            return;
+        }
+
+        if(!end) end = start;
+
+        if(end < start){
+            feedback.innerText = "⚠️ eind vóór start";
+            return;
+        }
+
+        const conflict = trips.find(t =>
+            t.type === "trip" &&
+            t.id !== editingId &&
+            start <= t.end_date &&
+            end >= t.start_date
+        );
+
+        if(conflict){
+            feedback.innerText = `⚠️ conflict met ${conflict.owner}`;
+            return;
+        }
+
+        payload = {
+            ...payload,
+            owner,
+            destination,
+            start_date: start,
+            end_date: end,
+            status: "aangevraagd"
+        };
+    }
+
+    /* ONDERHOUD */
+
+    if(type === "onderhoud"){
+
+        const date = document.getElementById("onderhoudDate").value;
+        const location = document.getElementById("location").value.trim();
+
+        if(!date || !location){
+            feedback.innerText = "⚠️ datum + locatie verplicht";
+            return;
+        }
+
+        payload = {
+            ...payload,
+            owner: "Onderhoud",
+            destination: location,
+            start_date: date,
+            end_date: date,
+            status: "aangevraagd"
+        };
+    }
+
+    /* INSERT / UPDATE */
+
+    let query;
+
+    if(editingId){
+        query = db
+            .from("trip")
+            .update(payload)
+            .eq("id", editingId)
+            .eq("user_id", user_id);
+    } else {
+        query = db
+            .from("trip")
+            .insert([payload]);
+    }
+
+    const { error } = await query;
+
+    if(error){
+        console.error(error);
+        feedback.innerText = "❌ opslaan mislukt";
+        return;
+    }
+
+    feedback.innerText = "✅ opgeslagen";
+
+    resetForm();
+    await loadTrips();
 }
-
-/* PAYLOAD */
-
-let payload = { 
-    type,
-    user_id
-};
-
 
 /* =============================
-TRIP
+DELETE
 ============================= */
 
-if(type === "trip"){
+async function deleteEvent(){
 
-    const owner = document.getElementById("owner").value.trim();
-    const destination = document.getElementById("destination").value.trim();
-    const start = document.getElementById("start").value;
-    let end = document.getElementById("end").value;
+    const feedback = document.getElementById("feedback");
+    const user_id = getUserId();
 
-    if(!owner || !start){
-        feedback.innerText = "⚠️ vul minimaal naam en startdatum in";
+    if(!editingId) return;
+
+    if(!confirm("Verwijderen?")) return;
+
+    const { error } = await db
+        .from("trip")
+        .delete()
+        .eq("id", editingId)
+        .eq("user_id", user_id);
+
+    if(error){
+        console.error(error);
+        feedback.innerText = "❌ verwijderen mislukt";
         return;
     }
 
-    if(!end){
-        end = start;
-    }
+    feedback.innerText = "🗑️ verwijderd";
 
-    if(end < start){
-        feedback.innerText = "⚠️ einddatum kan niet vóór startdatum";
-        return;
-    }
-
-    const conflict = trips.find(t =>
-        t.type === "trip" &&
-        t.id !== editingId &&
-        start <= t.end_date &&
-        end >= t.start_date
-    );
-
-    if(conflict){
-        feedback.innerText =
-        "⚠️ conflict met " +
-        (conflict.owner || "?") +
-        " (" + conflict.start_date + ")";
-        return;
-    }
-
-    payload.owner = owner;
-    payload.destination = destination;
-    payload.start_date = start;
-    payload.end_date = end;
-    payload.status = "aangevraagd";
+    resetForm();
+    await loadTrips();
 }
-
-
-/* =============================
-ONDERHOUD
-============================= */
-
-if(type === "onderhoud"){
-
-    const date = document.getElementById("onderhoudDate").value;
-    const location = document.getElementById("location").value.trim();
-
-    if(!date || !location){
-        feedback.innerText = "⚠️ vul datum en locatie in";
-        return;
-    }
-
-    payload.owner = "Onderhoud";
-    payload.destination = location;
-    payload.start_date = date;
-    payload.end_date = date;
-    payload.status = "aangevraagd"; // ✅ FIXED
-}
-
-
-/* =============================
-INSERT / UPDATE
-============================= */
-
-let query;
-
-if(editingId){
-
-    query = supabaseClient
-    .from("trip")
-    .update(payload)
-    .eq("id", editingId)
-    .eq("user_id", user_id);
-
-} else {
-
-    query = supabaseClient
-    .from("trip")
-    .insert([payload]);
-
-}
-
-const { error } = await query;
-
-if(error){
-console.error("Opslaan fout:", error);
-feedback.innerText = "❌ opslaan mislukt";
-return;
-}
-
-
-/* SUCCESS */
-
-feedback.innerText = "✅ opgeslagen";
-editingId = null;
-
-/* reset form */
-
-document.getElementById("owner").value = "";
-document.getElementById("destination").value = "";
-document.getElementById("start").value = "";
-document.getElementById("end").value = "";
-document.getElementById("onderhoudDate").value = "";
-document.getElementById("location").value = "";
-
-await loadTrips();
-
-}
-
 
 /* =============================
 TYPE SWITCH
@@ -356,48 +303,42 @@ TYPE SWITCH
 
 function setupTypeSwitch(){
 
-const eventType = document.getElementById("eventType");
-const tripFields = document.getElementById("tripFields");
-const onderhoudFields = document.getElementById("onderhoudFields");
-const title = document.querySelector(".formCard h2");
+    const type = document.getElementById("eventType");
+    const trip = document.getElementById("tripFields");
+    const ond = document.getElementById("onderhoudFields");
+    const title = document.querySelector(".formCard h2");
 
-eventType.addEventListener("change", () => {
+    type.addEventListener("change", () => {
 
-    const type = eventType.value;
+        if(type.value === "trip"){
+            trip.style.display = "block";
+            ond.style.display = "none";
+            title.innerText = editingId ? "Trip bewerken" : "Nieuwe trip";
+        }
 
-    if(type === "trip"){
-        tripFields.style.display = "block";
-        onderhoudFields.style.display = "none";
-        title.innerText = "Nieuwe trip";
-    }
-
-    if(type === "onderhoud"){
-        tripFields.style.display = "none";
-        onderhoudFields.style.display = "block";
-        title.innerText = "Nieuw onderhoud";
-    }
-
-});
-
+        if(type.value === "onderhoud"){
+            trip.style.display = "none";
+            ond.style.display = "block";
+            title.innerText = editingId ? "Onderhoud bewerken" : "Nieuw onderhoud";
+        }
+    });
 }
 
-
 /* =============================
-INIT
+INIT (SAFE)
 ============================= */
 
 window.addEventListener("DOMContentLoaded", () => {
 
-document.getElementById("saveBtn").onclick = saveEvent;
-document.getElementById("deleteBtn").onclick = deleteEvent; // ✅ FIX
+    if(!document.getElementById("tripList")) return; // 💥 voorkomt crash op andere pagina's
 
-setupTypeSwitch();
-initUser();
-startApp();
+    const saveBtn = document.getElementById("saveBtn");
+    const deleteBtn = document.getElementById("deleteBtn");
 
+    if(saveBtn) saveBtn.onclick = saveEvent;
+    if(deleteBtn) deleteBtn.onclick = deleteEvent;
+
+    setupTypeSwitch();
+    initUser();
+    loadTrips();
 });
-
-
-async function startApp(){
-await loadTrips();
-}
