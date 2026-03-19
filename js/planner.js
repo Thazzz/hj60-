@@ -27,6 +27,14 @@ let editingUserId = null;
 HELPERS
 ============================= */
 
+function enableForm(enabled){
+    const fields = document.querySelectorAll("input, select");
+
+    fields.forEach(f => {
+        f.disabled = !enabled;
+    });
+}
+
 function getUserId(){
     return localStorage.getItem("user_id");
 }
