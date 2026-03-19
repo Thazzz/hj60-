@@ -215,6 +215,23 @@ position:relative; /* 👈 belangrijk */
     overflow: hidden;
 }
 
+.eventTripOnderhoud{
+    position:absolute;
+
+    height:18px;
+    line-height:18px;
+
+    background:#27ae60; /* 👈 groen */
+    color:white;
+
+    font-size:11px;
+    padding:0 6px;
+
+    border-radius:4px;
+
+    white-space:nowrap;
+    z-index:20;
+}
 /* KLUS */
 
 .eventKlus{
