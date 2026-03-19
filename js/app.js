@@ -71,6 +71,7 @@ const tripEvents = (trips || []).map(t => ({
 }));
 
 const maintenanceEvents = (maintenance || []).map(m => ({
+    id: m.id, 
     type: "onderhoud",
     start_date: m.last_done_date || null,
     end_date: m.last_done_date || null,
@@ -189,20 +190,23 @@ events
 .forEach(e => {
 
     const row = document.createElement("div");
-    row.className = "maintenanceRow";
+row.className = "maintenanceRow";
 
-    const name = document.createElement("span");
-    name.innerText = e.location || "Onbekend";
+const name = document.createElement("span");
+name.innerText = e.location || "Onbekend";
 
-    const date = document.createElement("span");
-    date.innerText = e.start_date
-    ? new Date(e.start_date).toLocaleDateString("nl-NL")
-    : "-";
+const date = document.createElement("input");
+date.type = "date";
+date.value = e.start_date || "";
 
-    row.appendChild(name);
-    row.appendChild(date);
+date.addEventListener("change", async () => {
+    await updateMaintenanceDate(e.id, date.value);
+});
 
-    container.appendChild(row);
+row.appendChild(name);
+row.appendChild(date);
+
+container.appendChild(row);
 
 });
 
@@ -414,5 +418,29 @@ document.getElementById("nextMonth").onclick = nextMonth;
 document.getElementById("prevMonth").onclick = prevMonth;
 
 }
+
+async function updateMaintenanceDate(id, newDate){
+
+const { error } = await supabaseClient
+.from("maintenance")
+.update({
+    last_done_date: newDate
+})
+.eq("id", id);
+
+if(error){
+    console.error("Update fout:", error);
+} else {
+    console.log("✅ onderhoud geüpdatet");
+}
+}
+
+date.addEventListener("change", async () => {
+    await updateMaintenanceDate(e.id, date.value);
+
+    await loadTrips();
+    renderMaintenance();
+    renderCalendar();
+});
 
 startApp();
