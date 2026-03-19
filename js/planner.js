@@ -297,6 +297,13 @@ DELETE
 
 async function deleteEvent(){
 
+console.log("DELETE DEBUG", {
+    editingId,
+    editingUserId,
+    currentUser: getUserId()
+});
+
+
     const feedback = document.getElementById("feedback");
     const user_id = getUserId();
 
@@ -308,7 +315,6 @@ async function deleteEvent(){
         .from("trip")
         .delete()
         .eq("id", editingId)
-        .eq("user_id", editingUserId);
 
     if(error){
         console.error(error);
