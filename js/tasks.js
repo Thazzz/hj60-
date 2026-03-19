@@ -151,6 +151,12 @@ window.addEventListener("DOMContentLoaded", () => {
         initTasks();
     }
 
+    const btn = document.getElementById("deleteTaskBtn");
+
+    if(btn){
+        btn.onclick = deleteTask;
+    }
+
 });
 
 /* =============================
