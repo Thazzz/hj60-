@@ -132,6 +132,45 @@ document.getElementById("deleteTaskBtn").style.display = "none";
     await loadTasks();
     renderTaskListPlanner();
 }
+/*============================
+delete task
+========================*/
+window.deleteTask = async function(){
+
+    console.log("DELETE CLICK", window.editingTaskId);
+
+    if(!window.editingTaskId){
+        alert("Geen klus geselecteerd");
+        return;
+    }
+
+    if(!confirm("Weet je zeker dat je deze klus wilt verwijderen?")){
+        return;
+    }
+
+    const { error } = await supabaseClient
+        .from("tasks")
+        .delete()
+        .eq("id", window.editingTaskId);
+
+    if(error){
+        console.error("❌ delete error", error);
+        alert("Verwijderen mislukt");
+        return;
+    }
+
+    console.log("🗑️ verwijderd");
+
+    // reset
+    window.editingTaskId = null;
+    document.getElementById("deleteTaskBtn").style.display = "none";
+
+    // refresh
+    await loadTasks();
+    renderTaskListPlanner();
+}
+
+
 
 
 /* =============================

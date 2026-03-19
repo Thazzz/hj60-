@@ -440,7 +440,9 @@ function renderTaskListPlanner(){
         return;
     }
 
-    tasks.forEach(task => {
+tasks
+    .filter(task => task.status !== "done")
+    .forEach(task => {
 
         const div = document.createElement("div");
         div.className = "tripItem";
