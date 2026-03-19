@@ -114,6 +114,7 @@ async function loadTasks(){
     const { data, error } = await supabaseClient
         .from("tasks")
         .select("*")
+        .neq("status", "done")
         .order("status", { ascending: true })
         .order("priority", { ascending: true });
 
