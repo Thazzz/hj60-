@@ -5,33 +5,17 @@ TASKS MODULE
 console.log("tasks.js geladen");
 
 /* =============================
+CONFIG
+============================= */
+
+const CURRENT_USER = "Thijs";
+
+
+/* =============================
 STATE
 ============================= */
 
 let tasks = [];
-
-
-/* =============================
-USER CHECK
-============================= */
-
-async function checkUser(){
-
-    const { data, error } = await supabaseClient.auth.getUser();
-
-    if(error){
-        console.error("❌ user error", error);
-        return;
-    }
-
-    if(!data.user){
-        console.warn("⚠️ geen ingelogde user");
-        return;
-    }
-
-    console.log("👤 ingelogde user:", data.user);
-
-}
 
 
 /* =============================
@@ -40,15 +24,6 @@ TEST INSERT
 
 async function testInsertTask(){
 
-    const { data: userData } = await supabaseClient.auth.getUser();
-
-    const user = userData.user;
-
-    if(!user){
-        console.error("❌ geen user");
-        return;
-    }
-
     const { error } = await supabaseClient
         .from("tasks")
         .insert([{
@@ -56,7 +31,7 @@ async function testInsertTask(){
             description: "debug insert",
             priority: 1,
             status: "todo",
-            owner: user.id
+            owner: CURRENT_USER
         }]);
 
     if(error){
@@ -98,7 +73,6 @@ INIT
 
 async function initTasks(){
 
-    await checkUser();
     await loadTasks();
 
 }
@@ -107,7 +81,7 @@ initTasks();
 
 
 /* =============================
-DEBUG (handmatig gebruiken)
+DEBUG
 ============================= */
 
 // run in console:
