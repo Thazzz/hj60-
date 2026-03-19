@@ -112,18 +112,40 @@ function renderTripList(){
         const div = document.createElement("div");
         div.className = "tripItem";
 
-        div.onclick = () => loadIntoForm(t);
+        const isOwner = t.user_id === getUserId();
+        div.classList.add(isOwner ? "mine" : "other");
+
+        div.onclick = () => {
+            loadIntoForm(t);
+
+            // 🔥 active state
+            document.querySelectorAll(".tripItem").forEach(el=>{
+                el.classList.remove("active");
+            });
+            div.classList.add("active");
+        };
+
+        /* LABEL OPBOUW */
+
+        let label = "";
 
         if(t.type === "trip"){
-            div.innerText =
+            label =
                 `${t.start_date} → ${t.end_date} | ${t.owner || "?"}` +
                 (t.destination ? ` → ${t.destination}` : "");
         }
 
         if(t.type === "onderhoud"){
-            div.innerText =
+            label =
                 `🔧 ${t.start_date} | ${t.destination || "onbekend"}`;
         }
+
+        /* STATUS CHIP (voorbereid op later) */
+        let status = "";
+        if(t.status === "aangevraagd") status = "🟡";
+        if(t.status === "bevestigd") status = "🟢";
+
+        div.innerText = `${status} ${label}`;
 
         el.appendChild(div);
     });
@@ -140,38 +162,12 @@ function loadIntoForm(t){
         user: t.user_id
     });
 
-    // state zetten
     editingId = t.id;
     editingUserId = t.user_id;
 
-    // type zetten + UI switch triggeren
     const typeEl = document.getElementById("eventType");
     typeEl.value = t.type;
     typeEl.dispatchEvent(new Event("change"));
-
-    /* =============================
-    FORM VULLEN
-    ============================= */
-
-function loadIntoForm(t){
-
-    console.log("LOAD INTO FORM", {
-        id: t.id,
-        user: t.user_id
-    });
-
-    // state
-    editingId = t.id;
-    editingUserId = t.user_id;
-
-    // type switch
-    const typeEl = document.getElementById("eventType");
-    typeEl.value = t.type;
-    typeEl.dispatchEvent(new Event("change"));
-
-    /* =============================
-    FORM VULLEN
-    ============================= */
 
     if(t.type === "trip"){
         document.getElementById("owner").value = t.owner || "";
@@ -185,25 +181,37 @@ function loadIntoForm(t){
         document.getElementById("location").value = t.destination || "";
     }
 
-    /* =============================
-    UI STATE
-    ============================= */
-
     const deleteBtn = document.getElementById("deleteBtn");
     const feedback = document.getElementById("feedback");
 
-    if(deleteBtn){
-        deleteBtn.style.display = "block";
+    // 🔥 NIEUW
+const isOwner = t.user_id && t.user_id === getUserId();
 
-        // 🔥 HIER moet hij zitten
-        deleteBtn.onclick = deleteEvent;
+    if(deleteBtn){
+        console.log("DELETE BTN FOUND", { isOwner });
+
+        if(isOwner){
+            deleteBtn.style.display = "block";
+            deleteBtn.style.visibility = "visible";
+            deleteBtn.style.opacity = "1";
+            deleteBtn.onclick = deleteEvent;
+        } else {
+            deleteBtn.style.display = "none";
+        }
     }
 
-    if(feedback) feedback.innerText = "✏️ bewerken";
-
-    enableForm(true);
+  if(feedback){
+    if(!t.user_id){
+        feedback.innerText = "⚠️ onbekende eigenaar";
+    } else if(isOwner){
+        feedback.innerText = "✏️ bewerken";
+    } else {
+        feedback.innerText = "👀 van iemand anders";
+    }
 }
 
+    enableForm(isOwner); // 🔥 key verschil
+}
 /* =============================
 SAVE
 ============================= */
