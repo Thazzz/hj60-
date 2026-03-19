@@ -456,16 +456,12 @@ div.onclick = () => loadTaskIntoForm(task);
 
 }
 
-
-/*=============================
-edit task
-=============================*/
-
-let editingTaskId = null;
-
+/*==========================
+load task
+=====================*/
 function loadTaskIntoForm(task){
 
-    editingTaskId = task.id;
+    window.editingTaskId = task.id;
 
     document.getElementById("taskTitle").value = task.title || "";
     document.getElementById("taskDesc").value = task.description || "";
@@ -477,13 +473,14 @@ function loadTaskIntoForm(task){
     console.log("✏️ editing task", task.id);
 }
 
+
 /* =============================
 INIT (SAFE)
 ============================= */
 
-window.addEventListener("DOMContentLoaded", () => {
+window.addEventListener("DOMContentLoaded", async () => {
 
-    if(!document.getElementById("tripList")) return; // 💥 voorkomt crash op andere pagina's
+    if(!document.getElementById("tripList")) return;
 
     const saveBtn = document.getElementById("saveBtn");
     const deleteBtn = document.getElementById("deleteBtn");
@@ -493,5 +490,12 @@ window.addEventListener("DOMContentLoaded", () => {
 
     setupTypeSwitch();
     initUser();
-    loadTrips();
+    await loadTrips();
+
+    // 🔥 NIEUW
+    if(typeof loadTasks === "function"){
+        await loadTasks();
+        renderTaskListPlanner();
+    }
+
 });

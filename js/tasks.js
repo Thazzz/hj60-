@@ -15,8 +15,8 @@ const CURRENT_USER = "Thijs";
 STATE
 ============================= */
 
-let tasks = [];
-let editingTaskId = null;
+window.tasks = [];
+window.editingTaskId = null;
 
 /* =============================
 TEST INSERT
@@ -69,7 +69,7 @@ async function loadTasks(){
 /*================================
 save task
 =============================*/
-async function saveTask(){
+window.saveTask = async function(){
 
     const title = document.getElementById("taskTitle").value.trim();
     const description = document.getElementById("taskDesc").value.trim();
