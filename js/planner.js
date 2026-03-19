@@ -153,6 +153,26 @@ function loadIntoForm(t){
     FORM VULLEN
     ============================= */
 
+function loadIntoForm(t){
+
+    console.log("LOAD INTO FORM", {
+        id: t.id,
+        user: t.user_id
+    });
+
+    // state
+    editingId = t.id;
+    editingUserId = t.user_id;
+
+    // type switch
+    const typeEl = document.getElementById("eventType");
+    typeEl.value = t.type;
+    typeEl.dispatchEvent(new Event("change"));
+
+    /* =============================
+    FORM VULLEN
+    ============================= */
+
     if(t.type === "trip"){
         document.getElementById("owner").value = t.owner || "";
         document.getElementById("destination").value = t.destination || "";
@@ -172,13 +192,15 @@ function loadIntoForm(t){
     const deleteBtn = document.getElementById("deleteBtn");
     const feedback = document.getElementById("feedback");
 
-    // 🔥 altijd zichtbaar bij edit
-    if(deleteBtn) deleteBtn.style.display = "block";
+    if(deleteBtn){
+        deleteBtn.style.display = "block";
 
-    // feedback
+        // 🔥 HIER moet hij zitten
+        deleteBtn.onclick = deleteEvent;
+    }
+
     if(feedback) feedback.innerText = "✏️ bewerken";
 
-    // form actief
     enableForm(true);
 }
 
