@@ -143,6 +143,19 @@ border-radius: 8px;
 font-size: 13px;
 }
 
+.tripItem.mine {
+    border-left: 4px solid #2c7be5;
+}
+
+.tripItem.other {
+    opacity: 0.6;
+}
+
+.tripItem.active {
+    outline: 2px solid #2c7be5;
+    background: #161616;
+}
+
 /* ==============================
 DESKTOP (optioneel)
 ============================== */
