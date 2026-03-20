@@ -286,13 +286,17 @@ position:relative; /* 👈 belangrijk */
 /* task */
 .taskTitle.done {
     text-decoration: line-through;
+    font-size: 12px;
     opacity: 0.5;
 }
 
 .taskTitle.doing {
     font-weight: bold;
 }
-
+#taskList li {
+    font-size: 11px;
+    line-height: 1.2;
+}
 
 
 /* onderhoud */
