@@ -94,8 +94,9 @@ return now >= start && now <= end;
 
 if(activeTrip){
     statusElement.className = "headerStatus status-active";
-    statusElement.innerText =
-        "🚙 " + activeTrip.owner + " → " + (activeTrip.destination || "");
+    statusElement.innerHTML = `
+    <span>🚙 ${activeTrip.owner} → ${activeTrip.destination || ""}</span>
+`;
 } else {
     statusElement.className = "headerStatus status-idle";
     statusElement.innerText = "🛠️ werkplaats";
@@ -268,7 +269,7 @@ function renderShopping(){
 
     items.forEach(item => {
         if(item.trim() === "") return;
-        
+
         const li = document.createElement("li");
         li.textContent = item.trim();
         list.appendChild(li);
