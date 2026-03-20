@@ -59,7 +59,8 @@ body::after {
     align-items:center;
     justify-content:center;
     padding:10px;
-    background:#1a1a1a;
+    background: rgba(16,16,16,0.6);
+    backdrop-filter: blur(6px);
     border-bottom:1px solid #333;
 }
 
@@ -70,8 +71,8 @@ body::after {
 }
 
 .logo {
-    width:34px;
-    height:34px;
+    width:50px;
+    height:50px;
 }
 
 .title {
@@ -88,9 +89,20 @@ body::after {
 }
 
 .headerStatus {
-    margin-top:5px;
-    font-size:13px;
-    color:#aaa;
+    font-size: 16px;
+    font-weight: 600;
+
+    padding: 8px 16px;
+
+    border-radius: 8px;
+
+    /* 🔥 NIEUW */
+    width: 60%;              /* of 50–70% spelen */
+    max-width: 900px;       /* voorkomt dat hij te groot wordt */
+    margin: 8px auto 0;     /* centeren */
+
+    background: rgba(34,34,34,0.6);  /* zie punt 2 */
+    border: 1px solid rgba(255,255,255,0.1);
 }
 
 /* animatie */
@@ -105,9 +117,9 @@ body::after {
 }
 
 .status-active {
-    overflow: hidden;
-    white-space: nowrap;
-    position: relative;
+    background: rgba(30,58,95,0.55);  /* 🔥 translucent blauw */
+    border-color: rgba(44,123,229,0.6);
+    color: #9ecbff;
 }
 
 .status-active span {
