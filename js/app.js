@@ -25,11 +25,6 @@ DATA
 
 let events = [];
 
-const shopping = [
-"Motorolie",
-"Oliefilter",
-"Remreiniger"
-];
 
 
 /* -----------------------------
@@ -252,16 +247,40 @@ async function toggleTaskStatus(id, currentStatus){
 SHOPPING
 ----------------------------- */
 
+let shopping = [];
+
+async function loadShopping(){
+
+    const { data, error } = await supabaseClient
+        .from("shopping")
+        .select("*")
+        .order("created_at", { ascending: true });
+
+    if(error){
+        console.error("❌ shopping load error", error);
+        return;
+    }
+
+    shopping = data;
+}
+
 function renderShopping(){
 
-const list = document.getElementById("shoppingList");
-list.innerHTML = "";
+    const list = document.getElementById("shoppingList");
+    list.innerHTML = "";
 
-shopping.forEach(item => {
-const li = document.createElement("li");
-li.textContent = item;
-list.appendChild(li);
-});
+    if(shopping.length === 0){
+        list.innerHTML = "<li>Geen boodschappen</li>";
+        return;
+    }
+
+    shopping.forEach(item => {
+
+        const li = document.createElement("li");
+        li.textContent = item.name;
+
+        list.appendChild(li);
+    });
 
 }
 
@@ -537,6 +556,7 @@ console.log("Dashboard initialiseren");
 
 await loadTrips();
 await loadTasks();
+await loadShopping();
 
 updateStatus();
 renderTasks();
