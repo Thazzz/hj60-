@@ -27,7 +27,7 @@ background: linear-gradient(
     rgba(17,17,17,0.1) 70%,
     rgba(17,17,17,0.05) 100%
 );
-    );
+
 
     pointer-events:none;
 }
@@ -54,13 +54,43 @@ body::after {
 /* HEADER */
 
 .header {
-    height: 12vh;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 10px 20px;
-    background: #1a1a1a;
-    border-bottom: 1px solid #333;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    justify-content:center;
+    padding:10px;
+    background:#1a1a1a;
+    border-bottom:1px solid #333;
+}
+
+.headerCenter {
+    display:flex;
+    align-items:center;
+    gap:12px;
+}
+
+.logo {
+    width:34px;
+    height:34px;
+}
+
+.title {
+    font-size:22px;
+    font-weight:bold;
+    letter-spacing:1px;
+}
+
+.subtitle {
+    font-size:12px;
+    color:#888;
+    text-transform:uppercase;
+    letter-spacing:1px;
+}
+
+.headerStatus {
+    margin-top:5px;
+    font-size:13px;
+    color:#aaa;
 }
 
 /* animatie */
