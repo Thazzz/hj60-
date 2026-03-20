@@ -93,10 +93,18 @@ return now >= start && now <= end;
 });
 
 if(activeTrip){
+
     statusElement.className = "headerStatus status-active";
-    statusElement.innerHTML = `
-    <span>🚙 ${activeTrip.owner} → ${activeTrip.destination || ""}</span>
-`;
+
+    const text = `🚙 ${activeTrip.owner} → ${activeTrip.destination || ""}`;
+
+    statusElement.innerHTML = `<span>${text}</span>`;
+
+    // 🔥 snelheid aanpassen
+    const speed = Math.max(10, text.length * 0.6);
+
+    statusElement.querySelector("span").style.animationDuration = speed + "s";
+
 } else {
     statusElement.className = "headerStatus status-idle";
     statusElement.innerText = "🛠️ werkplaats";
