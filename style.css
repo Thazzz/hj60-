@@ -67,9 +67,8 @@ body::after {
 .headerCenter {
     display:flex;
     align-items:center;
-    justify-content: space-between; 
-    width:100%;
-    max-width:900px;
+    justify-content:center;   /* 🔥 alles naar midden */
+    gap:16px;                 /* 🔥 controle over afstand */
 }
 
 .headerText {
@@ -126,7 +125,7 @@ body::after {
         transform: translate(0, -50%);
     }
     100% {
-        transform: translate(-120%, -50%);
+        transform: translate(-250%, -50%);
     }
 }
 
@@ -138,7 +137,8 @@ body::after {
     left: 110%;             /* start rechts buiten balk */
     top: 50%;
     
-    animation: driveText 12s linear infinite;
+    animation: driveText 8s linear infinite;
+
 }
 
 
