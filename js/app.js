@@ -147,7 +147,22 @@ tasks.sort((a, b) => {
 });
 
 }
+async function loadGear(){
 
+    const { data, error } = await supabaseClient
+        .from("gear")
+        .select("*")
+        .order("name");
+
+    if(error){
+        console.error("gear load error", error);
+        return;
+    }
+
+    gear = data;
+
+    renderGear();
+}
 
 /* -----------------------------
 TASKS
@@ -291,11 +306,7 @@ console.log("🛒 nextTask:", nextTask);
 GEAR
 ----------------------------- */
 
-const gear = [
-{ name: "Tent", status: "ok" },
-{ name: "Jerrycan", status: "slijtage" },
-{ name: "Accu", status: "vervangen" }
-];
+let gear = [];
 
 function renderGear(){
 
@@ -304,14 +315,33 @@ if(!container) return;
 
 container.innerHTML = "";
 
-gear.forEach(item => {
+// 🔥 alleen relevante gear tonen
+const filtered = gear.filter(g =>
+    g.status === "slijtage" || g.status === "vervangen"
+);
 
-const div = document.createElement("div");
-div.className = "gearItem";
-div.innerText = item.name + " - " + item.status;
+if(filtered.length === 0){
+    container.innerHTML = "<div class='gearItem'>Alles in orde 👍</div>";
+    return;
+}
 
-container.appendChild(div);
+filtered.forEach(item => {
 
+    let icon = "🟢";
+    if(item.status === "slijtage") icon = "🟠";
+    if(item.status === "vervangen") icon = "🔴";
+    
+    const div = document.createElement("div");
+    div.className = "gearItem";
+
+     if(item.status === "vervangen"){
+        div.style.fontWeight = "bold";
+        div.style.color = "#ff6b6b";
+    }
+
+    div.innerText = `${icon} ${item.name}`;
+
+    container.appendChild(div);
 });
 
 }
@@ -558,14 +588,13 @@ console.log("Dashboard initialiseren");
 
 await loadTrips();
 await loadTasks();
-
+await loadGear();
 
 updateStatus();
 renderTasks();
 renderMaintenance();
 renderShopping();
 renderCalendar();
-renderGear();
 
 document.getElementById("nextMonth").onclick = nextMonth;
 document.getElementById("prevMonth").onclick = prevMonth;
