@@ -23,6 +23,7 @@ let trips = [];
 let editingId = null;
 let editingUserId = null;
 let gear = [];
+let editingGearId = null;
 
 /* =============================
 HELPERS
@@ -505,6 +506,17 @@ function renderGearPlanner(){
 
         div.innerText = `${icon} ${g.name}`;
 
+        // 🔥 klik = edit mode
+        div.onclick = () => {
+            editingGearId = g.id;
+
+            document.getElementById("gearName").value = g.name;
+            document.getElementById("gearStatus").value = g.status;
+            document.getElementById("gearOwner").value = g.owner || "";
+
+            console.log("✏️ editing gear", g.id);
+        };
+
         el.appendChild(div);
     });
 }
@@ -535,13 +547,31 @@ async function saveGear(){
         return;
     }
 
-    const { error } = await supabaseClient
-        .from("gear")
-        .insert([{
-            name,
-            status,
-            owner
-        }]);
+    let query;
+
+    if(editingGearId){
+        // 🔥 UPDATE
+        query = supabaseClient
+            .from("gear")
+            .update({
+                name,
+                status,
+                owner
+            })
+            .eq("id", editingGearId);
+
+    } else {
+        // 🆕 INSERT
+        query = supabaseClient
+            .from("gear")
+            .insert([{
+                name,
+                status,
+                owner
+            }]);
+    }
+
+    const { error } = await query;
 
     if(error){
         console.error(error);
@@ -549,9 +579,17 @@ async function saveGear(){
         return;
     }
 
+    console.log("✅ gear opgeslagen");
+
+    // reset edit mode
+    editingGearId = null;
+
+    // reset form
     document.getElementById("gearName").value = "";
+    document.getElementById("gearOwner").value = "";
 
     await loadGear();
+
 }
 
 /* =============================
