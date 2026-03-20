@@ -161,7 +161,10 @@ function renderTasks(){
 
     let lastStatus = null;
 
-    tasks.forEach(task => {
+   const maxTasks = 6;
+   const visibleTasks = tasks.slice(0, maxTasks);
+
+   visibleTasks.forEach(task => {
 
         // 🔥 divider toevoegen bij status wissel
         if(task.status !== lastStatus){
@@ -189,14 +192,33 @@ function renderTasks(){
             <small>${task.status} - ${task.owner || "-"}</small>
         `;
 
-        li.onclick = () => toggleTaskStatus(task.id, task.status);
+    li.onclick = () => confirmTaskChange(task);
 
         list.appendChild(li);
 
     });
 
 }
+function confirmTaskChange(task){
 
+    let message = "";
+
+    if(task.status === "todo"){
+        message = `Start klus "${task.title}"?`;
+    }
+    else if(task.status === "doing"){
+        message = `Klus "${task.title}" afronden?`;
+    }
+    else{
+        return;
+    }
+
+    const confirmed = confirm(message);
+
+    if(confirmed){
+        toggleTaskStatus(task.id, task.status);
+    }
+}
 function getPriorityIcon(p){
     if(p === 1) return "🔴";
     if(p === 2) return "🟠";
@@ -228,7 +250,15 @@ async function toggleTaskStatus(id, currentStatus){
 
 /* -----------------------------
 SHOPPING
------------------------------ */
+----------------------------- */currentStatus === "doing") newStatus = "done";
+
+    const { error } = await supabaseClient
+        .from("tasks")
+        .update({ status: newStatus })
+        .eq("id", id);
+
+    if(error){
+        cons
 
 function renderShopping(){
 
