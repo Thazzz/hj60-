@@ -101,9 +101,9 @@ body::after {
     font-size: 16px;
     font-weight: 600;
 
-    padding: 8px 16px;
+    padding: 12px 20px;
 
-    border-radius: 8px;
+    border-radius: 6px;
 
     /* 🔥 NIEUW */
     width: 60%;              /* of 50–70% spelen */
