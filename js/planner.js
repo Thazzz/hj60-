@@ -93,6 +93,7 @@ function initUser(){
     }
 }
 
+
 /* =============================
 LOAD EVENTS
 ============================= */
@@ -513,7 +514,7 @@ function renderGearPlanner(){
             document.getElementById("gearName").value = g.name;
             document.getElementById("gearStatus").value = g.status;
             document.getElementById("gearOwner").value = g.owner || "";
-
+            document.getElementById("deleteGearBtn").style.display = "block";
             console.log("✏️ editing gear", g.id);
         };
 
@@ -591,6 +592,39 @@ async function saveGear(){
     await loadGear();
 
 }
+window.deleteGear = async function(){
+
+    if(!editingGearId){
+        alert("Geen item geselecteerd");
+        return;
+    }
+
+    if(!confirm("Weet je zeker dat je dit wilt verwijderen?")){
+        return;
+    }
+
+    const { error } = await supabaseClient
+        .from("gear")
+        .delete()
+        .eq("id", editingGearId);
+
+    if(error){
+        console.error(error);
+        alert("Verwijderen mislukt");
+        return;
+    }
+
+    console.log("🗑️ gear verwijderd");
+
+    // reset
+    editingGearId = null;
+
+    document.getElementById("gearName").value = "";
+    document.getElementById("gearOwner").value = "";
+    document.getElementById("deleteGearBtn").style.display = "none";
+
+    await loadGear();
+}
 
 /* =============================
 INIT (SAFE)
@@ -605,6 +639,11 @@ window.addEventListener("DOMContentLoaded", async () => {
 
     if(saveBtn) saveBtn.onclick = saveEvent;
     if(deleteBtn) deleteBtn.onclick = deleteEvent;
+
+    const deleteGearBtn = document.getElementById("deleteGearBtn");
+    if(deleteGearBtn){
+        deleteGearBtn.onclick = deleteGear;
+    }
 
     setupTypeSwitch();
     initUser();
