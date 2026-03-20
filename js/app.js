@@ -25,7 +25,7 @@ DATA
 
 let events = [];
 
-
+let tasks = [];
 
 /* -----------------------------
 TRIPS LADEN (nu ook onderhoud)
@@ -246,44 +246,37 @@ async function toggleTaskStatus(id, currentStatus){
 /* -----------------------------
 SHOPPING
 ----------------------------- */
-
-let shopping = [];
-
-async function loadShopping(){
-
-    const { data, error } = await supabaseClient
-        .from("shopping")
-        .select("*")
-        .order("created_at", { ascending: true });
-
-    if(error){
-        console.error("❌ shopping load error", error);
-        return;
-    }
-
-    shopping = data;
-}
-
 function renderShopping(){
 
     const list = document.getElementById("shoppingList");
     list.innerHTML = "";
 
-    if(shopping.length === 0){
+    if(!tasks || tasks.length === 0){
+        list.innerHTML = "<li>Geen klussen</li>";
+        return;
+    }
+
+    // 🔥 eerste taak met boodschappen
+    const nextTask = tasks.find(t => t.shopping);
+
+    if(!nextTask){
         list.innerHTML = "<li>Geen boodschappen</li>";
         return;
     }
 
-    shopping.forEach(item => {
+    const items = nextTask.shopping.split(/\n|,/);
 
+    items.forEach(item => {
+        if(item.trim() === "") return;
+        
         const li = document.createElement("li");
-        li.textContent = item.name;
-
+        li.textContent = item.trim();
         list.appendChild(li);
     });
 
-}
 
+console.log("🛒 nextTask:", nextTask);
+}
 
 /* -----------------------------
 GEAR
@@ -556,7 +549,7 @@ console.log("Dashboard initialiseren");
 
 await loadTrips();
 await loadTasks();
-await loadShopping();
+
 
 updateStatus();
 renderTasks();
