@@ -22,6 +22,7 @@ STATE
 let trips = [];
 let editingId = null;
 let editingUserId = null;
+let gear = [];
 
 /* =============================
 HELPERS
@@ -423,6 +424,12 @@ window.showTab = function(tab){
     document.getElementById("taskTab").style.display =
         tab === "task" ? "block" : "none";
 
+    const gearTab = document.getElementById("gearTab");
+    if(gearTab){
+        gearTab.style.display =
+            tab === "gear" ? "block" : "none";
+    }
+
 }
 
 /*==========================
@@ -473,10 +480,79 @@ function loadTaskIntoForm(task){
     document.getElementById("deleteTaskBtn").style.display = "block";
 
     document.getElementById("taskShopping").value = task.shopping || "";
-    
+
     console.log("✏️ editing task", task.id);
 }
 
+/*==========================
+uitrusting
+=====================*/
+function renderGearPlanner(){
+
+    const el = document.getElementById("gearListPlanner");
+    if(!el) return;
+
+    el.innerHTML = "";
+
+    gear.forEach(g => {
+
+        let icon = "🟢";
+        if(g.status === "slijtage") icon = "🟠";
+        if(g.status === "vervangen") icon = "🔴";
+
+        const div = document.createElement("div");
+        div.className = "tripItem";
+
+        div.innerText = `${icon} ${g.name}`;
+
+        el.appendChild(div);
+    });
+}
+async function loadGear(){
+
+    const { data, error } = await supabaseClient
+        .from("gear")
+        .select("*")
+        .order("name");
+
+    if(error){
+        console.error(error);
+        return;
+    }
+
+    gear = data;
+
+    renderGearPlanner();
+}
+async function saveGear(){
+
+    const name = document.getElementById("gearName").value.trim();
+    const status = document.getElementById("gearStatus").value;
+    const owner = document.getElementById("gearOwner").value.trim();
+
+    if(!name){
+        alert("Naam verplicht");
+        return;
+    }
+
+    const { error } = await supabaseClient
+        .from("gear")
+        .insert([{
+            name,
+            status,
+            owner
+        }]);
+
+    if(error){
+        console.error(error);
+        alert("Opslaan mislukt");
+        return;
+    }
+
+    document.getElementById("gearName").value = "";
+
+    await loadGear();
+}
 
 /* =============================
 INIT (SAFE)
@@ -501,5 +577,7 @@ window.addEventListener("DOMContentLoaded", async () => {
         await loadTasks();
         renderTaskListPlanner();
     }
+
+await loadGear();
 
 });
