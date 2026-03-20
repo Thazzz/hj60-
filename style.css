@@ -1,1039 +1,433 @@
-/* =========================
-   GLOBAL RESET / STABILITY
-========================= */
-
-*,
-*::before,
-*::after {
-box-sizing: border-box;
-}
-
-
-/* =========================
-   BASIS
-========================= */
-
 body {
-margin: 0;
-font-family: 'Inter', sans-serif;
+    margin:0;
+    position: relative;
+    z-index: 0;
+    font-family:Arial, Helvetica, sans-serif;
+    background:#111;
+    color:#eee;
 
-background-color: #111;
-background-image:
-linear-gradient(
-rgba(0,0,0,0.55) 0%,
-rgba(0,0,0,0.65) 40%,
-rgba(0,0,0,0.80) 100%
-),
-url("images/Werkplaats.png");
-
-background-size: cover;
-background-position: center;
-background-attachment: fixed;
-background-repeat: no-repeat;
-
-color: #eaeaea;
-line-height: 1.6;
-font-weight: 300;
-
-min-height: 100vh;
-
-overflow-x: hidden;
+    /* 🔥 HJ60 background */
+    background-image: url("./hj60.png");
+    background-repeat: no-repeat;
+    background-position: right bottom;
+    background-size: 65%;
 }
 
-
-/* =========================
-   LAYOUT
-========================= */
-
-main {
-max-width: 1200px;
-margin: auto;
-padding: 0 20px;
-}
-
-
-/* =========================
-   HERO
-========================= */
-
-body:not(.home) .hero {
-padding: 25px 20px 20px 20px;
-}
-
-body:not(.home) .logo {
-max-width: 420px;
-margin-bottom: 6px;
-}
-
-body:not(.home) .intro h1 {
-margin-top: 0;
-margin-bottom: 8px;
-}
-
-body:not(.home) .intro {
-margin-top: 0;
-}
-
-.hero {
-text-align: center;
-padding: 120px 20px 60px 20px;
-position: relative;
-overflow: hidden;
-}
-
-
-/* spotlight */
-
-.hero::before {
-
-content: "";
-position: absolute;
-
-top: -200px;
-left: 50%;
-transform: translateX(-50%);
-
-width: 800px;
-height: 600px;
-
-background: radial-gradient(
-circle,
-rgba(255,255,255,0.12) 0%,
-rgba(255,255,255,0.04) 30%,
-rgba(0,0,0,0) 70%
-);
-
-pointer-events: none;
-z-index: 1;
-
-}
-
-
-/* =========================
-   HOVER ZONE VOOR MAKER BAR
-========================= */
-
-.top-hover {
-
-position: fixed;
-top: 0;
-left: 0;
-
-width: 100%;
-height: 20px;
-
-z-index: 998;
-
-}
-
-
-/* =========================
-   STOFDEELTJES
-========================= */
-
-.hero::after {
-
-content: "";
-
-position: absolute;
-
-top: -150px;
-left: 50%;
-
-transform: translate(-50%,0);
-
-width: 900px;
-height: 700px;
-
-pointer-events: none;
-
-background-image:
-radial-gradient(rgba(255,255,255,0.18) 1.2px, transparent 1.2px),
-radial-gradient(rgba(255,255,255,0.12) 1px, transparent 1px),
-radial-gradient(rgba(255,255,255,0.08) 1px, transparent 1px);
-
-background-size:
-120px 120px,
-180px 180px,
-250px 250px;
-
-background-position:
-0 0,
-60px 40px,
-120px 80px;
-
-animation: dustFloat 140s linear infinite;
-
-opacity: 0.55;
-
-z-index: 1;
-
-mix-blend-mode: screen;
-
-}
-
-
-/* =========================
-   MAKER BAR
-========================= */
-
-.top-hover:hover + .maker-bar,
-.maker-bar:hover {
-top: 0;
-opacity: 1;
-}
-
-.maker-bar {
-
-position: fixed;
-top: -40px;
-left: 0;
-
-width: 100%;
-height: 40px;
-
-background: rgba(10,10,10,0.75);
-backdrop-filter: blur(6px);
-border-bottom: 1px solid rgba(255,255,255,0.06);
-box-shadow: 0 8px 25px rgba(0,0,0,0.6);
-
-display: flex;
-justify-content: flex-end;
-align-items: center;
-
-padding: 0 40px;
-
-gap: 20px;
-
-transition: top 0.35s cubic-bezier(.22,.61,.36,1);
-
-opacity: 0;
-
-z-index: 999;
-
-font-size: 13px;
-
-}
-
-
-/* lichtlijn */
-
-.maker-bar::after {
-
-content: "";
-
-position: absolute;
-
-bottom: 0;
-left: 50%;
-
-transform: translateX(-50%);
-
-width: 0%;
-height: 2px;
-
-opacity: 0.6;
+body::before {
+    content:"";
+    position:fixed;
+    inset:0;
+
+    z-index:-1; /* 🔥 dit is de fix */
 
 background: linear-gradient(
-to right,
-rgba(255,255,255,0),
-rgba(255,255,255,0.35),
-rgba(255,255,255,0)
+    to right,
+    rgba(17,17,17,0.35) 0%,
+    rgba(17,17,17,0.2) 40%,
+    rgba(17,17,17,0.1) 70%,
+    rgba(17,17,17,0.05) 100%
 );
+    );
 
-transition: width 0.4s ease;
-
-}
-
-.top-hover:hover + .maker-bar::after,
-.maker-bar:hover::after {
-width: 70%;
-}
-
-
-/* =========================
-   LINKS IN MAKER BAR
-========================= */
-
-.maker-bar a {
-
-color: rgba(255,255,255,0.6);
-text-decoration: none;
-
-transition: color 0.2s ease;
-
-}
-
-.maker-bar a:hover {
-color: white;
-}
-
-
-/* =========================
-   LOGO + INTRO
-========================= */
-
-.home .logo {
-max-width: 420px;
-width: 90%;
-
-margin-bottom: 30px;
-
-position: relative;
-z-index: 2;
-
-filter:
-drop-shadow(0 10px 25px rgba(0,0,0,0.8))
-drop-shadow(0 0 18px rgba(255,255,255,0.08));
-
-animation:
-fadeLogo 2.2s ease-out forwards,
-logoFloat 7s ease-in-out infinite 2.2s;
-opacity: 0;
-
-}
-
-body:not(.home) .logo {
-max-width: 320px;
-}
-
-.intro {
-
-max-width: 720px;
-margin: auto;
-
-opacity: 0;
-animation: fadeIntro 2s ease-out 1s forwards;
-
-position: relative;
-z-index: 2;
-
-}
-
-.intro h1 {
-
-font-family: 'Roboto Slab', serif;
-font-size: 30px;
-
-margin-bottom: 20px;
-
-color: #ffffff;
-
-}
-
-.intro p {
-color: #d6d6d6;
-}
-
-
-/* =========================
-   PROJECT BLOKKEN
-========================= */
-
-.projects {
-
-max-width: 1100px;
-margin: 80px auto;
-
-display: grid;
-
-grid-template-columns: repeat(auto-fit, minmax(280px, 320px));
-
-justify-content: center;
-
-gap: 30px;
-
-position: relative;
-
+    pointer-events:none;
 }
-
-
-/* lichtbundel */
-
-.projects::before {
-
-content: "";
-
-position: absolute;
-
-top: -120px;
-left: 50%;
-
-transform: translateX(-50%);
-
-width: 900px;
-height: 500px;
-
-background: radial-gradient(
-ellipse,
-rgba(255,255,255,0.08) 0%,
-rgba(255,255,255,0.03) 40%,
-rgba(0,0,0,0) 70%
-);
-
-pointer-events: none;
-
-z-index: 0;
-
-}
-
-
-/* project card */
-
-.project {
-
-position: relative;
-z-index: 1;
 
-background: rgba(18,18,18,0.72);
+body::after {
+    content:"";
+    position:fixed;
+    inset:0;
 
-padding: 30px;
+    pointer-events:none;
 
-border-radius: 10px;
+    /* 🔥 glow rechts onder */
+    background: radial-gradient(
+        circle at 75% 85%,
+        rgba(255,255,255,0.08) 0%,
+        rgba(255,255,255,0.04) 20%,
+        rgba(255,255,255,0.02) 35%,
+        transparent 60%
+    );
 
-border: 1px solid rgba(255,255,255,0.06);
-
-text-decoration: none;
-color: inherit;
-
-transition: transform 0.35s ease, box-shadow 0.35s ease;
-
-will-change: transform;
-
-backdrop-filter: blur(3px);
-
-box-shadow: 0 8px 30px rgba(0,0,0,0.55);
-
+    z-index:-1;
 }
-
-.project h2 {
-
-font-family: 'Roboto Slab', serif;
-margin-top: 0;
 
-color: #ffffff;
+/* HEADER */
 
-text-align: center;
-
-}
-
-.project p {
-color: #cfcfcf;
+.header {
+    height: 12vh;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 20px;
+    background: #1a1a1a;
+    border-bottom: 1px solid #333;
 }
-
-.project:hover {
 
-transform: translateY(-8px);
-
-background: rgba(40,40,40,0.95);
-
-box-shadow: 0 20px 60px rgba(0,0,0,0.8);
-
+.status-active span {
+    display: inline-block;
+    padding-left: 100%;
+    animation: driveText 30s linear infinite;
+    text-shadow: 0 0 6px rgba(44,123,229,0.6);
 }
-
 
-/* =========================
-   FOOTER
-========================= */
+/* animatie */
 
-footer {
-
-text-align: center;
-
-padding: 60px 20px 40px 20px;
-
-color: #888;
-
-font-size: 14px;
-
+@keyframes driveText {
+    0% {
+        transform: translateX(100%);
+    }
+    100% {
+        transform: translateX(-100%);
+    }
 }
-
-.email {
-
-color: #cccccc;
-
-text-decoration: none;
 
+.status-active {
+    overflow: hidden;
+    white-space: nowrap;
+    position: relative;
 }
 
-.email:hover {
-text-decoration: underline;
+.status-active span {
+    display: inline-block;
+    padding-left: 100%;
+    animation: driveText 10s linear infinite;
 }
-
-
-/* =========================
-   HOMEPAGE LINKS
-========================= */
-
-.home-links {
-
-position: fixed;
-
-bottom: 40px;
-left: 60px;
-right: 60px;
-
-display: flex;
-
-justify-content: space-between;
-align-items: center;
-
-pointer-events: none;
-
-z-index: 5;
+/* LINKER KANT */
 
+.headerLeft {
+    display: flex;
+    flex-direction: column;
 }
 
-.home-links a {
-pointer-events: auto;
+.title {
+    font-size: 28px;
+    font-weight: 800;
+    letter-spacing: 2px;
 }
 
-
-/* =========================
-   INSTAGRAM ICONEN
-========================= */
-
-.insta-group {
-
-display: flex;
-flex-direction: column;
-gap: 6px;
-
+.subtitle {
+    font-size: 12px;
+    color: #888;
+    letter-spacing: 1px;
+    text-transform: uppercase;
 }
-
-.insta-group img {
-
-width: 48px;
-height: 48px;
-
-opacity: 0.85;
-
-transition: all 0.2s ease;
 
-filter: drop-shadow(0 8px 24px rgba(0,0,0,0.6));
+/* STATUS RECHTS = HERO */
 
+.headerStatus {
+    font-size: 16px;
+    font-weight: 600;
+    padding: 6px 12px;
+    border-radius: 6px;
+    background: #222;
+    border: 1px solid #333;
 }
 
-.insta-group img:hover {
-
-opacity: 1;
-transform: scale(1.1);
-
+.status-active {
+    background: #1e3a5f;
+    border-color: #2c7be5;
+    color: #9ecbff;
 }
-
-.insta-group a {
-
-display: flex;
-align-items: center;
-gap: 5px;
 
-text-decoration: none;
-
+.status-idle {
+    background: #2a2a2a;
+    border-color: #444;
+    color: #bbb;
 }
-
-.insta-group span {
-
-font-size: 11px;
-color: #d0d0d0;
-
-opacity: 0.8;
 
-transition: opacity 0.2s ease;
+/* DASHBOARD GRID */
 
+.dashboard {
+    display:grid;
+    grid-template-columns: 20% 60% 20%;
+    height:88vh;
 }
 
-.insta-group a:hover span {
-opacity: 1;
-}
-
-/* =========================
-   TOOLTIP
-========================= */
+/* PANELS */
 
-.insta-group a {
-position: relative;
+.panel {
+    padding:15px;
+    overflow:auto;
 }
-
-.insta-group a::before {
-
-content: attr(title);
-
-position: absolute;
-
-bottom: 70px;
-left: 50%;
-
-transform: translateX(-50%);
-
-background: rgba(0,0,0,0.85);
 
-color: #ddd;
-
-padding: 6px 10px;
-
-font-size: 12px;
-
-border-radius: 4px;
-
-white-space: nowrap;
-
-opacity: 0;
-
-transition: opacity 0.2s ease;
-
-pointer-events: none;
-
+.tasks {
+    background:rgba(16,16,16,0.85);
+    backdrop-filter: blur(4px);
+    border-right:1px solid #333;
 }
 
-.insta-group a:hover::before {
-opacity: 1;
+.calendar {
+    background:rgba(16,16,16,0.85);
 }
-
 
-/* =========================
-   ABOUT LINK
-========================= */
+/* CONTROLS */
 
-.about {
-
-font-size: 14px;
-
-color: #cccccc;
-
-text-decoration: none;
-
-border-bottom: 1px solid rgba(255,255,255,0.2);
-
-padding-bottom: 2px;
-
-transition: opacity 0.2s ease;
-
-}
-
-.about:hover {
-opacity: 1;
+.calendarControls{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    margin-bottom:10px;
 }
-
 
-/* =========================
-   ABOUT PAGE
-========================= */
-
-.about-page .hero::before,
-.about-page .hero::after {
-display: none;
+.calendarControls button{
+    background:#333;
+    border:none;
+    color:white;
+    padding:6px 10px;
+    cursor:pointer;
 }
-
-.about-page .intro h1 {
 
-font-size: 34px;
+/* GRID */
 
-letter-spacing: 0.5px;
-
-margin: 0 0 6px 0;
-
+#calendarTitle{
+    font-weight:bold;
 }
-
-.about-page .intro p {
-
-max-width: 600px;
 
-margin: 0 auto 10px auto;
+#calendarGrid{
+    display:grid;
+    grid-template-columns:repeat(7,1fr);
+    gap:2px;
 
-font-size: 16px;
+position:relative; /* 👈 belangrijk */
 
-color: #d0d0d0;
-
 }
 
-.about-page .hero {
-padding: 10px 20px 0px 20px;
-}
+/* HEADERS */
 
-.about-page .logo {
-margin-bottom: 4px;
+.dayHeader{
+    text-align:center;
+    font-size:12px;
+    color:#888;
 }
-
-.about-layout {
-
-max-width: 900px;
 
-margin: 10px auto 60px auto;
+/* CELLS */
 
-padding: 0 20px;
-
+.dayCell{
+    position:relative;            /* 🔥 belangrijk */
+    background: rgba(27,27,27,0.75);
+    height:70px;
+    padding:6px;
+    font-size:13px;
+    overflow:visible;             /* 🔥 belangrijk */
 }
-
-
-/* portrait */
-
-.portrait {
-
-float: right;
-
-width: 160px;
-
-margin: -40px 0 20px 30px;
-
-border-radius: 6px;
-
-border: 1px solid rgba(255,255,255,0.1);
-
-background: #1b1b1b;
-
-padding: 6px;
-
-box-shadow: 0 12px 35px rgba(0,0,0,0.6);
-
-filter: drop-shadow(0 6px 20px rgba(0,0,0,0.7));
 
-transition: transform 0.2s ease, filter 0.2s ease;
+/* STATES */
 
+.weekend{
+    background:#1a1a1a;
 }
 
-.portrait:hover {
-
-transform: rotate(-1deg) scale(1.03);
-
-filter: drop-shadow(0 10px 30px rgba(0,0,0,0.8));
-
-cursor: pointer;
-
+.currentWeek{
+    outline:2px solid #3a3a3a;
 }
-
-
-/* =========================
-   LOGBOEK LIJN
-========================= */
-
-.about-text {
-
-position: relative;
 
-padding-left: 24px;
-
-font-size: 16px;
-line-height: 1.7;
-
-color: #d6d6d6;
-
+.today{
+    border:2px solid #4CAF50;
 }
-
-.about-text::before {
-
-opacity: 0.7;
-
-content: "";
-
-position: absolute;
-
-left: 0;
-top: 4px;
 
-width: 3px;
-height: 100%;
+/* EVENTS */
 
-background: linear-gradient(
-to bottom,
-rgba(255,255,255,0.18),
-rgba(255,255,255,0.05)
-);
+.eventTrip{
+    position:absolute;   /* 👈 key */
+    
+    height:18px;
+    line-height:18px;
 
-border-radius: 2px;
+    background:#2c7be5;
+    color:white;
 
-}
-
-
-/* =========================
-   ANIMATIES
-========================= */
-
-@keyframes dustFloat {
+    font-size:11px;
+    padding:0 6px;
 
-0% { transform: translate(-50%,0); }
-100% { transform: translate(-50%,-220px); }
+    border-radius:4px;
 
+    white-space:nowrap;
+    z-index:20;
 }
 
-@keyframes fadeLogo {
-
-0% { opacity:0; transform: translateY(-10px); }
-100% { opacity:1; transform: translateY(0); }
-
+/* optioneel: afgeronde uiteinden */
+.eventTrip::after{
+    content:"";
 }
-
-@keyframes logoFloat {
-
-0% { transform: translateY(0px); }
-50% { transform: translateY(-3px); }
-100% { transform: translateY(0px); }
 
-}
+.eventOnderhoud {
+    background: #e67e22; /* oranje */
+    color: white;
 
-@keyframes fadeIntro {
+    font-size: 11px;
+    padding: 2px 4px;
 
-0% { opacity:0; transform: translateY(10px); }
-100% { opacity:1; transform: translateY(0); }
+    border-radius: 3px;
+    margin-top: 4px;
 
+    white-space: nowrap;
+    overflow: hidden;
 }
-
-
-/* =========================
-   GALLERY
-========================= */
-
-.gallery {
 
-max-width: 1100px;
+.eventOnderhoudGepland {
+    background: #f39c12; /* oranje */
+    color: white;
 
-margin: 25px auto 40px auto;
+    font-size: 11px;
+    padding: 2px 4px;
 
-padding: 0 20px;
+    border-radius: 3px;
+    margin-top: 4px;
 
-display: grid;
-
-grid-template-columns: repeat(4, 1fr);
-
-gap: 20px;
-
+    white-space: nowrap;
+    overflow: hidden;
 }
-
-.gallery img {
-
-width: 100%;
 
-border-radius: 6px;
+.eventTripOnderhoud{
+    position:absolute;
 
-box-shadow: 0 10px 30px rgba(0,0,0,0.6);
+    height:18px;
+    line-height:18px;
 
-transition: transform 0.25s ease;
+    background:#27ae60; /* 👈 groen */
+    color:white;
 
-cursor: pointer;
+    font-size:11px;
+    padding:0 6px;
 
-}
+    border-radius:4px;
 
-.gallery img:hover {
-transform: scale(1.03);
+    white-space:nowrap;
+    z-index:20;
 }
-
-.gallery iframe {
-
-width: 100%;
-
-aspect-ratio: 16 / 9;
+/* KLUS */
 
-border-radius: 6px;
+.eventKlus{
+    position:absolute;
+    top:44px;
 
-}
+    left:4px;
+    right:4px;
 
-/* =========================
-   GALLERY RESPONSIVE
-========================= */
+    background:#e67e22;
+    color:white;
 
-/* tablet */
-@media (max-width: 1000px){
-.gallery{
-grid-template-columns: repeat(3, 1fr);
-}
-}
+    font-size:11px;
+    padding:2px 4px;
 
-/* kleine tablet */
-@media (max-width: 700px){
-.gallery{
-grid-template-columns: repeat(2, 1fr);
-}
+    border-radius:3px;
 }
 
-/* telefoon */
-@media (max-width: 450px){
-.gallery{
-grid-template-columns: 1fr;
+/* task */
+.taskTitle.done {
+    text-decoration: line-through;
+    font-size: 12px;
+    opacity: 0.5;
 }
-}
-
-
-/* =========================
-   LIGHTBOX
-========================= */
-
-.lightbox {
-
-display: none;
-
-position: fixed;
-
-z-index: 1000;
-
-left: 0;
-top: 0;
 
-width: 100%;
-height: 100%;
-
-background: rgba(0,0,0,0.85);
-
-justify-content: center;
-align-items: center;
-
+.taskTitle.doing {
+    font-weight: bold;
 }
-
-.lightbox img {
-
-max-width: 90%;
-max-height: 90%;
-
-border-radius: 6px;
-
-box-shadow: 0 20px 60px rgba(0,0,0,0.8);
-
-cursor: pointer;
-
+#taskList li {
+    font-size: 11px;
+    line-height: 1.2;
 }
-
-.lightbox-prev,
-.lightbox-next {
-
-position: absolute;
-
-top: 50%;
-transform: translateY(-50%);
-
-font-size: 50px;
-color: white;
-
-padding: 10px 16px;
-
-cursor: pointer;
-
-user-select: none;
-
-opacity: 0.6;
-transition: opacity 0.2s;
 
-}
 
-.lightbox-prev:hover,
-.lightbox-next:hover {
-opacity: 1;
-}
+/* onderhoud */
 
-.lightbox-prev {
-left: 30px;
+.maintenanceRow{
+display:flex;
+justify-content:space-between;
+align-items:center;
+gap:8px;
+margin-bottom:6px;
+font-size:12px;
 }
 
-.lightbox-next {
-right: 30px;
+.maintenanceRow input{
+background:#101010;
+border:1px solid #333;
+color:white;
+border-radius:4px;
+padding:4px;
+font-size:11px;
 }
-
-
-/* =========================
-   MOBILE
-========================= */
 
-@media (max-width:700px){
-
-.top-hover{
-display:none;
+.maintenanceHeader{
+display:flex;
+justify-content:space-between;
+font-size:11px;
+color:#888;
+margin-bottom:6px;
+padding:0 2px;
 }
 
-.maker-bar{
-.maker-bar{
-display:none;
+.maintenanceHeader span:last-child{
+margin-right:4px;
 }
 
-}
+/*gear*/
 
-.hero {
-padding: 80px 20px 40px 20px;
+.gearItem{
+font-size:12px;
+padding:6px 0;
+border-bottom:1px solid #222;
 }
 
-.logo {
-max-width: 80%;
-}
 
-.intro h1 {
-font-size: 24px;
-}
+/* GENERIC EVENT (legacy) */
 
-.intro p {
-font-size: 15px;
+.event{
+    font-size:11px;
+    background:#2c3e50;
+    padding:2px 4px;
+    margin-top:4px;
+    border-radius:3px;
+    color:white;
 }
 
-.projects {
+/* SHOPPING */
 
-margin: 40px auto 60px auto;
-
-gap: 20px;
-
-}
-
-.project {
-padding: 20px;
+.shopping {
+    background:rgba(24,24,24,0.85);
+    border-left:1px solid #333;
+    display: flex;
+    flex-direction: column;
+    height: 100%;
 }
-
-.project h2 {
-
-font-size: 20px;
-
-margin-bottom: 8px;
-
-letter-spacing: 0.4px;
 
+.shoppingTop {
+    max-height: 55%;
+    overflow: auto;
 }
 
-.project p {
-
-font-size: 14px;
-
-line-height: 1.5;
-
+.shoppingBottom {
+    flex: 1;
+    overflow: auto;
 }
-
-.home-links {
-
-position: static;
-
-margin-top: 60px;
-
-display: flex;
-
-justify-content: space-around;
 
-align-items: center;
+/* TITLES */
 
+h2 {
+    margin-top:0;
+    font-size:18px;
+    border-bottom:1px solid #333;
+    padding-bottom:5px;
 }
 
-.insta-group img {
+/* LISTS */
 
-width: 35px;
-height: 35px;
-
-}
-
-.about {
-font-size: 16px;
-padding: 6px 0;
+ul {
+    list-style:none;
+    padding-left:0;
 }
 
+li {
+    padding:5px 0;
+    font-size: 12px;
 }
-
 
-/* =========================
-   LARGE SCREENS
-========================= */
-
-@media (min-width:1400px){
-
-.intro h1{
-font-size: 36px;
+.shopping li {
+    font-size: 11px;
+    line-height: 1.2;
+    opacity: 0.9;
 }
 
-.intro p{
-font-size: 18px;
-}
 
-.projects{
-max-width: 1200px;
-}
 
-}
