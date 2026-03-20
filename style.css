@@ -122,7 +122,8 @@ body::after {
 }
 
 .tasks {
-    background:rgba(24,24,24,0.85);
+    background:rgba(40,40,40,0.85);
+    backdrop-filter: blur(4px);
     border-right:1px solid #333;
 }
 
