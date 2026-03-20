@@ -125,7 +125,7 @@ body::after {
         transform: translate(0, -50%);
     }
     100% {
-        transform: translate(-250%, -50%);
+        transform: translate(-450%, -50%);
     }
 }
 
