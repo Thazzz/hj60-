@@ -109,10 +109,10 @@ body::after {
 
 @keyframes driveText {
     0% {
-        transform: translateX(90%);
+        transform: translate(0, -50%);
     }
     100% {
-        transform: translateX(-110%);
+        transform: translate(-200%, -50%);
     }
 }
 
@@ -123,12 +123,17 @@ body::after {
 }
 
 .status-active span {
-    display: inline-block;
-    padding-left: 80%;
-    animation-name: driveText;
-    animation-timing-function: linear;
-    animation-iteration-count: infinite;
+    position: absolute;     /* 🔥 key fix */
+    white-space: nowrap;
+
+    left: 100%;             /* start rechts buiten balk */
+    top: 50%;
+    transform: translateY(-50%);
+
+    animation: driveText 18s linear infinite;
 }
+
+
 /* LINKER KANT */
 
 .headerLeft {
