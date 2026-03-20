@@ -48,6 +48,7 @@
 <div style="margin-bottom:10px;">
     <button onclick="showTab('event')">Event</button>
     <button onclick="showTab('task')">Klus</button>
+    <button onclick="showTab('gear')">Uitrusting</button>
 </div>
 
    <div id="eventTab">
@@ -177,6 +178,43 @@
 
 </div>
 
+<!-- uitrusting velden -->
+<div id="gearTab" style="display:none;">
+
+    <h3>Nieuwe uitrusting</h3>
+
+    <div class="formGroup">
+        <label>Naam</label>
+        <input id="gearName" placeholder="Bijv. Tent">
+    </div>
+
+    <div class="formGroup">
+        <label>Status</label>
+        <select id="gearStatus">
+            <option value="ok">🟢 OK</option>
+            <option value="slijtage">🟠 Slijtage</option>
+            <option value="vervangen">🔴 Vervangen</option>
+        </select>
+    </div>
+
+    <div class="formGroup">
+        <label>Eigenaar</label>
+        <input id="gearOwner" placeholder="Naam">
+    </div>
+
+    <button onclick="saveGear()" class="primaryBtn">
+        Opslaan
+    </button>
+
+    <hr>
+
+    <h3>Uitrusting</h3>
+
+    <div id="gearListPlanner">
+        laden...
+    </div>
+
+</div>
 </section>
 
 
