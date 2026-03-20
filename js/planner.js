@@ -472,6 +472,8 @@ function loadTaskIntoForm(task){
 
     document.getElementById("deleteTaskBtn").style.display = "block";
 
+    document.getElementById("taskShopping").value = task.shopping || "";
+    
     console.log("✏️ editing task", task.id);
 }
 

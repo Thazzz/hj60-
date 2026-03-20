@@ -26,13 +26,14 @@ async function testInsertTask(){
 
     const { error } = await supabaseClient
         .from("tasks")
-        .insert([{
-            title: "Test klus vanuit JS",
-            description: "debug insert",
-            priority: 1,
-            status: "todo",
-            owner: CURRENT_USER
-        }]);
+          .insert([{
+          title: "Test klus vanuit JS",
+          description: "debug insert",
+          priority: 1,
+          status: "todo",
+          owner: CURRENT_USER,
+          shopping: "test boodschap"
+}]);
 
     if(error){
         console.error("❌ insert fout:", error);
@@ -75,7 +76,7 @@ window.saveTask = async function(){
     const description = document.getElementById("taskDesc").value.trim();
     const priority = parseInt(document.getElementById("taskPriority").value);
     const owner = document.getElementById("taskOwner").value.trim();
-
+    const shopping = document.getElementById("taskShopping").value.trim() || null;
     if(!title){
         alert("Titel verplicht");
         return;
@@ -91,7 +92,8 @@ if(editingTaskId){
             title,
             description,
             priority,
-            owner
+            owner,
+            shopping
         })
         .eq("id", editingTaskId);
 
@@ -104,7 +106,8 @@ if(editingTaskId){
             description,
             priority,
             status: "todo",
-            owner
+            owner,
+            shopping
         }]);
 }
 
@@ -127,7 +130,7 @@ document.getElementById("deleteTaskBtn").style.display = "none";
     document.getElementById("taskDesc").value = "";
     document.getElementById("taskPriority").value = "1";
     document.getElementById("taskOwner").value = "";
-
+    document.getElementById("taskShopping").value = "";
     // refresh lijst
     await loadTasks();
     renderTaskListPlanner();
