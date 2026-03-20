@@ -101,7 +101,7 @@ if(activeTrip){
     statusElement.innerHTML = `<span>${text}</span>`;
 
     // 🔥 snelheid aanpassen
-    const speed = Math.max(10, text.length * 0.6);
+    const speed = Math.max(15, text.length * 1.2);
 
     statusElement.querySelector("span").style.animationDuration = speed + "s";
 
