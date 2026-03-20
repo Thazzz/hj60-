@@ -156,7 +156,7 @@ body::after {
 #calendarGrid{
     display:grid;
     grid-template-columns:repeat(7,1fr);
-    gap:4px;
+    gap:2px;
 
 position:relative; /* 👈 belangrijk */
 
@@ -174,8 +174,8 @@ position:relative; /* 👈 belangrijk */
 
 .dayCell{
     position:relative;            /* 🔥 belangrijk */
-    background:#1b1b1b;
-    height:80px;
+    background: rgba(27,27,27,0.75);
+    height:70px;
     padding:6px;
     font-size:13px;
     overflow:visible;             /* 🔥 belangrijk */
