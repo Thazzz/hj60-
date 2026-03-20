@@ -250,15 +250,7 @@ async function toggleTaskStatus(id, currentStatus){
 
 /* -----------------------------
 SHOPPING
------------------------------ */currentStatus === "doing") newStatus = "done";
-
-    const { error } = await supabaseClient
-        .from("tasks")
-        .update({ status: newStatus })
-        .eq("id", id);
-
-    if(error){
-        cons
+----------------------------- */
 
 function renderShopping(){
 
