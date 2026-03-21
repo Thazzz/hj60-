@@ -162,11 +162,9 @@ DESKTOP (optioneel)
 
 @media (min-width: 768px) {
 
-```
 .container {
     max-width: 600px;
     margin: 0 auto;
 }
-```
 
 }
