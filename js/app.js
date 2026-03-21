@@ -272,6 +272,7 @@ SHOPPING
 ----------------------------- */
 function renderShopping(){
 
+
     const list = document.getElementById("shoppingList");
     list.innerHTML = "";
 
@@ -280,17 +281,16 @@ function renderShopping(){
         return;
     }
 
-    // 🔥 eerste taak met boodschappen
-    const nextTask = tasks.find(t => t.shopping);
+    const allItems = tasks
+        .filter(t => t.shopping)
+        .flatMap(t => t.shopping.split(/\n|,/));
 
-    if(!nextTask){
+    if(allItems.length === 0){
         list.innerHTML = "<li>Geen boodschappen</li>";
         return;
     }
 
-    const items = nextTask.shopping.split(/\n|,/);
-
-    items.forEach(item => {
+    allItems.forEach(item => {
         if(item.trim() === "") return;
 
         const li = document.createElement("li");
@@ -299,7 +299,8 @@ function renderShopping(){
     });
 
 
-console.log("🛒 nextTask:", nextTask);
+console.log("🛒 allItems:", allItems);
+
 }
 
 /* -----------------------------
