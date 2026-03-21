@@ -79,6 +79,8 @@ STATUS
 function updateStatus(){
 
 const statusElement = document.getElementById("status");
+if(!statusElement) return;
+
 const now = new Date();
 
 const activeTrip = events.find(event => {
@@ -98,12 +100,15 @@ if(activeTrip){
 
     const text = `🚙 ${activeTrip.owner} → ${activeTrip.destination || ""}`;
 
-    statusElement.innerHTML = `<span>${text}</span>`;
+    statusElement.textContent = "";
+    const textSpan = document.createElement("span");
+    textSpan.textContent = text;
+    statusElement.appendChild(textSpan);
 
     // 🔥 snelheid aanpassen
     const speed = Math.max(15, text.length * 1.2);
 
-    statusElement.querySelector("span").style.animationDuration = speed + "s";
+    textSpan.style.animationDuration = speed + "s";
 
 } else {
     statusElement.className = "headerStatus status-idle";
@@ -171,6 +176,7 @@ TASKS
 function renderTasks(){
 
     const list = document.getElementById("taskList");
+    if(!list) return;
     list.innerHTML = "";
 
     if(tasks.length === 0){
@@ -201,15 +207,18 @@ function renderTasks(){
         }
 
         const li = document.createElement("li");
+        li.append(`${getPriorityIcon(task.priority)} `);
 
-        li.innerHTML = `
-            ${getPriorityIcon(task.priority)} 
-            <span class="taskTitle ${task.status}">
-                ${task.title}
-            </span>
-            <br>
-            <small>${task.status} - ${task.owner || "-"}</small>
-        `;
+        const titleSpan = document.createElement("span");
+        titleSpan.className = `taskTitle ${task.status}`;
+        titleSpan.textContent = task.title || "";
+        li.appendChild(titleSpan);
+
+        li.appendChild(document.createElement("br"));
+
+        const meta = document.createElement("small");
+        meta.textContent = `${task.status} - ${task.owner || "-"}`;
+        li.appendChild(meta);
 
     li.onclick = () => confirmTaskChange(task);
 
@@ -397,7 +406,7 @@ function renderCalendar(){
 const grid = document.getElementById("calendarGrid");
 const title = document.getElementById("calendarTitle");
 
-if(!grid) return;
+if(!grid || !title) return;
 
 grid.innerHTML = "";
 
@@ -466,6 +475,10 @@ grid.appendChild(cell);
 /* EVENTS */
 
 events.forEach(event => {
+
+if(!event.start_date || !event.end_date){
+    return;
+}
 
 const start = new Date(event.start_date + "T00:00:00");
 const end = new Date(event.end_date + "T00:00:00");
@@ -597,8 +610,11 @@ renderMaintenance();
 renderShopping();
 renderCalendar();
 
-document.getElementById("nextMonth").onclick = nextMonth;
-document.getElementById("prevMonth").onclick = prevMonth;
+const nextMonthButton = document.getElementById("nextMonth");
+const prevMonthButton = document.getElementById("prevMonth");
+
+if(nextMonthButton) nextMonthButton.onclick = nextMonth;
+if(prevMonthButton) prevMonthButton.onclick = prevMonth;
 
 }
 
