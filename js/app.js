@@ -5,7 +5,7 @@ HJ60 dashboard
 console.log("HJ60 dashboard gestart");
 
 window.onerror = function(msg, url, line){
-    console.error("ðŸ”¥ JS crash:", msg, "line:", line);
+    console.error("\u{1F525} JS crash:", msg, "line:", line);
 };
 
 /* -----------------------------
@@ -33,7 +33,7 @@ TRIPS LADEN (nu ook onderhoud)
 
 async function loadTrips(){
 
-console.log("â³ events laden...");
+console.log("\u23F3 events laden...");
 
 /* TRIPS */
 const { data: trips, error: tripError } = await supabaseClient
@@ -98,7 +98,7 @@ if(activeTrip){
 
     statusElement.className = "headerStatus status-active";
 
-    const text = `ðŸš™ ${activeTrip.owner} â†’ ${activeTrip.destination || ""}`;
+    const text = `\u{1F699} ${activeTrip.owner} \u2192 ${activeTrip.destination || ""}`;
 
     statusElement.textContent = "";
     const textSpan = document.createElement("span");
@@ -112,7 +112,7 @@ if(activeTrip){
 
 } else {
     statusElement.className = "headerStatus status-idle";
-    statusElement.innerText = "ðŸ› ï¸ werkplaats";
+    statusElement.innerText = "\u{1F6E0}\uFE0F werkplaats";
 }
 }
 /* -----------------------------
@@ -128,7 +128,7 @@ async function loadTasks(){
         .order("priority", { ascending: true });
 
     if(error){
-        console.error("âŒ tasks load error", error);
+        console.error("\u274C tasks load error", error);
         return;
     }
 
@@ -197,7 +197,7 @@ function renderTasks(){
             const divider = document.createElement("li");
             divider.className = "taskGroupLabel";
             divider.innerText =
-                task.status === "doing" ? "ðŸ”§ Bezig" : "ðŸ“‹ Te doen";
+                task.status === "doing" ? "\u{1F527} Bezig" : "\u{1F4CB} Te doen";
 
             divider.style.opacity = "0.6";
             divider.style.marginTop = "10px";
@@ -250,9 +250,9 @@ function confirmTaskChange(task){
     }
 }
 function getPriorityIcon(p){
-    if(p === 1) return "ðŸ”´";
-    if(p === 2) return "ðŸŸ ";
-    return "ðŸŸ¢";
+    if(p === 1) return "\u{1F534}";
+    if(p === 2) return "\u{1F7E0}";
+    return "\u{1F7E2}";
 }
 
 async function toggleTaskStatus(id, currentStatus){
@@ -268,11 +268,11 @@ async function toggleTaskStatus(id, currentStatus){
         .eq("id", id);
 
     if(error){
-        console.error("âŒ update error", error);
+        console.error("\u274C update error", error);
         return;
     }
 
-    console.log("âœ… status updated:", newStatus);
+    console.log("\u2705 status updated:", newStatus);
 
     await loadTasks();
     renderTasks();
@@ -310,7 +310,7 @@ function renderShopping(){
     });
 
 
-console.log("ðŸ›’ allItems:", allItems);
+console.log("\u{1F6D2} allItems:", allItems);
 
 }
 
@@ -333,7 +333,7 @@ const filtered = gear.filter(g =>
 );
 
 if(filtered.length === 0){
-    container.innerHTML = "<div class='gearItem'>Alles in orde ðŸ‘</div>";
+    container.innerHTML = "<div class='gearItem'>Alles in orde \u{1F44D}</div>";
     return;
 }
 
@@ -497,7 +497,7 @@ if(event.type === "onderhoud"){
 
         const label = document.createElement("div");
         label.className = "eventOnderhoud";
-        label.innerText = "ðŸ”§ " + (event.location || "");
+        label.innerText = "\u{1F527} " + (event.location || "");
 
         cell.appendChild(label);
     }
@@ -550,8 +550,8 @@ if(text.toLowerCase().includes("onderhoud")){
 }
 
     label.innerText =
-    "ðŸš™ " + (event.owner || "?") +
-    " â†’ " + (event.destination || "?");
+    "\u{1F699} " + (event.owner || "?") +
+    " \u2192 " + (event.destination || "?");
 
     const rect = cell.getBoundingClientRect();
     const gridRect = grid.getBoundingClientRect();
@@ -628,7 +628,7 @@ const { error } = await supabaseClient
 if(error){
     console.error("Update fout:", error);
 } else {
-    console.log("âœ… onderhoud geÃ¼pdatet");
+    console.log("\u2705 onderhoud geupdate");
 }
 }
 
