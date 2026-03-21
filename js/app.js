@@ -216,10 +216,9 @@ function renderTasks(){
         titleSpan.textContent = task.title || "";
         li.appendChild(titleSpan);
 
-        li.appendChild(document.createElement("br"));
-
         const meta = document.createElement("small");
-        meta.textContent = `${task.status} - ${task.owner || "-"}`;
+        meta.className = "taskOwner";
+        meta.textContent = task.owner || "-";
         li.appendChild(meta);
 
     li.onclick = () => confirmTaskChange(task);
