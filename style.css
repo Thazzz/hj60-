@@ -184,34 +184,39 @@ body::after {
 #taskList {
     display:flex;
     flex-direction:column;
-    gap:8px;
+    gap:5px;
 }
 
 .taskGroupLabel {
-    margin-top:10px;
-    padding:4px 2px 0;
-    font-size:11px;
+    margin-top:6px;
+    padding:2px 2px 0;
+    font-size:10px;
     font-weight:700;
-    letter-spacing:0.8px;
+    letter-spacing:0.7px;
     text-transform:uppercase;
     color:#8f9aa3;
 }
 
 .taskItem {
-    padding:10px 12px;
+    display:flex;
+    align-items:center;
+    gap:8px;
+    padding:7px 10px 6px;
     background:linear-gradient(180deg, rgba(34,34,34,0.92), rgba(22,22,22,0.92));
     border:1px solid rgba(255,255,255,0.06);
-    border-left:4px solid rgba(44,123,229,0.55);
+    border-left:3px solid rgba(44,123,229,0.55);
     border-radius:8px;
-    box-shadow:0 6px 18px rgba(0,0,0,0.22);
+    box-shadow:0 4px 12px rgba(0,0,0,0.18);
 }
 
 .taskItem small {
     display:block;
-    margin-top:4px;
+    margin-left:auto;
     color:#8f9aa3;
-    font-size:10px;
+    font-size:9px;
     letter-spacing:0.2px;
+    white-space:nowrap;
+    text-align:right;
 }
 
 .calendar {
@@ -374,7 +379,7 @@ position:relative; /* ðŸ‘ˆ belangrijk */
 /* task */
 .taskTitle.done {
     text-decoration: line-through;
-    font-size: 12px;
+    font-size: 11px;
     opacity: 0.5;
 }
 
@@ -382,9 +387,14 @@ position:relative; /* ðŸ‘ˆ belangrijk */
     font-weight: bold;
     color:#f2f4f6;
 }
+
+.taskTitle {
+    flex:1;
+    min-width:0;
+}
 #taskList li {
-    font-size: 11px;
-    line-height: 1.2;
+    font-size: 10px;
+    line-height: 1.1;
 }
 
 
