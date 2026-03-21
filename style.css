@@ -80,21 +80,17 @@ body::after {
     height:70px;
 }
 
-.rightLogo {
-    transform: scaleX(-1); 
-}
-
 .title {
-    font-size:22px;
-    font-weight:bold;
-    letter-spacing:1px;
+    font-size: 28px;
+    font-weight: 800;
+    letter-spacing: 2px;
 }
 
 .subtitle {
-    font-size:12px;
-    color:#888;
-    text-transform:uppercase;
-    letter-spacing:1px;
+    font-size: 12px;
+    color: #888;
+    letter-spacing: 1px;
+    text-transform: uppercase;
 }
 
 .headerStatus {
@@ -139,27 +135,6 @@ body::after {
     
     animation: driveText 8s linear infinite;
 
-}
-
-
-/* LINKER KANT */
-
-.headerLeft {
-    display: flex;
-    flex-direction: column;
-}
-
-.title {
-    font-size: 28px;
-    font-weight: 800;
-    letter-spacing: 2px;
-}
-
-.subtitle {
-    font-size: 12px;
-    color: #888;
-    letter-spacing: 1px;
-    text-transform: uppercase;
 }
 
 /* STATUS RECHTS = HERO */
@@ -412,17 +387,6 @@ padding:6px 0;
 border-bottom:1px solid #222;
 }
 
-
-/* GENERIC EVENT (legacy) */
-
-.event{
-    font-size:11px;
-    background:#2c3e50;
-    padding:2px 4px;
-    margin-top:4px;
-    border-radius:3px;
-    color:white;
-}
 
 /* SHOPPING */
 
