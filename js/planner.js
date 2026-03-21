@@ -411,6 +411,11 @@ klus
 
 window.showTab = function(tab){
 
+    const tabButtons = document.querySelectorAll(".tabButton");
+    tabButtons.forEach(button => {
+        button.classList.toggle("active", button.dataset.tab === tab);
+    });
+
     document.getElementById("eventTab").style.display =
         tab === "event" ? "block" : "none";
 
