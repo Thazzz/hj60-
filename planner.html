@@ -46,10 +46,10 @@
 <!-- FORM -->
 <section class="card formCard">
 
-<div style="margin-bottom:10px;">
-    <button onclick="showTab('event')">Event</button>
-    <button onclick="showTab('task')">Klus</button>
-    <button onclick="showTab('gear')">Uitrusting</button>
+<div class="tabBar" style="margin-bottom:10px;">
+    <button class="tabButton active" data-tab="event" onclick="showTab('event')">Event</button>
+    <button class="tabButton" data-tab="task" onclick="showTab('task')">Klus</button>
+    <button class="tabButton" data-tab="gear" onclick="showTab('gear')">Uitrusting</button>
 </div>
 
    <div id="eventTab">
