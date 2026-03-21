@@ -6,7 +6,7 @@ body {
     background:#111;
     color:#eee;
 
-    /* 🔥 HJ60 background */
+    /* ðŸ”¥ HJ60 background */
     background-image: url("./hj60.png");
     background-repeat: no-repeat;
     background-position: right bottom;
@@ -18,7 +18,7 @@ body::before {
     position:fixed;
     inset:0;
 
-    z-index:-1; /* 🔥 dit is de fix */
+    z-index:-1; /* ðŸ”¥ dit is de fix */
 
 background: linear-gradient(
     to right,
@@ -39,7 +39,7 @@ body::after {
 
     pointer-events:none;
 
-    /* 🔥 glow rechts onder */
+    /* ðŸ”¥ glow rechts onder */
     background: radial-gradient(
         circle at 75% 85%,
         rgba(255,255,255,0.08) 0%,
@@ -58,7 +58,7 @@ body::after {
     flex-direction:column;
     align-items:center;
     justify-content:center;
-    padding:10px;
+    padding:8px 10px 6px;
     background: rgba(16,16,16,0.6);
     backdrop-filter: blur(6px);
     border-bottom:1px solid #333;
@@ -67,12 +67,16 @@ body::after {
 .headerCenter {
     display:flex;
     align-items:center;
-    justify-content:center;   /* 🔥 alles naar midden */
-    gap:16px;                 /* 🔥 controle over afstand */
+    justify-content:center;   /* ðŸ”¥ alles naar midden */
+    gap:12px;                 /* ðŸ”¥ controle over afstand */
 }
 
 .headerText {
+    display:flex;
+    flex-direction:column;
+    justify-content:center;
     text-align:center;
+    min-height:70px;
 }
 
 .logo {
@@ -81,13 +85,17 @@ body::after {
 }
 
 .title {
-    font-size: 28px;
+    margin:0;
+    font-size: 26px;
+    line-height:1;
     font-weight: 800;
     letter-spacing: 2px;
 }
 
 .subtitle {
+    margin:4px 0 0;
     font-size: 12px;
+    line-height:1.1;
     color: #888;
     letter-spacing: 1px;
     text-transform: uppercase;
@@ -101,15 +109,15 @@ body::after {
 
     border-radius: 6px;
 
-    /* 🔥 NIEUW */
-    width: 60%;              /* of 50–70% spelen */
+    /* ðŸ”¥ NIEUW */
+    width: 60%;              /* of 50â€“70% spelen */
     max-width: 900px;       /* voorkomt dat hij te groot wordt */
-    margin: 8px auto 0;     /* centeren */
+    margin: 4px auto 0;     /* centeren */
 
     background: rgba(34,34,34,0.6);  /* zie punt 2 */
     border: 1px solid rgba(255,255,255,0.1);
 
-        /* 🔥 DE FIX */
+        /* ðŸ”¥ DE FIX */
     position: relative;
     overflow: hidden;
 }
@@ -127,7 +135,7 @@ body::after {
 
 
 .status-active span {
-    position: absolute;     /* 🔥 key fix */
+    position: absolute;     /* ðŸ”¥ key fix */
     white-space: nowrap;
 
     left: 110%;             /* start rechts buiten balk */
@@ -205,7 +213,7 @@ body::after {
     grid-template-columns:repeat(7,1fr);
     gap:2px;
 
-position:relative; /* 👈 belangrijk */
+position:relative; /* ðŸ‘ˆ belangrijk */
 
 }
 
@@ -220,12 +228,12 @@ position:relative; /* 👈 belangrijk */
 /* CELLS */
 
 .dayCell{
-    position:relative;            /* 🔥 belangrijk */
+    position:relative;            /* ðŸ”¥ belangrijk */
     background: rgba(27,27,27,0.75);
     height:70px;
     padding:6px;
     font-size:13px;
-    overflow:visible;             /* 🔥 belangrijk */
+    overflow:visible;             /* ðŸ”¥ belangrijk */
 }
 
 /* STATES */
@@ -245,7 +253,7 @@ position:relative; /* 👈 belangrijk */
 /* EVENTS */
 
 .eventTrip{
-    position:absolute;   /* 👈 key */
+    position:absolute;   /* ðŸ‘ˆ key */
     
     height:18px;
     line-height:18px;
@@ -301,7 +309,7 @@ position:relative; /* 👈 belangrijk */
     height:18px;
     line-height:18px;
 
-    background:#27ae60; /* 👈 groen */
+    background:#27ae60; /* ðŸ‘ˆ groen */
     color:white;
 
     font-size:11px;
@@ -434,6 +442,3 @@ li {
     line-height: 1.2;
     opacity: 0.9;
 }
-
-
-
