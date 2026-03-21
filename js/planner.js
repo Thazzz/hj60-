@@ -30,7 +30,10 @@ HELPERS
 ============================= */
 
 function enableForm(enabled){
-    const fields = document.querySelectorAll("input, select");
+    const eventTab = document.getElementById("eventTab");
+    if(!eventTab) return;
+
+    const fields = eventTab.querySelectorAll("input, select");
 
     fields.forEach(f => {
         f.disabled = !enabled;
@@ -66,20 +69,6 @@ function getPriorityIcon(p){
     if(p == 1) return "🔴";
     if(p == 2) return "🟠";
     return "🟢";
-}
-
-function showTab(tab){
-
-    document.getElementById("eventTab").style.display =
-        tab === "event" ? "block" : "none";
-
-    document.getElementById("taskTab").style.display =
-        tab === "task" ? "block" : "none";
-
-    const title = document.getElementById("formTitle");
-
-    if(tab === "event") title.innerText = "PlannerApp";
-    if(tab === "task") title.innerText = "Klussen";
 }
 
 /* =============================
@@ -396,7 +385,9 @@ function setupTypeSwitch(){
     const type = document.getElementById("eventType");
     const trip = document.getElementById("tripFields");
     const ond = document.getElementById("onderhoudFields");
-    const title = document.querySelector(".formCard h2");
+    const title = document.getElementById("eventFormTitle");
+
+    if(!type || !trip || !ond || !title) return;
 
     type.addEventListener("change", () => {
 
@@ -431,7 +422,6 @@ window.showTab = function(tab){
         gearTab.style.display =
             tab === "gear" ? "block" : "none";
     }
-
 }
 
 /*==========================
