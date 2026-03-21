@@ -5,7 +5,7 @@ HJ60 dashboard
 console.log("HJ60 dashboard gestart");
 
 window.onerror = function(msg, url, line){
-    console.error("🔥 JS crash:", msg, "line:", line);
+    console.error("ðŸ”¥ JS crash:", msg, "line:", line);
 };
 
 /* -----------------------------
@@ -33,7 +33,7 @@ TRIPS LADEN (nu ook onderhoud)
 
 async function loadTrips(){
 
-console.log("⏳ events laden...");
+console.log("â³ events laden...");
 
 /* TRIPS */
 const { data: trips, error: tripError } = await supabaseClient
@@ -60,7 +60,7 @@ const tripEvents = (trips || []).map(t => ({
 }));
 
 const maintenanceEvents = (maintenance || []).map(m => ({
-    id: m.id, 
+    id: m.id,
     type: "onderhoud",
     start_date: m.last_done_date || null,
     end_date: m.last_done_date || null,
@@ -98,21 +98,21 @@ if(activeTrip){
 
     statusElement.className = "headerStatus status-active";
 
-    const text = `🚙 ${activeTrip.owner} → ${activeTrip.destination || ""}`;
+    const text = `ðŸš™ ${activeTrip.owner} â†’ ${activeTrip.destination || ""}`;
 
     statusElement.textContent = "";
     const textSpan = document.createElement("span");
     textSpan.textContent = text;
     statusElement.appendChild(textSpan);
 
-    // 🔥 snelheid aanpassen
+    // ðŸ”¥ snelheid aanpassen
     const speed = Math.max(15, text.length * 1.2);
 
     textSpan.style.animationDuration = speed + "s";
 
 } else {
     statusElement.className = "headerStatus status-idle";
-    statusElement.innerText = "🛠️ werkplaats";
+    statusElement.innerText = "ðŸ› ï¸ werkplaats";
 }
 }
 /* -----------------------------
@@ -128,7 +128,7 @@ async function loadTasks(){
         .order("priority", { ascending: true });
 
     if(error){
-        console.error("❌ tasks load error", error);
+        console.error("âŒ tasks load error", error);
         return;
     }
 
@@ -191,12 +191,13 @@ function renderTasks(){
 
    visibleTasks.forEach(task => {
 
-        // 🔥 divider toevoegen bij status wissel
+        // ðŸ”¥ divider toevoegen bij status wissel
         if(task.status !== lastStatus){
 
             const divider = document.createElement("li");
+            divider.className = "taskGroupLabel";
             divider.innerText =
-                task.status === "doing" ? "🔧 Bezig" : "📋 Te doen";
+                task.status === "doing" ? "ðŸ”§ Bezig" : "ðŸ“‹ Te doen";
 
             divider.style.opacity = "0.6";
             divider.style.marginTop = "10px";
@@ -207,6 +208,7 @@ function renderTasks(){
         }
 
         const li = document.createElement("li");
+        li.className = "taskItem";
         li.append(`${getPriorityIcon(task.priority)} `);
 
         const titleSpan = document.createElement("span");
@@ -248,9 +250,9 @@ function confirmTaskChange(task){
     }
 }
 function getPriorityIcon(p){
-    if(p === 1) return "🔴";
-    if(p === 2) return "🟠";
-    return "🟢";
+    if(p === 1) return "ðŸ”´";
+    if(p === 2) return "ðŸŸ ";
+    return "ðŸŸ¢";
 }
 
 async function toggleTaskStatus(id, currentStatus){
@@ -266,11 +268,11 @@ async function toggleTaskStatus(id, currentStatus){
         .eq("id", id);
 
     if(error){
-        console.error("❌ update error", error);
+        console.error("âŒ update error", error);
         return;
     }
 
-    console.log("✅ status updated:", newStatus);
+    console.log("âœ… status updated:", newStatus);
 
     await loadTasks();
     renderTasks();
@@ -308,7 +310,7 @@ function renderShopping(){
     });
 
 
-console.log("🛒 allItems:", allItems);
+console.log("ðŸ›’ allItems:", allItems);
 
 }
 
@@ -325,22 +327,18 @@ if(!container) return;
 
 container.innerHTML = "";
 
-// 🔥 alleen relevante gear tonen
+// ðŸ”¥ alleen relevante gear tonen
 const filtered = gear.filter(g =>
     g.status === "slijtage" || g.status === "vervangen"
 );
 
 if(filtered.length === 0){
-    container.innerHTML = "<div class='gearItem'>Alles in orde 👍</div>";
+    container.innerHTML = "<div class='gearItem'>Alles in orde ðŸ‘</div>";
     return;
 }
 
 filtered.forEach(item => {
 
-    let icon = "🟢";
-    if(item.status === "slijtage") icon = "🟠";
-    if(item.status === "vervangen") icon = "🔴";
-    
     const div = document.createElement("div");
     div.className = "gearItem";
 
@@ -349,7 +347,7 @@ filtered.forEach(item => {
         div.style.color = "#ff6b6b";
     }
 
-    div.innerText = `${icon} ${item.name}`;
+    div.innerText = item.name;
 
     container.appendChild(div);
 });
@@ -499,7 +497,7 @@ if(event.type === "onderhoud"){
 
         const label = document.createElement("div");
         label.className = "eventOnderhoud";
-        label.innerText = "🔧 " + (event.location || "");
+        label.innerText = "ðŸ”§ " + (event.location || "");
 
         cell.appendChild(label);
     }
@@ -552,8 +550,8 @@ if(text.toLowerCase().includes("onderhoud")){
 }
 
     label.innerText =
-    "🚙 " + (event.owner || "?") +
-    " → " + (event.destination || "?");
+    "ðŸš™ " + (event.owner || "?") +
+    " â†’ " + (event.destination || "?");
 
     const rect = cell.getBoundingClientRect();
     const gridRect = grid.getBoundingClientRect();
@@ -630,7 +628,7 @@ const { error } = await supabaseClient
 if(error){
     console.error("Update fout:", error);
 } else {
-    console.log("✅ onderhoud geüpdatet");
+    console.log("âœ… onderhoud geÃ¼pdatet");
 }
 }
 
