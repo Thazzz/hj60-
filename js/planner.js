@@ -631,9 +631,15 @@ window.addEventListener("DOMContentLoaded", async () => {
 
     const saveBtn = document.getElementById("saveBtn");
     const deleteBtn = document.getElementById("deleteBtn");
+    const saveTaskBtn = document.getElementById("saveTaskBtn");
+    const saveGearBtn = document.getElementById("saveGearBtn");
 
     if(saveBtn) saveBtn.onclick = saveEvent;
     if(deleteBtn) deleteBtn.onclick = deleteEvent;
+    if(saveTaskBtn && typeof saveTask === "function"){
+        saveTaskBtn.onclick = saveTask;
+    }
+    if(saveGearBtn) saveGearBtn.onclick = saveGear;
 
     const deleteGearBtn = document.getElementById("deleteGearBtn");
     if(deleteGearBtn){
