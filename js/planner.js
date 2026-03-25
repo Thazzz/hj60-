@@ -235,14 +235,19 @@ async function saveEvent(){
     const type = document.getElementById("eventType").value;
     const user_id = document.getElementById("email").value.trim();
 
-    if(!user_id){
+    if(type === "trip" && !user_id){
         feedback.innerText = "⚠️ vul email in";
         return;
     }
 
-    setUserId(user_id);
+    if(user_id){
+        setUserId(user_id);
+    }
 
-    let payload = { type, user_id };
+    let payload = { type };
+    if(user_id){
+        payload.user_id = user_id;
+    }
 
     /* TRIP */
 
