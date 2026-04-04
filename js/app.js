@@ -293,7 +293,16 @@ function renderShopping(){
 
     const allItems = tasks
         .filter(t => t.shopping)
-        .flatMap(t => t.shopping.split(/\n|,/));
+        .flatMap(task =>
+            task.shopping
+                .split(/\n|,/)
+                .map((rawItem, index) => ({
+                    taskId: task.id,
+                    itemIndex: index,
+                    text: rawItem.trim()
+                }))
+        )
+        .filter(item => item.text !== "");
 
     if(allItems.length === 0){
         list.innerHTML = "<li>Geen boodschappen</li>";
@@ -301,16 +310,64 @@ function renderShopping(){
     }
 
     allItems.forEach(item => {
-        if(item.trim() === "") return;
-
         const li = document.createElement("li");
-        li.textContent = item.trim();
+        li.textContent = item.text;
+        li.style.cursor = "pointer";
+        li.title = "Klik om uit de lijst te halen";
+        li.onclick = () => confirmShoppingRemoval(item);
         list.appendChild(li);
     });
 
 
 console.log("\u{1F6D2} allItems:", allItems);
 
+}
+
+function confirmShoppingRemoval(item){
+
+    const confirmed = confirm(`Boodschap uit de lijst halen?\n\n${item.text}`);
+
+    if(!confirmed) return;
+
+    removeShoppingItem(item);
+}
+
+async function removeShoppingItem(item){
+
+    const task = tasks.find(task => task.id === item.taskId);
+
+    if(!task || !task.shopping){
+        console.error("Boodschap niet gevonden in takenlijst:", item);
+        return;
+    }
+
+    const shoppingItems = task.shopping.split(/\n|,/);
+
+    if(item.itemIndex < 0 || item.itemIndex >= shoppingItems.length){
+        console.error("Ongeldige boodschap-index:", item);
+        return;
+    }
+
+    shoppingItems.splice(item.itemIndex, 1);
+
+    const updatedShopping = shoppingItems
+        .map(entry => entry.trim())
+        .filter(entry => entry !== "")
+        .join("\n") || null;
+
+    const { error } = await supabaseClient
+        .from("tasks")
+        .update({ shopping: updatedShopping })
+        .eq("id", item.taskId);
+
+    if(error){
+        console.error("❌ boodschap verwijderen mislukt", error);
+        alert("Boodschap verwijderen mislukt");
+        return;
+    }
+
+    await loadTasks();
+    renderShopping();
 }
 
 /* -----------------------------
