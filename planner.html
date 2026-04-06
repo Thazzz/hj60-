@@ -163,6 +163,19 @@
         <textarea id="taskShopping"></textarea>
     </div>
 
+    <div class="formGroup">
+        <label>Voorbeeldfoto</label>
+        <input id="taskPhoto" type="file" accept="image/*">
+        <small class="formHint">Voeg 1 foto toe als referentie voor deze klus.</small>
+    </div>
+
+    <div id="taskPhotoPanel" class="taskPhotoPanel" style="display:none;">
+        <img id="taskPhotoPreview" class="taskPhotoPreview" alt="Voorbeeldfoto van klus">
+        <button id="removeTaskPhotoBtn" type="button" class="secondaryBtn" style="display:none;">
+            Foto verwijderen
+        </button>
+    </div>
+
     <button id="saveTaskBtn" type="button" class="primaryBtn">
         Opslaan
     </button>
