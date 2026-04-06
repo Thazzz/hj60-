@@ -49,7 +49,11 @@ function setUserId(id){
 }
 
 function normalizeIdentity(value){
-    return (value || "").trim().toLowerCase();
+    return (value || "")
+        .normalize("NFKC")
+        .replace(/\s+/g, "")
+        .trim()
+        .toLowerCase();
 }
 
 function getIdentityInputValue(){
@@ -258,7 +262,10 @@ const isOwner = isOwnEvent(t.user_id);
     } else if(isOwner){
         feedback.innerText = "✏️ bewerken";
     } else {
-        feedback.innerText = "👀 van iemand anders";
+        const activeIdentity = getActiveIdentity();
+        feedback.innerText = activeIdentity
+            ? `👀 van iemand anders (${activeIdentity})`
+            : "👀 van iemand anders";
     }
 }
 
