@@ -121,6 +121,7 @@ window.setTaskPhotoStateFromTask = function(task){
 function resetTaskForm(){
     window.editingTaskId = null;
     document.getElementById("deleteTaskBtn").style.display = "none";
+    document.getElementById("completeTaskBtn").style.display = "none";
 
     document.getElementById("taskTitle").value = "";
     document.getElementById("taskDesc").value = "";
@@ -444,6 +445,35 @@ window.deleteTask = async function(){
     renderTaskListPlanner();
 };
 
+window.completeTask = async function(){
+
+    if(!window.editingTaskId){
+        alert("Geen klus geselecteerd");
+        return;
+    }
+
+    if(!confirm("Klus afhandelen?")){
+        return;
+    }
+
+    const { error } = await supabaseClient
+        .from("tasks")
+        .update({ status: "done" })
+        .eq("id", window.editingTaskId);
+
+    if(error){
+        console.error("❌ afhandelen mislukt", error);
+        alert("Afhandelen mislukt");
+        return;
+    }
+
+    console.log("✅ klus afgehandeld");
+
+    resetTaskForm();
+    await loadTasks();
+    renderTaskListPlanner();
+};
+
 /* =============================
 INIT
 ============================= */
@@ -464,9 +494,14 @@ window.addEventListener("DOMContentLoaded", () => {
     attachTaskPhotoPreviewToTaskEditor();
 
     const btn = document.getElementById("deleteTaskBtn");
+    const completeBtn = document.getElementById("completeTaskBtn");
 
     if(btn){
         btn.onclick = deleteTask;
+    }
+
+    if(completeBtn){
+        completeBtn.onclick = completeTask;
     }
 });
 

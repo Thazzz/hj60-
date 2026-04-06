@@ -480,6 +480,7 @@ function loadTaskIntoForm(task){
     document.getElementById("taskOwner").value = task.owner || "";
 
     document.getElementById("deleteTaskBtn").style.display = "block";
+    document.getElementById("completeTaskBtn").style.display = "block";
 
     document.getElementById("taskShopping").value = task.shopping || "";
 
