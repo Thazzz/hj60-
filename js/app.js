@@ -27,6 +27,9 @@ let events = [];
 
 let tasks = [];
 
+const TASK_PHOTO_BUCKET = "task-photos";
+let activeTask = null;
+
 /* -----------------------------
 TRIPS LADEN (nu ook onderhoud)
 ----------------------------- */
@@ -221,32 +224,12 @@ function renderTasks(){
         meta.textContent = task.owner || "-";
         li.appendChild(meta);
 
-    li.onclick = () => confirmTaskChange(task);
+    li.onclick = () => openTaskModal(task);
 
         list.appendChild(li);
 
     });
 
-}
-function confirmTaskChange(task){
-
-    let message = "";
-
-    if(task.status === "todo"){
-        message = `Start klus "${task.title}"?`;
-    }
-    else if(task.status === "doing"){
-        message = `Klus "${task.title}" afronden?`;
-    }
-    else{
-        return;
-    }
-
-    const confirmed = confirm(message);
-
-    if(confirmed){
-        toggleTaskStatus(task.id, task.status);
-    }
 }
 function getPriorityIcon(p){
     if(p === 1) return "\u{1F534}";
@@ -254,13 +237,105 @@ function getPriorityIcon(p){
     return "\u{1F7E2}";
 }
 
-async function toggleTaskStatus(id, currentStatus){
+function getPriorityLabel(priority){
+    if(priority === 1) return "Hoog";
+    if(priority === 2) return "Midden";
+    return "Laag";
+}
 
-    let newStatus = "todo";
+function getStatusLabel(status){
+    if(status === "doing") return "Bezig";
+    if(status === "done") return "Done";
+    return "Te doen";
+}
 
-    if(currentStatus === "todo") newStatus = "doing";
-    else if(currentStatus === "doing") newStatus = "done";
+function getTaskPhotoUrl(path){
+    if(!path) return "";
 
+    const { data } = supabaseClient
+        .storage
+        .from(TASK_PHOTO_BUCKET)
+        .getPublicUrl(path);
+
+    return data?.publicUrl || "";
+}
+
+function openTaskModal(task){
+
+    activeTask = task;
+
+    const modal = document.getElementById("taskModal");
+    const title = document.getElementById("taskModalTitle");
+    const owner = document.getElementById("taskModalOwner");
+    const status = document.getElementById("taskModalStatus");
+    const priority = document.getElementById("taskModalPriority");
+    const description = document.getElementById("taskModalDescription");
+    const shopping = document.getElementById("taskModalShopping");
+    const photoWrap = document.getElementById("taskModalPhotoWrap");
+    const photo = document.getElementById("taskModalPhoto");
+
+    if(!modal || !title || !owner || !status || !priority || !description || !shopping || !photoWrap || !photo){
+        return;
+    }
+
+    title.textContent = task.title || "Klus";
+    owner.textContent = task.owner || "-";
+    status.textContent = getStatusLabel(task.status);
+    priority.textContent = `${getPriorityIcon(task.priority)} ${getPriorityLabel(task.priority)}`;
+    description.textContent = task.description?.trim() || "Geen beschrijving";
+
+    shopping.innerHTML = "";
+
+    const shoppingItems = (task.shopping || "")
+        .split(/\n|,/)
+        .map(item => item.trim())
+        .filter(Boolean);
+
+    if(shoppingItems.length === 0){
+        const li = document.createElement("li");
+        li.textContent = "Geen boodschappen";
+        shopping.appendChild(li);
+    } else {
+        shoppingItems.forEach(item => {
+            const li = document.createElement("li");
+            li.textContent = item;
+            shopping.appendChild(li);
+        });
+    }
+
+    if(task.photo_path){
+        photo.src = getTaskPhotoUrl(task.photo_path);
+        photoWrap.style.display = "flex";
+    } else {
+        photo.removeAttribute("src");
+        photoWrap.style.display = "none";
+    }
+
+    document.querySelectorAll(".taskStatusBtn").forEach(button => {
+        button.classList.toggle("active", button.dataset.status === task.status);
+    });
+
+    modal.classList.remove("hidden");
+    modal.setAttribute("aria-hidden", "false");
+}
+
+function closeTaskModal(){
+    const modal = document.getElementById("taskModal");
+    const photo = document.getElementById("taskModalPhoto");
+
+    activeTask = null;
+
+    if(!modal) return;
+
+    modal.classList.add("hidden");
+    modal.setAttribute("aria-hidden", "true");
+
+    if(photo){
+        photo.removeAttribute("src");
+    }
+}
+
+async function updateTaskStatus(id, newStatus){
     const { error } = await supabaseClient
         .from("tasks")
         .update({ status: newStatus })
@@ -268,13 +343,50 @@ async function toggleTaskStatus(id, currentStatus){
 
     if(error){
         console.error("\u274C update error", error);
-        return;
+        alert("Status wijzigen mislukt");
+        return false;
     }
 
     console.log("\u2705 status updated:", newStatus);
 
     await loadTasks();
     renderTasks();
+    renderShopping();
+    return true;
+}
+
+async function handleTaskStatusChange(newStatus){
+
+    if(!activeTask) return;
+
+    const updated = await updateTaskStatus(activeTask.id, newStatus);
+    if(!updated) return;
+
+    closeTaskModal();
+}
+
+function setupTaskModal(){
+    const closeButton = document.getElementById("taskModalClose");
+    const backdrop = document.getElementById("taskModalBackdrop");
+    const statusButtons = document.querySelectorAll(".taskStatusBtn");
+
+    if(closeButton){
+        closeButton.onclick = closeTaskModal;
+    }
+
+    if(backdrop){
+        backdrop.onclick = closeTaskModal;
+    }
+
+    statusButtons.forEach(button => {
+        button.onclick = () => handleTaskStatusChange(button.dataset.status);
+    });
+
+    document.addEventListener("keydown", event => {
+        if(event.key === "Escape"){
+            closeTaskModal();
+        }
+    });
 }
 
 /* -----------------------------
@@ -669,6 +781,7 @@ const prevMonthButton = document.getElementById("prevMonth");
 
 if(nextMonthButton) nextMonthButton.onclick = nextMonth;
 if(prevMonthButton) prevMonthButton.onclick = prevMonth;
+setupTaskModal();
 
 }
 
