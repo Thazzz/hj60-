@@ -106,6 +106,59 @@
 
 </main>
 
+<div id="taskModal" class="taskModal hidden" aria-hidden="true">
+    <div id="taskModalBackdrop" class="taskModalBackdrop"></div>
+
+    <section class="taskClipboard" role="dialog" aria-modal="true" aria-labelledby="taskModalTitle">
+        <button id="taskModalClose" class="taskModalClose" type="button" aria-label="Sluiten">&times;</button>
+
+        <div class="taskClipboardTape"></div>
+
+        <div class="taskClipboardBody">
+            <div class="taskClipboardHeader">
+                <div>
+                    <p class="taskClipboardEyebrow">Klusdetails</p>
+                    <h2 id="taskModalTitle">Klus</h2>
+                </div>
+                <span id="taskModalPriority" class="taskClipboardPriority">-</span>
+            </div>
+
+            <div class="taskClipboardMeta">
+                <div class="taskClipboardField">
+                    <span class="taskClipboardLabel">Eigenaar</span>
+                    <span id="taskModalOwner">-</span>
+                </div>
+                <div class="taskClipboardField">
+                    <span class="taskClipboardLabel">Status</span>
+                    <span id="taskModalStatus">-</span>
+                </div>
+            </div>
+
+            <div class="taskClipboardField">
+                <span class="taskClipboardLabel">Beschrijving</span>
+                <p id="taskModalDescription" class="taskClipboardText">Geen beschrijving</p>
+            </div>
+
+            <div class="taskClipboardField">
+                <span class="taskClipboardLabel">Boodschappen</span>
+                <ul id="taskModalShopping" class="taskClipboardList">
+                    <li>Geen boodschappen</li>
+                </ul>
+            </div>
+
+            <div id="taskModalPhotoWrap" class="taskClipboardPhotoWrap" style="display:none;">
+                <span class="taskClipboardLabel">Voorbeeldfoto</span>
+                <img id="taskModalPhoto" class="taskClipboardPhoto" alt="Voorbeeldfoto van klus">
+            </div>
+
+            <div class="taskClipboardActions">
+                <button class="taskStatusBtn" type="button" data-status="todo">Te doen</button>
+                <button class="taskStatusBtn" type="button" data-status="doing">Bezig</button>
+                <button class="taskStatusBtn taskStatusDone" type="button" data-status="done">Done</button>
+            </div>
+        </div>
+    </section>
+</div>
 
 </body>
 </html>
