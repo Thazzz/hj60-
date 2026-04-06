@@ -48,6 +48,26 @@ function setUserId(id){
     localStorage.setItem("user_id", id);
 }
 
+function normalizeIdentity(value){
+    return (value || "").trim().toLowerCase();
+}
+
+function getIdentityInputValue(){
+    const emailInput = document.getElementById("email");
+    if(!emailInput) return "";
+    return emailInput.value || "";
+}
+
+function getActiveIdentity(){
+    return normalizeIdentity(getIdentityInputValue() || getUserId());
+}
+
+function isOwnEvent(eventUserId){
+    const activeIdentity = getActiveIdentity();
+    if(!activeIdentity) return false;
+    return normalizeIdentity(eventUserId) === activeIdentity;
+}
+
 function resetForm(){
     editingId = null;
     editingUserId = null;
@@ -79,6 +99,26 @@ function initUser(){
     const saved = getUserId();
     if(saved){
         document.getElementById("email").value = saved;
+    }
+
+    const emailInput = document.getElementById("email");
+    if(emailInput){
+        emailInput.addEventListener("change", () => {
+            const normalized = normalizeIdentity(emailInput.value);
+
+            if(normalized){
+                setUserId(normalized);
+            }
+
+            renderTripList();
+
+            if(editingId){
+                const currentTrip = trips.find(t => t.id === editingId);
+                if(currentTrip){
+                    loadIntoForm(currentTrip);
+                }
+            }
+        });
     }
 }
 
@@ -124,7 +164,7 @@ function renderTripList(){
         const div = document.createElement("div");
         div.className = "tripItem";
 
-        const isOwner = t.user_id === getUserId();
+        const isOwner = isOwnEvent(t.user_id);
         div.classList.add(isOwner ? "mine" : "other");
 
         div.onclick = () => {
@@ -197,7 +237,7 @@ function loadIntoForm(t){
     const feedback = document.getElementById("feedback");
 
     // 🔥 NIEUW
-const isOwner = t.user_id && t.user_id === getUserId();
+const isOwner = isOwnEvent(t.user_id);
 
     if(deleteBtn){
         console.log("DELETE BTN FOUND", { isOwner });
@@ -233,7 +273,7 @@ async function saveEvent(){
     const feedback = document.getElementById("feedback");
 
     const type = document.getElementById("eventType").value;
-    const user_id = document.getElementById("email").value.trim();
+    const user_id = normalizeIdentity(document.getElementById("email").value);
 
     if(type === "trip" && !user_id){
         feedback.innerText = "⚠️ vul email in";
