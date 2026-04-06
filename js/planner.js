@@ -158,12 +158,23 @@ function renderTripList(){
     const el = document.getElementById("tripList");
     el.innerHTML = "";
 
-    if(trips.length === 0){
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+
+    const upcomingTrips = trips
+        .filter(t => {
+            const referenceDate = new Date((t.end_date || t.start_date) + "T00:00:00");
+            referenceDate.setHours(0, 0, 0, 0);
+            return referenceDate >= today;
+        })
+        .slice(0, 5);
+
+    if(upcomingTrips.length === 0){
         el.innerText = "Nog geen events";
         return;
     }
 
-    trips.forEach(t => {
+    upcomingTrips.forEach(t => {
 
         const div = document.createElement("div");
         div.className = "tripItem";
