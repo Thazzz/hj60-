@@ -262,10 +262,7 @@ const isOwner = isOwnEvent(t.user_id);
     } else if(isOwner){
         feedback.innerText = "✏️ bewerken";
     } else {
-        const activeIdentity = getActiveIdentity();
-        feedback.innerText = activeIdentity
-            ? `👀 van iemand anders | event: ${normalizeIdentity(t.user_id)} | jij: ${activeIdentity}`
-            : "👀 van iemand anders";
+        feedback.innerText = "👀 van iemand anders";
     }
 }
 
