@@ -543,6 +543,11 @@ li {
     opacity: 0.9;
 }
 
+.shoppingBought {
+    text-decoration: line-through;
+    opacity: 0.5;
+}
+
 /* TASK MODAL */
 
 .hidden {
