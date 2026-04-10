@@ -249,6 +249,15 @@ function getStatusLabel(status){
     return "Te doen";
 }
 
+function parseShoppingEntry(rawEntry){
+    const trimmed = (rawEntry || "").trim();
+    const purchased = trimmed.startsWith("[x] ");
+    return {
+        purchased,
+        text: purchased ? trimmed.slice(4).trim() : trimmed
+    };
+}
+
 function getTaskPhotoUrl(path){
     if(!path) return "";
 
@@ -288,8 +297,8 @@ function openTaskModal(task){
 
     const shoppingItems = (task.shopping || "")
         .split(/\n|,/)
-        .map(item => item.trim())
-        .filter(Boolean);
+        .map(parseShoppingEntry)
+        .filter(item => item.text);
 
     if(shoppingItems.length === 0){
         const li = document.createElement("li");
@@ -298,7 +307,11 @@ function openTaskModal(task){
     } else {
         shoppingItems.forEach(item => {
             const li = document.createElement("li");
-            li.textContent = item;
+            li.textContent = item.text;
+            if(item.purchased){
+                li.style.textDecoration = "line-through";
+                li.style.opacity = "0.55";
+            }
             shopping.appendChild(li);
         });
     }
@@ -411,7 +424,7 @@ function renderShopping(){
                 .map((rawItem, index) => ({
                     taskId: task.id,
                     itemIndex: index,
-                    text: rawItem.trim()
+                    ...parseShoppingEntry(rawItem)
                 }))
         )
         .filter(item => item.text !== "");
@@ -425,8 +438,16 @@ function renderShopping(){
         const li = document.createElement("li");
         li.textContent = item.text;
         li.style.cursor = "pointer";
-        li.title = "Klik om uit de lijst te halen";
-        li.onclick = () => confirmShoppingRemoval(item);
+        li.title = item.purchased
+            ? "Al gekocht"
+            : "Klik om als gekocht te markeren";
+
+        if(item.purchased){
+            li.classList.add("shoppingBought");
+        } else {
+            li.onclick = () => confirmShoppingPurchase(item);
+        }
+
         list.appendChild(li);
     });
 
@@ -435,16 +456,18 @@ console.log("\u{1F6D2} allItems:", allItems);
 
 }
 
-function confirmShoppingRemoval(item){
+function confirmShoppingPurchase(item){
 
-    const confirmed = confirm(`Boodschap uit de lijst halen?\n\n${item.text}`);
+    if(item.purchased) return;
+
+    const confirmed = confirm(`Gekocht?\n\n${item.text}`);
 
     if(!confirmed) return;
 
-    removeShoppingItem(item);
+    markShoppingItemPurchased(item);
 }
 
-async function removeShoppingItem(item){
+async function markShoppingItemPurchased(item){
 
     const task = tasks.find(task => task.id === item.taskId);
 
@@ -460,7 +483,8 @@ async function removeShoppingItem(item){
         return;
     }
 
-    shoppingItems.splice(item.itemIndex, 1);
+    const currentEntry = parseShoppingEntry(shoppingItems[item.itemIndex]);
+    shoppingItems[item.itemIndex] = `[x] ${currentEntry.text}`;
 
     const updatedShopping = shoppingItems
         .map(entry => entry.trim())
@@ -473,8 +497,8 @@ async function removeShoppingItem(item){
         .eq("id", item.taskId);
 
     if(error){
-        console.error("❌ boodschap verwijderen mislukt", error);
-        alert("Boodschap verwijderen mislukt");
+        console.error("❌ boodschap markeren mislukt", error);
+        alert("Boodschap markeren mislukt");
         return;
     }
 
